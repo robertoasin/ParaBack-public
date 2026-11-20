@@ -66,6 +66,25 @@ BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK2, MUTED = "#0b0b0b", "#52514e", "#898781"
 GRID, AXIS = "#e1e0d9", "#c3c2b7"
 SEQUENTIAL = ["#ffffff", "#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"]
+#: Figura de familias: ninguna, hasta 1/3, hasta 2/3, más de 2/3 y todas. Cinco pasos de la rampa azul (blanco, 250,
+#: 400, 550 y 700) separados al menos 16 puntos de L*, para que se distingan también impresos en gris; el primero
+#: no nulo se separa del fondo más de 2:1. Los números van en blanco desde el paso 400 (APCA: Lc −69 frente a 40).
+FAMILY_SHADES = ["#ffffff", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"]
+
+
+def family_shade(done: int, size: int) -> Tuple[str, str]:
+    """(relleno, color del número) de una celda de la figura de familias."""
+    if done == 0:
+        level = 0
+    elif done == size:
+        level = 4
+    elif 3 * done <= size:
+        level = 1
+    elif 3 * done <= 2 * size:
+        level = 2
+    else:
+        level = 3
+    return FAMILY_SHADES[level], INK if level < 2 else "white"
 
 #: Nombre interno → (nombre en el artículo, trabajadores).
 CONFIGS: Dict[str, Tuple[str, int]] = {
@@ -346,11 +365,9 @@ def families(data: Data, out: pathlib.Path, min_size: int = 5) -> pathlib.Path:
     for ax, block in zip(axes, blocks):
         for y, (_, _, _, _, size, values) in enumerate(block):
             for x, v in enumerate(values):
-                frac = v / size
-                shade = SEQUENTIAL[min(len(SEQUENTIAL) - 1, round(frac * (len(SEQUENTIAL) - 1)))]
+                shade, ink = family_shade(v, size)
                 ax.add_patch(plt.Rectangle((x, y), 1, 1, facecolor=shade, edgecolor="white", lw=1.0))
-                ax.text(x + 0.5, y + 0.55, str(v), ha="center", va="center", fontsize=7,
-                        color="white" if frac > 0.55 else INK)
+                ax.text(x + 0.5, y + 0.55, str(v), ha="center", va="center", fontsize=7, color=ink)
         ax.set_xlim(0, len(headers))
         ax.set_ylim(half, 0)
         ax.set_aspect("equal")
