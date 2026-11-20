@@ -1,0 +1,71 @@
+diff -ru a/src/soplex/solverational.hpp b/src/soplex/solverational.hpp
+--- a/src/soplex/solverational.hpp	2026-09-18 12:23:01.000000000 +0200
++++ b/src/soplex/solverational.hpp	2026-11-20 10:25:23.000000000 +0100
+@@ -45,6 +45,20 @@
+    bool infeasibilityNotCertified = false;
+    bool unboundednessNotCertified = false;
+ 
++   // make the interrupt flag visible to iterative refinement until this method returns
++   struct InterruptScope
++   {
++      volatile bool*& current;
++      InterruptScope(volatile bool*& member, volatile bool* flag) : current(member)
++      {
++         current = flag;
++      }
++      ~InterruptScope()
++      {
++         current = nullptr;
++      }
++   } interruptScope(_rationalInterrupt, interrupt);
++
+    // start timing
+    _statistics->solvingTime->start();
+    _statistics->preprocessingTime->start();
+@@ -5322,7 +5336,7 @@
+       {
+          SPX_MSG_INFO1(spxout, spxout << std::endl);
+ 
+-         _solveRealLPAndRecordStatistics();
++         _solveRealLPAndRecordStatistics(_rationalInterrupt);
+ 
+          SPX_MSG_INFO1(spxout, spxout << std::endl);
+       }
+@@ -5853,7 +5867,7 @@
+       {
+          SPX_MSG_INFO1(spxout, spxout << std::endl);
+ 
+-         _solveBoostedRealLPAndRecordStatistics();
++         _solveBoostedRealLPAndRecordStatistics(_rationalInterrupt);
+ 
+          SPX_MSG_INFO1(spxout, spxout << std::endl);
+       }
+diff -ru a/src/soplex.h b/src/soplex.h
+--- a/src/soplex.h	2026-09-18 12:23:01.000000000 +0200
++++ b/src/soplex.h	2026-11-20 10:25:23.000000000 +0100
+@@ -1973,6 +1973,10 @@
+    bool _hasSolReal;
+    bool _hasSolRational;
+ 
++   /// interrupt flag of the rational solve in progress (nullptr outside _optimizeRational()); checked by
++   /// _isSolveStopped() and passed on to the floating-point and boosted solves of iterative refinement
++   volatile bool* _rationalInterrupt = nullptr;
++
+    ///@}
+ 
+    ///@name Miscellaneous
+diff -ru a/src/soplex.hpp b/src/soplex.hpp
+--- a/src/soplex.hpp	2026-09-18 12:23:01.000000000 +0200
++++ b/src/soplex.hpp	2026-11-20 10:25:23.000000000 +0100
+@@ -7699,8 +7699,10 @@
+ {
+    assert(_statistics != nullptr);
+ 
++   // an interrupt is reported like a time limit, as the floating-point solver does (ABORT_TIME)
+    stoppedTime = (realParam(TIMELIMIT) < realParam(INFTY)
+-                  && _statistics->solvingTime->time() >= realParam(TIMELIMIT));
++                  && _statistics->solvingTime->time() >= realParam(TIMELIMIT))
++                 || (_rationalInterrupt != nullptr && *_rationalInterrupt);
+    stoppedIter = (intParam(ITERLIMIT) >= 0 && _statistics->iterations >= intParam(ITERLIMIT))
+                  || (intParam(REFLIMIT) >= 0 && _statistics->refinements >= intParam(REFLIMIT))
+                  || (intParam(STALLREFLIMIT) >= 0 && _statistics->stallRefinements >= intParam(STALLREFLIMIT));

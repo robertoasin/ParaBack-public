@@ -1,0 +1,387 @@
+instance	ev1-gurobi:status	ev1-gurobi:time	ev1-gurobi:complete_time	ev1-gurobi-mf:status	ev1-gurobi-mf:time	ev1-gurobi-mf:complete_time	ev1-gurobi-x:status	ev1-gurobi-x:time	ev1-gurobi-x:complete_time	ev1-napback:status	ev1-napback:time	ev1-napback:complete_time	ev1-napback-srv:status	ev1-napback-srv:time	ev1-napback-srv:complete_time	ev1-rb:status	ev1-rb:time	ev1-rb:complete_time	ev1-rb-pg:status	ev1-rb-pg:time	ev1-rb-pg:complete_time	ev1-rb-wp:status	ev1-rb-wp:time	ev1-rb-wp:complete_time	ev1-scipx:status	ev1-scipx:time	ev1-scipx:complete_time	ev1-scipx-mf:status	ev1-scipx-mf:time	ev1-scipx-mf:complete_time
+Init-x1-i8_pp_87_merged	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+Init-x2-i2_pp_94	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+Init-x2-i8_pp_92	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+SMTI_10000_10_0.85_3	interrupted			interrupted			n/c			complete	2470.78		interrupted			complete	2807.34		complete	2190.95		complete	2360.76		interrupted			interrupted		
+SMTI_10000_3_0.95_1	interrupted			complete	82.33		n/c			interrupted			interrupted			complete	417.27		complete	51.95		complete	392.52		interrupted			complete	720.60	
+SMTI_25000_10_0.75_2	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+SMTI_25000_10_0.85_7	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+SMTI_25000_10_0.95_10	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			complete	1202.13		interrupted			interrupted			interrupted		
+SMTI_25000_5_0.75_3	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			complete	869.03		interrupted			interrupted			interrupted		
+SMTI_50000_3_0.85_4	interrupted			complete	1620.34		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-1098.cudf.trendy	complete	0.30		complete	0.21		n/c			complete	0.29		complete	0.38		complete	0.07		complete	0.07		complete	0.07		complete	6.87		complete	0.99	
+normalized-10:10:4.5:0.5:100	complete	1.38		complete	0.58		n/c			interrupted			interrupted			complete	65.09		interrupted			complete	2.84		complete	5.62		complete	11.67	
+normalized-10:10:4.5:0.95:100	complete	0.88		complete	0.41		n/c			interrupted			interrupted			complete	12.09		interrupted			interrupted			complete	4.27		complete	12.34	
+normalized-10:20:4.5:0.95:100	complete	6.23		complete	1.62		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	18.11		complete	43.03	
+normalized-10:20:4.5:0.95:98	complete	7.36		complete	1.63		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	25.36		complete	83.18	
+normalized-10_20	complete	0.08		complete	0.11		n/c			complete	15.19		complete	17.66		complete	0.07		complete	0.05		complete	0.05		complete	2.13		complete	0.12	
+normalized-11_22	complete	0.14		complete	0.11		n/c			complete	241.29		complete	343.84		complete	0.27		complete	0.15		complete	0.10		complete	2.14		complete	0.53	
+normalized-30:30:4.5:0.5:100	complete	349.88		complete	96.00		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	1435.60		complete	1156.77	
+normalized-30:30:4.5:0.95:100	complete	461.95		complete	124.49		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	1243.82		complete	1591.62	
+normalized-30:30:4.5:0.95:98	complete	670.22		complete	88.70		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	986.67		complete	571.62	
+normalized-30:70:4.5:0.5:100	interrupted			complete	969.25		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-30:70:4.5:0.95:100	interrupted			complete	2193.71		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-30:70:4.5:0.95:98	interrupted			complete	419.73		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-50-250-false-45-90-4-1000opt	complete	3390.25		complete	848.43		n/c			complete	18.14		complete	23.61		complete	4.50		complete	8.09		complete	10.95		interrupted			interrupted		
+normalized-50-250-false-45-90-4-2000opt	interrupted			interrupted			n/c			complete	21.99		complete	25.35		complete	13.20		complete	17.61		complete	36.24		interrupted			interrupted		
+normalized-50-250-false-45-90-4-3000opt	interrupted			interrupted			n/c			complete	22.13		complete	24.05		complete	24.57		complete	21.46		complete	22.95		interrupted			interrupted		
+normalized-50-250-false-45-90-4-4000opt	interrupted			complete	3293.00		n/c			complete	20.72		complete	28.79		complete	14.37		complete	21.15		complete	26.31		interrupted			interrupted		
+normalized-50-250-false-45-90-4-5000opt	interrupted			complete	2619.35		n/c			complete	26.62		complete	29.91		complete	9.24		complete	12.15		complete	9.65		interrupted			interrupted		
+normalized-50-250-false-45-90-4-6000opt	interrupted			interrupted			n/c			complete	27.70		complete	33.62		complete	17.51		complete	42.31		complete	50.84		interrupted			interrupted		
+normalized-50-250-false-45-90-4-8000opt	interrupted			interrupted			n/c			complete	57.49		complete	70.85		complete	85.45		complete	83.92		complete	202.59		interrupted			interrupted		
+normalized-50-750-false-45-90-4-2000opt	interrupted			complete	569.45		n/c			complete	9.82		complete	11.14		complete	6.36		complete	3.75		complete	5.75		interrupted			interrupted		
+normalized-50-750-false-45-90-4-3000opt	interrupted			complete	575.08		n/c			complete	8.30		complete	10.20		complete	4.75		complete	3.10		complete	4.36		interrupted			interrupted		
+normalized-50-750-false-45-90-4-8000opt	interrupted			complete	552.22		n/c			complete	8.26		complete	9.18		complete	3.95		complete	2.57		complete	4.40		interrupted			interrupted		
+normalized-5_10	complete	0.08		complete	0.09		n/c			complete	0.18		complete	0.17		complete	0.06		complete	0.06		complete	0.06		complete	0.23		complete	0.12	
+normalized-650.cudf.paranoid	complete	1.81		complete	1.75		n/c			complete	2.07		complete	3.23		complete	6.36		complete	0.24		complete	6.34		complete	10.29		complete	2.18	
+normalized-6_12	complete	0.09		complete	0.09		n/c			complete	0.37		complete	0.38		complete	0.06		complete	0.06		complete	0.06		complete	0.25		complete	0.17	
+normalized-7_14	complete	0.11		complete	0.10		n/c			complete	3.28		complete	3.76		complete	0.07		complete	0.06		complete	0.06		complete	0.26		complete	0.12	
+normalized-8_16	complete	0.10		complete	0.12		n/c			complete	26.46		complete	31.45		complete	0.11		complete	0.11		complete	0.11		complete	0.57		complete	0.58	
+normalized-990.cudf.trendy	complete	0.42		complete	0.32		n/c			complete	0.58		complete	0.62		complete	0.09		complete	0.07		complete	0.10		interrupted			complete	15.94	
+normalized-9symml	complete	1.95		complete	0.62		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	32.24		complete	22.97	
+normalized-BA_RDC4.dot_fibo_0null20mast_rapportOE1.0_TMAX180_K67_cod1	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-BA_RDC4.dot_fibo_10null50mast_rapportOE2.0_TMAX300_K67_cod2_pbEq1_newVersion	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-BA_RDC4.dot_fibo_50null20mast_rapportOE2.0_TMAX60_K67_cod2	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-BA_RDC4.dot_luby_0null50mast_rapportOE2.0_TMAX60_K67_cod2_pbEq1_newVersion_binary	complete	1847.43		complete	648.81		n/c			interrupted			interrupted			complete	71.15		complete	89.43		complete	553.76		interrupted			interrupted		
+normalized-BA_RDC4.dot_luby_10null0mast_rapportOE2.0_TMAX15_K67_cod2_pbEq1_newVersion_ladder	complete	100.99		complete	26.56		n/c			complete	322.63		complete	1786.66		complete	447.83		complete	2168.91		complete	187.48		interrupted			interrupted		
+normalized-BA_RDC4.dot_luby_10null20mast_rapportOE2.0_TMAX300_K67_cod2_pbEq1_newVersion_product	interrupted			interrupted			n/c			interrupted			interrupted			complete	1611.53		interrupted			interrupted			interrupted			interrupted		
+normalized-Cargo-24_c24	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			died			died		
+normalized-Charlotte-06-2_c24	complete	155.32		complete	16.78		n/c			interrupted			interrupted			complete	9.32		complete	11.48		complete	4.61		interrupted			interrupted		
+normalized-Charlotte-mini-24-2_c24	complete	772.05		complete	171.38		n/c			interrupted			interrupted			complete	966.18		interrupted			complete	235.61		interrupted			interrupted		
+normalized-Clique-c0125-9_c24	complete	12.73		complete	8.47		n/c			complete	1081.64		complete	1322.29		interrupted			interrupted			interrupted			complete	829.87		complete	400.16	
+normalized-FoolSolitaire-table-2-0_c24	interrupted			interrupted			n/c			complete	1171.60		complete	917.99		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-Generated_notes_20140709_1000_0.05-013	complete	418.58		complete	61.35		n/c			interrupted			interrupted			failed			interrupted			interrupted			complete	1785.94		complete	346.46	
+normalized-Generated_notes_20140709_1000_0.05-017	complete	169.83		complete	63.55		n/c			interrupted			interrupted			failed			interrupted			failed			complete	959.16		complete	268.34	
+normalized-KE_120_003	complete	0.15		complete	0.09		n/c			interrupted			interrupted			complete	0.30		complete	3.16		complete	2.94		complete	0.42		complete	0.17	
+normalized-KE_230_000	complete	2.04		complete	0.36		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	8.56		complete	1.38	
+normalized-KE_260_007	complete	2.25		complete	0.39		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	14.66		complete	2.81	
+normalized-KE_410_001	complete	4.17		complete	0.80		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	31.47		complete	3.50	
+normalized-KE_450_009	complete	5.27		complete	1.37		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	53.26		complete	7.97	
+normalized-KE_60_004	complete	0.94		complete	0.10		n/c			complete	1.35		complete	0.53		complete	0.06		complete	0.06		complete	0.06		complete	0.21		complete	0.12	
+normalized-KE_610_007	complete	182.50		complete	5.60		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	603.99		complete	63.57	
+normalized-KE_680_004	complete	242.35		complete	11.98		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	1399.77		complete	282.86	
+normalized-NG.dot_fibo_10null10mast_rapportOE2.0_TMAX15_K192_cod1	interrupted			complete	176.40		n/c			interrupted			interrupted			complete	263.30		complete	100.84		complete	501.54		interrupted			interrupted		
+normalized-NG.dot_fibo_50null20mast_rapportOE1.0_TMAX120_K192_cod2	interrupted			complete	942.24		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-OGR_7	complete	4.25		complete	11.21		n/c			complete	4.68		complete	5.64		complete	0.26		complete	0.27		complete	0.27		complete	117.44		complete	109.25	
+normalized-TestScheduling-t030m10r05-1_c24	interrupted			interrupted			n/c			failed			failed			complete	1008.08		complete	649.70		complete	747.73		interrupted			interrupted		
+normalized-WordGolf-4-ogd2008-50-0_c24	complete	334.23		complete	447.07		n/c			failed			failed			complete	282.08		complete	258.86		complete	483.93		interrupted			interrupted		
+normalized-ab51-40-100	complete	63.39		complete	533.51		n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-addm4.r	complete	12.31		complete	19.41		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	143.77		complete	531.02	
+normalized-aim-100-6_0-yes1-1	complete	0.18		complete	0.97		n/c			complete	0.11		complete	0.11		complete	0.06		complete	0.07		complete	0.06		complete	10.88		complete	3.03	
+normalized-aim-200-2_0-yes1-2	complete	1.26		complete	0.99		n/c			complete	0.16		complete	0.12		complete	0.07		complete	0.07		complete	0.07		complete	607.40		complete	114.47	
+normalized-aim-50-2_0-yes1-1	complete	0.16		complete	0.94		n/c			complete	0.08		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	1.23		complete	0.17	
+normalized-aim-50-6_0-yes1-3	complete	0.11		complete	0.92		n/c			complete	0.06		complete	0.06		complete	0.06		complete	0.06		complete	0.06		complete	3.48		complete	1.08	
+normalized-alu4.b	complete	1116.55		complete	1073.30		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-aries-da_network_1000_5__369_766__8	complete	251.92		complete	57.97		n/c			interrupted			interrupted			failed			failed			failed			interrupted			interrupted		
+normalized-aries-da_network_20_2__17_12	complete	0.95		complete	0.06		n/c			complete	0.06		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.11		complete	0.12	
+normalized-aries-da_network_500_3__212_366__16	complete	14.17		complete	6.60		n/c			failed			failed			interrupted			failed			interrupted			interrupted			complete	1303.69	
+normalized-aries-da_network_50_2__8_45	complete	0.06		complete	0.09		n/c			complete	0.25		complete	0.11		complete	0.06		complete	0.06		complete	0.06		complete	0.16		complete	0.12	
+normalized-aries-da_network_50_2__8_45__1024	complete	335.47		complete	445.39		n/c			complete	866.88		complete	520.21		failed			failed			complete	1748.67		interrupted			interrupted		
+normalized-aries-da_network_50_2__8_45__512	complete	94.58		complete	104.52		n/c			complete	251.89		complete	217.23		failed			failed			complete	64.94		interrupted			interrupted		
+normalized-aug5.5	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-aug6.5	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-bnatt350	complete	1465.92		complete	3043.42		n/c			complete	1.22		complete	2.11		complete	4.82		complete	4.85		complete	2.96		interrupted			interrupted		
+normalized-bnn_mnist_7_label9_adversarial_norm_inf	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-bnn_mnist_back_image_32_label3_adversarial_norm_1	interrupted			interrupted			n/c			complete	148.37		complete	188.17		complete	2.99		complete	2.23		complete	12.49		interrupted			interrupted		
+normalized-bnn_mnist_back_image_32_label3_adversarial_norm_inf	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-bnn_mnist_back_image_73_label5_adversarial_norm_1	interrupted			interrupted			n/c			complete	600.96		complete	721.76		complete	12.75		complete	6.14		complete	18.45		interrupted			interrupted		
+normalized-bnn_mnist_back_image_73_label5_adversarial_norm_inf	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-bnn_mnist_rot_16_label5_adversarial_norm_0	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-bnn_mnist_rot_16_label5_adversarial_norm_1	interrupted			interrupted			n/c			complete	2989.83		complete	2940.61		complete	21.30		complete	18.15		complete	105.00		interrupted			interrupted		
+normalized-bnn_mnist_rot_16_label5_adversarial_norm_inf	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-bnn_mnist_rot_8_label1_adversarial_norm_0	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-bnn_mnist_rot_8_label1_adversarial_norm_2	interrupted			complete	1399.17		n/c			interrupted			interrupted			complete	917.65		complete	165.04		complete	2312.14		interrupted			interrupted		
+normalized-bogr_4	complete	0.13		complete	0.08		n/c			complete	0.08		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.17		complete	0.18	
+normalized-bogr_5	complete	0.97		complete	0.19		n/c			complete	0.12		complete	0.10		complete	0.06		complete	0.06		complete	0.06		complete	0.97		complete	1.23	
+normalized-bogr_6	complete	1.25		complete	1.66		n/c			complete	0.33		complete	0.30		complete	0.07		complete	0.05		complete	0.07		complete	8.32		complete	13.00	
+normalized-cc	complete	0.93		complete	0.10		n/c			interrupted			interrupted			complete	2.37		complete	4.70		complete	0.81		complete	0.43		complete	0.68	
+normalized-circ4_3	complete	0.40		complete	0.79		n/c			complete	0.17		complete	0.16		complete	0.06		complete	0.07		complete	0.06		complete	28.97		complete	25.45	
+normalized-clique-coloring-max-clique-n=10-t=3	complete	0.46		complete	5.92		n/c			complete	0.40		complete	0.57		complete	0.41		complete	0.10		complete	0.26		complete	22.05		complete	12.61	
+normalized-clique-coloring-max-clique-n=10-t=9	complete	1.59		complete	19.30		n/c			complete	0.47		complete	0.53		complete	0.19		complete	1.32		complete	0.22		complete	99.56		complete	50.59	
+normalized-clique-coloring-max-clique-n=11-t=8	complete	1.29		complete	16.25		n/c			complete	0.71		complete	0.90		complete	0.40		complete	1.96		complete	1.81		complete	125.18		complete	43.47	
+normalized-clique-coloring-max-clique-n=13-t=7	complete	1.61		complete	17.01		n/c			complete	1.44		complete	1.97		complete	2.51		complete	4.93		complete	1.06		complete	186.38		complete	72.07	
+normalized-clique-coloring-max-clique-n=13-t=8	complete	4.63		complete	15.16		n/c			complete	1.51		complete	2.19		complete	1.98		complete	6.32		complete	2.52		complete	343.50		complete	106.96	
+normalized-clique-coloring-max-clique-n=14-t=2	complete	3.02		complete	10.40		n/c			complete	2.45		complete	3.06		complete	0.28		complete	0.35		complete	0.40		complete	176.57		complete	167.29	
+normalized-clique-coloring-max-clique-n=18-t=2	complete	13.24		complete	42.38		n/c			complete	6.88		complete	12.75		complete	0.67		complete	0.24		complete	0.37		complete	1169.21		complete	644.94	
+normalized-clique-coloring-max-clique-n=20-t=2	complete	26.15		complete	49.51		n/c			complete	14.41		complete	22.85		complete	1.55		complete	0.42		complete	1.13		complete	2014.67		complete	1860.09	
+normalized-clique-coloring-max-clique-n=7-t=3	complete	0.13		complete	0.49		n/c			complete	0.13		complete	0.13		complete	0.07		complete	0.07		complete	0.06		complete	1.39		complete	0.96	
+normalized-clique-coloring-max-clique-n=8-t=3	complete	0.19		complete	0.86		n/c			complete	0.22		complete	0.22		complete	0.09		complete	0.07		complete	0.07		complete	3.84		complete	9.66	
+normalized-composed_pebbling_php_opt_pyramid_height13_pigeons12_holes11	complete	550.62		complete	73.62		n/c			interrupted			interrupted			complete	113.93		complete	37.07		complete	142.56		interrupted			complete	2606.05	
+normalized-composed_pebbling_php_opt_pyramid_height16_pigeons15_holes14	complete	3482.99		complete	119.25		n/c			interrupted			interrupted			complete	644.73		complete	271.86		complete	860.85		interrupted			interrupted		
+normalized-composed_pebbling_php_opt_pyramid_height30_pigeons29_holes28	interrupted			complete	1250.05		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-composed_pebbling_php_opt_pyramid_height37_pigeons36_holes35	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-composed_pebbling_php_opt_pyramid_height46_pigeons45_holes44	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			failed			interrupted			interrupted			died		
+normalized-comppebphp_opt_pyrheightequalsnholes_05	complete	0.69		complete	2.23		n/c			complete	0.21		complete	0.40		complete	0.26		complete	0.15		complete	0.31		complete	41.22		complete	19.05	
+normalized-comppebphp_opt_pyrheightequalsnholes_06	complete	3.78		complete	12.92		n/c			complete	0.76		complete	1.31		complete	0.77		complete	0.47		complete	0.87		interrupted			complete	53.86	
+normalized-comppebphp_opt_pyrheightequalsnholes_33	interrupted			complete	1959.94		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-comppebphp_opt_pyrheightequalsnholes_54	interrupted			interrupted			n/c			failed			failed			interrupted			failed			interrupted			interrupted			interrupted		
+normalized-comppebvc_opt_75	interrupted			complete	2.26		n/c			complete	34.87		complete	83.68		interrupted			complete	0.18		interrupted			interrupted			complete	92.49	
+normalized-count.b	complete	26.59		complete	94.57		n/c			complete	633.88		complete	606.06		complete	14.83		complete	12.39		complete	25.90		complete	253.37		complete	1406.49	
+normalized-data4_3	complete	0.37		complete	2.44		n/c			complete	0.21		complete	0.21		complete	0.19		complete	0.31		complete	0.22		complete	25.26		complete	16.75	
+normalized-dobutsu-shogi-master	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			died			interrupted		
+normalized-dobutsu-shogi-master-noopt	interrupted			interrupted			n/c			failed			failed			failed			interrupted			failed			died			interrupted		
+normalized-dominating_set_hexgrid_opt_r6_c50	complete	0.30		complete	2.07		n/c			complete	7.46		complete	5.72		interrupted			interrupted			interrupted			complete	16.76		complete	1.31	
+normalized-dominating_set_hexgrid_opt_r6_c60	complete	0.20		complete	0.94		n/c			complete	7.87		complete	7.81		complete	350.25		interrupted			complete	5.41		complete	0.42		complete	0.23	
+normalized-dominating_set_hexgrid_opt_r6_c80	complete	0.29		complete	0.97		n/c			complete	10.03		complete	10.18		complete	444.14		interrupted			complete	1.09		complete	0.66		complete	0.28	
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_160	complete	3.46		complete	1.12		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	7.30		complete	0.81	
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_290	complete	125.74		complete	59.91		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	774.64		complete	333.43	
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_380	complete	1635.01		complete	64.61		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	2223.98		complete	6.59	
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_390	complete	749.56		complete	296.00		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	1729.02		complete	494.52	
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_400	complete	271.18		complete	3.27		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	234.10		complete	6.91	
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_430	complete	3277.38		complete	524.69		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			complete	512.35	
+normalized-edgecross14-019.lin	complete	5.40		complete	1.45		n/c			complete	801.42		complete	1037.88		complete	245.13		complete	417.91		complete	224.46		complete	65.81		complete	38.40	
+normalized-evencolouring_opt_linear_random6regular_nvert_021	complete	0.08		complete	0.93		n/c			complete	0.07		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.21		complete	0.13	
+normalized-evencolouring_opt_linear_random6regular_nvert_071	complete	0.09		complete	0.95		n/c			complete	0.07		complete	0.07		complete	0.05		complete	0.06		complete	0.05		complete	0.59		complete	0.17	
+normalized-evencolouring_opt_linear_random6regular_nvert_101	complete	0.10		complete	0.95		n/c			complete	0.07		complete	0.07		complete	0.07		complete	0.06		complete	0.07		complete	0.84		complete	0.17	
+normalized-evencolouring_opt_unit_random6regular_nvert_031	complete	0.09		complete	1.00		n/c			complete	0.07		complete	0.06		complete	0.07		complete	0.06		complete	0.07		complete	0.53		complete	0.63	
+normalized-evencolouring_opt_unit_random6regular_nvert_091	complete	0.17		complete	1.32		n/c			complete	0.10		complete	0.12		complete	0.09		complete	0.07		complete	0.06		complete	2.60		complete	3.53	
+normalized-evencolouring_opt_unit_random6regular_nvert_111	complete	0.20		complete	1.49		n/c			complete	0.12		complete	0.15		complete	0.11		complete	0.07		complete	0.10		complete	3.91		complete	5.40	
+normalized-evencolouring_opt_unit_random6regular_nvert_351	complete	3.84		complete	8.03		n/c			complete	2.62		complete	3.63		complete	0.75		complete	0.62		complete	0.60		complete	44.48		complete	57.13	
+normalized-evencolouring_opt_unit_random6regular_nvert_401	complete	2.92		complete	10.16		n/c			complete	1.68		complete	2.88		complete	0.91		complete	0.97		complete	0.69		complete	63.15		complete	83.54	
+normalized-evencolouring_opt_unit_random6regular_nvert_451	complete	3.46		complete	12.77		n/c			complete	1.11		complete	1.63		complete	1.62		complete	1.55		complete	1.03		complete	77.54		complete	114.50	
+normalized-evencolouring_opt_unit_random6regular_nvert_501	complete	4.29		complete	16.58		n/c			complete	1.92		complete	2.59		complete	1.42		complete	1.51		complete	1.12		complete	93.61		complete	126.10	
+normalized-ex6inp.r	complete	0.25		complete	1.24		n/c			complete	0.52		complete	0.50		complete	0.05		complete	0.07		complete	0.06		complete	1.88		complete	2.59	
+normalized-f20c10b_001_area_delay	complete	224.81		complete	61.31		n/c			complete	341.68		complete	421.02		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-f20c10b_008_area_delay	complete	40.09		complete	19.60		n/c			complete	30.79		complete	41.43		interrupted			interrupted			interrupted			complete	1157.90		complete	442.06	
+normalized-f20c10b_010_area_delay	complete	243.10		complete	66.50		n/c			complete	307.98		complete	531.97		interrupted			interrupted			interrupted			interrupted			complete	2893.72	
+normalized-f20c10b_011_area_delay	complete	139.33		complete	147.55		n/c			complete	155.55		complete	98.37		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-f20c10b_013_area_delay	complete	274.48		complete	32.55		n/c			complete	142.78		complete	240.16		interrupted			interrupted			interrupted			complete	1472.09		complete	1203.09	
+normalized-f20c10b_025_area_delay	complete	781.97		complete	158.28		n/c			complete	200.02		complete	220.04		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-factor-size=9-P=109-Q=419	complete	0.09		complete	0.93		n/c			complete	0.13		complete	0.12		complete	0.06		complete	0.06		complete	0.06		complete	0.18		complete	0.13	
+normalized-factor-size=9-P=131-Q=277	complete	0.06		complete	0.91		n/c			complete	0.08		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.13		complete	0.12	
+normalized-factor-size=9-P=149-Q=509	complete	0.11		complete	0.94		n/c			complete	0.07		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.13		complete	0.12	
+normalized-factor-size=9-P=223-Q=383	complete	0.09		complete	0.96		n/c			complete	0.17		complete	0.17		complete	0.06		complete	0.06		complete	0.06		complete	0.16		complete	0.13	
+normalized-factor-size=9-P=229-Q=239	complete	0.11		complete	0.89		n/c			complete	0.16		complete	0.11		complete	0.06		complete	0.06		complete	0.06		complete	0.18		complete	0.13	
+normalized-factor-size=9-P=331-Q=379	complete	0.09		complete	0.95		n/c			complete	0.11		complete	0.11		complete	0.06		complete	0.06		complete	0.06		complete	0.17		complete	0.12	
+normalized-factor-size=9-P=71-Q=409	complete	0.06		complete	0.91		n/c			complete	0.08		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.13		complete	0.12	
+normalized-factor-sizeN=240-sizeP=121-sizeQ=240-330229238	n/c			n/c			n/c			complete	126.89		complete	253.94		complete	0.79		complete	0.71		complete	0.82		n/c			n/c		
+normalized-factor-sizeN=440-sizeP=221-sizeQ=440-726468498	n/c			n/c			n/c			complete	1603.89		complete	3324.97		complete	2.78		complete	2.49		complete	2.84		n/c			n/c		
+normalized-factor-sizeN=480-sizeP=241-sizeQ=480-57455727	n/c			n/c			n/c			complete	2173.97		interrupted			complete	3.28		complete	2.90		complete	3.12		n/c			n/c		
+normalized-fir01_trarea_ac	complete	0.28		complete	0.95		n/c			complete	1.12		complete	0.98		complete	0.15		complete	0.37		complete	0.05		complete	0.33		complete	0.12	
+normalized-fir02_trarea_ac	complete	0.25		complete	0.98		n/c			complete	829.40		complete	1791.77		complete	6.08		complete	1.35		complete	5.73		complete	0.73		complete	0.18	
+normalized-fir03_trarea_ac	complete	0.46		complete	1.00		n/c			complete	2482.37		interrupted			interrupted			complete	17.23		interrupted			complete	1.74		complete	0.32	
+normalized-fir04_area_delay	complete	3.58		complete	4.18		n/c			complete	1.87		complete	1.84		complete	10.47		complete	9.42		complete	1.28		complete	86.57		complete	212.73	
+normalized-fir04_area_partials	complete	0.09		complete	0.97		n/c			complete	0.07		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.18		complete	0.23	
+normalized-fir04_trarea_ac	complete	1.12		complete	0.20		n/c			interrupted			interrupted			interrupted			complete	66.02		complete	1665.39		complete	3.01		complete	0.87	
+normalized-fir05_area_opers	complete	36.33		complete	21.51		n/c			complete	10.75		complete	7.00		complete	1.88		complete	0.53		complete	6.99		complete	187.02		complete	302.45	
+normalized-fir05_trarea_ac	complete	0.46		complete	1.00		n/c			interrupted			interrupted			complete	16.58		complete	13.33		complete	71.59		complete	1.40		complete	0.28	
+normalized-fir06_trarea_ac	complete	3.41		complete	1.25		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	8.58		complete	2.20	
+normalized-fir07_trarea_ac	complete	2.28		complete	1.17		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	9.15		complete	2.06	
+normalized-fir08_area_delay	interrupted			complete	1614.38		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-fir08_trarea_ac	complete	55.12		complete	4.10		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	100.53		complete	44.72	
+normalized-fir09_trarea_ac	complete	8.78		complete	1.77		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	81.09		complete	41.36	
+normalized-fir10_trarea_ac	complete	80.69		complete	18.62		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	421.17		complete	206.39	
+normalized-frb35-17-2	interrupted			interrupted			n/c			complete	32.22		complete	51.12		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-frb35-17-3	interrupted			interrupted			n/c			complete	17.66		complete	28.21		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-frb35-17-4	interrupted			interrupted			n/c			complete	13.20		complete	42.16		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-fx57	complete	359.65		complete	292.47		n/c			complete	385.33		complete	1383.32		complete	599.51		complete	2039.50		complete	409.07		interrupted			complete	725.30	
+normalized-fx60	complete	2876.01		complete	2457.63		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-fx75	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-fx84	complete	2888.96		complete	2394.43		n/c			interrupted			interrupted			interrupted			interrupted			complete	3463.63		interrupted			interrupted		
+normalized-fx92	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-g15x15	interrupted			interrupted			n/c			complete	1021.46		complete	877.67		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-g2x2	complete	0.09		complete	0.93		n/c			complete	0.06		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.12		complete	0.12	
+normalized-g4x4	complete	0.09		complete	0.10		n/c			complete	0.06		complete	0.06		complete	0.06		complete	0.06		complete	0.06		complete	0.11		complete	0.11	
+normalized-g7x7	complete	0.12		complete	0.09		n/c			complete	0.11		complete	0.09		complete	0.05		complete	0.06		complete	0.06		complete	0.48		complete	0.28	
+normalized-g9x3	complete	0.09		complete	0.08		n/c			complete	0.06		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.15		complete	0.12	
+normalized-g9x9	complete	0.48		complete	0.45		n/c			complete	0.86		complete	1.01		complete	4.22		complete	3.96		complete	2.46		complete	3.43		complete	3.71	
+normalized-gpc-4.1.cudf.paranoid	complete	60.58		complete	13.92		n/c			complete	12.81		complete	25.28		complete	47.26		complete	383.18		complete	128.49		interrupted			interrupted		
+normalized-graphpart_2pm-0055-0055.lin	complete	7.14		complete	1.80		n/c			complete	0.63		complete	0.57		complete	85.32		complete	55.60		complete	75.45		complete	122.63		complete	77.74	
+normalized-graphpart_2pm-0088-0888.lin	complete	760.48		complete	31.69		n/c			complete	1.77		complete	1.62		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-graphpart_clique-40.lin	interrupted			complete	2243.20		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-hanoi5	interrupted			interrupted			n/c			complete	15.07		complete	15.55		complete	1.49		complete	1.29		complete	1.42		interrupted			interrupted		
+normalized-hw128-vm90p-opt.opb.negationfix	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-hw128-vm98p-opt.opb.negationfix	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-hw32-vm25p-opt.opb.negationfix	complete	16.51		complete	140.32		n/c			interrupted			interrupted			complete	61.93		interrupted			complete	140.26		complete	448.49		complete	588.27	
+normalized-hw32-vm85p-opt.opb.negationfix	interrupted			complete	1695.00		n/c			failed			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-hw32-vm90p-opt.opb.negationfix	complete	472.96		complete	419.86		n/c			failed			interrupted			interrupted			interrupted			interrupted			complete	2402.93		complete	2332.80	
+normalized-hw32-vm99p-opt.opb.negationfix	complete	438.10		complete	733.56		n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-hw64-vm85p-opt.opb.negationfix	interrupted			complete	2985.08		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-hw64-vm99p-opt.opb.negationfix	complete	2709.28		complete	2487.89		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ii16d2	complete	1095.45		complete	120.81		n/c			complete	5.97		complete	6.17		complete	0.63		complete	0.92		complete	0.53		interrupted			interrupted		
+normalized-ii32c2	complete	276.34		complete	53.55		n/c			complete	22.29		complete	21.94		complete	312.00		complete	261.58		complete	545.45		complete	2827.25		complete	1696.03	
+normalized-injcomp_opt_3layers_maxall_lastlayerdecr1_size_12	complete	1.92		complete	1.05		n/c			complete	2.95		complete	2.86		complete	0.91		complete	110.18		complete	0.19		complete	26.39		complete	6.63	
+normalized-injcomp_opt_3layers_maxall_lastlayerdecr1_size_29	complete	132.88		complete	3.22		n/c			complete	3111.01		complete	2046.29		complete	118.08		interrupted			complete	1009.19		complete	633.22		complete	335.91	
+normalized-injcomp_opt_3layers_maxall_lastlayerdecr1_size_75	interrupted			complete	65.40		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-injcomp_opt_3layers_maxall_lastlayerdiv2_size_20	complete	8.16		complete	1.37		n/c			complete	13.52		complete	16.17		complete	26.90		complete	690.30		complete	4.36		complete	59.39		complete	60.86	
+normalized-injcomp_opt_3layers_maxall_lastlayerdiv2_size_22	complete	12.92		complete	0.73		n/c			complete	26.56		complete	21.54		complete	5.58		complete	173.99		complete	4.00		complete	137.43		complete	54.36	
+normalized-injcomp_opt_3layers_maxfirst_lastlayerdecr1_size_18	complete	1.05		complete	0.41		n/c			complete	1.48		complete	1.43		complete	1.16		complete	0.67		complete	1.12		complete	115.04		complete	15.26	
+normalized-injcomp_opt_3layers_maxfirst_lastlayerdiv2_size_60	complete	123.57		complete	9.03		n/c			complete	488.91		complete	559.58		complete	320.08		complete	108.01		complete	1198.24		interrupted			complete	1317.19	
+normalized-injcomp_opt_4layers_maxall_lastlayerdecr1_size_26	complete	1281.90		complete	78.40		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			complete	1073.48	
+normalized-injcomp_opt_4layers_maxfirst_lastlayerdecr1_size_30	complete	61.59		complete	117.52		n/c			complete	498.44		complete	401.81		complete	97.33		complete	286.68		complete	99.76		complete	1294.50		complete	1244.95	
+normalized-j12024_1.std	complete	186.27		complete	76.71		n/c			complete	91.73		complete	122.51		complete	28.91		complete	8.90		complete	21.11		interrupted			complete	3058.34	
+normalized-j12024_3.std	complete	92.12		complete	64.48		n/c			complete	60.91		complete	79.99		complete	12.72		complete	5.19		complete	11.79		interrupted			interrupted		
+normalized-j1202_6.std	complete	205.46		complete	601.17		n/c			complete	78.71		complete	117.81		complete	15.17		complete	7.06		complete	12.34		interrupted			interrupted		
+normalized-j12042_6.std	interrupted			interrupted			n/c			complete	66.74		complete	97.24		complete	15.90		complete	10.59		complete	16.05		interrupted			interrupted		
+normalized-j12055_1.std	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-j3046_8.std	complete	3.55		complete	1.87		n/c			complete	2.10		complete	3.35		complete	0.49		complete	0.46		complete	0.48		complete	175.46		complete	213.20	
+normalized-j3046_9.std	complete	6.94		complete	3.90		n/c			complete	2.73		complete	4.23		complete	0.67		complete	0.59		complete	0.68		complete	481.88		complete	651.02	
+normalized-j6045_4.std	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-j9033_7.std	complete	90.59		complete	57.30		n/c			complete	49.97		complete	66.92		complete	10.04		complete	4.56		complete	9.40		interrupted			interrupted		
+normalized-j906_2.std	complete	107.29		complete	115.45		n/c			complete	53.31		complete	76.27		complete	15.97		complete	5.70		complete	14.31		interrupted			interrupted		
+normalized-jul6.5	interrupted			complete	644.29		n/c			complete	105.93		complete	95.75		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-jun5.5	interrupted			complete	1287.72		n/c			complete	364.33		complete	249.48		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-jun6.5	interrupted			complete	953.34		n/c			complete	193.07		complete	163.55		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-kdessh.cudf.trendy	n/c			n/c			interrupted			complete	51.40		complete	58.72		complete	77.83		complete	2294.18		complete	327.03		interrupted			interrupted		
+normalized-kfilereplace.cudf.trendy	n/c			n/c			interrupted			complete	47.92		complete	47.58		complete	193.52		interrupted			complete	136.68		interrupted			interrupted		
+normalized-knapPI_11_1000_1000_5_-23276	complete	2.04		complete	0.25		n/c			interrupted			interrupted			complete	1.02		complete	0.45		complete	1.08		interrupted			interrupted		
+normalized-knapPI_12_1000_1000_3_-17136	complete	2.21		complete	0.78		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-knapPI_14_10000_1000_2_-407357	complete	111.44		complete	64.98		n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			complete	2645.51	
+normalized-knapPI_15_2000_1000_5_-50838	complete	48.23		complete	34.88		n/c			interrupted			interrupted			complete	7.26		interrupted			complete	9.15		complete	3317.83		complete	1890.14	
+normalized-knapPI_1_500_10000_2_-399276	complete	0.19		complete	1.00		n/c			interrupted			interrupted			complete	28.23		complete	480.97		complete	18.79		complete	5.00		complete	8.19	
+normalized-knapPI_3_200_10000_5_-93992	complete	0.75		complete	0.54		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	25.89		complete	15.66	
+normalized-knapPI_3_5000_1000_4_-199683	complete	70.01		complete	42.13		n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			complete	1689.55	
+normalized-knapPI_3_50_1000_2_-1678	complete	0.08		complete	0.08		n/c			complete	10.53		complete	12.79		complete	0.06		complete	0.06		complete	0.06		complete	0.21		complete	0.32	
+normalized-knapPI_6_200_10000_5_-48992	complete	4.60		complete	1.91		n/c			interrupted			interrupted			complete	54.05		complete	16.78		complete	43.42		complete	99.74		complete	68.34	
+normalized-knapPI_9_5000_1000_1_-48768	interrupted			interrupted			n/c			interrupted			interrupted			complete	0.16		complete	0.26		complete	0.25		interrupted			interrupted		
+normalized-libgnokii4.cudf.paranoid	complete	54.17		complete	13.24		n/c			complete	13.09		complete	20.25		complete	94.15		complete	802.87		complete	243.00		interrupted			interrupted		
+normalized-libgnokii4.cudf.trendy	n/c			n/c			interrupted			complete	50.17		complete	36.68		complete	135.68		complete	922.04		complete	400.90		interrupted			interrupted		
+normalized-libnspr4-dev.cudf.trendy	n/c			n/c			interrupted			complete	48.10		complete	39.89		interrupted			complete	1045.08		complete	1276.19		interrupted			interrupted		
+normalized-linearized_pebbling_opt_layeredfan_down_r10_c19_a4	complete	2.60		complete	0.12		n/c			complete	6.78		complete	5.79		complete	363.96		complete	0.07		complete	428.42		complete	23.64		complete	0.25	
+normalized-linearized_pebbling_opt_layeredfan_down_r10_c20_a6	complete	8.32		complete	0.17		n/c			complete	40.53		complete	32.30		complete	187.61		complete	0.07		complete	312.77		complete	57.12		complete	0.35	
+normalized-linearized_pebbling_opt_layeredfan_down_r20_c39_a6	complete	118.30		complete	0.32		n/c			complete	1299.63		complete	966.53		interrupted			complete	0.11		interrupted			complete	221.51		complete	1.20	
+normalized-linearized_pebbling_opt_layeredfan_down_r21_c41_a4	complete	53.61		complete	0.29		n/c			complete	497.85		complete	410.89		interrupted			complete	0.07		interrupted			complete	130.94		complete	0.87	
+normalized-linearized_pebbling_opt_layeredfan_down_r26_c52_a5	complete	259.90		complete	0.66		n/c			complete	2764.11		complete	2018.33		interrupted			interrupted			interrupted			complete	728.00		complete	37.35	
+normalized-linearized_pebbling_opt_layeredfan_down_r7_c14_a4	complete	0.79		complete	1.45		n/c			complete	1.26		complete	1.30		complete	9.33		complete	0.07		complete	11.22		complete	24.85		complete	0.19	
+normalized-linearized_pebbling_opt_layeredfan_up_r17_c34_a4	complete	10.58		complete	0.23		n/c			complete	138.85		complete	119.35		interrupted			complete	0.06		interrupted			complete	100.33		complete	0.61	
+normalized-linearized_pebbling_opt_layeredfan_up_r22_c44_a5	complete	59.54		complete	0.48		n/c			complete	943.63		complete	747.48		interrupted			complete	250.53		interrupted			complete	349.92		complete	44.86	
+normalized-linearized_pebbling_opt_layeredfan_up_r31_c62_a6	complete	307.86		complete	0.80		n/c			interrupted			interrupted			interrupted			complete	0.19		interrupted			complete	1901.47		complete	3.12	
+normalized-linearized_pebbling_opt_layeredfan_up_r33_c65_a6	complete	459.78		complete	1.67		n/c			interrupted			interrupted			interrupted			complete	0.21		interrupted			complete	2474.53		complete	3.40	
+normalized-lo_10x10_002.opb.metafix	complete	0.19		complete	0.15		n/c			complete	0.11		complete	0.11		complete	0.06		complete	0.06		complete	0.06		complete	0.67		complete	2.47	
+normalized-lo_10x10_004.opb.metafix	complete	0.15		complete	0.15		n/c			complete	0.12		complete	0.11		complete	0.06		complete	0.06		complete	0.06		complete	0.93		complete	1.02	
+normalized-lo_10x10_008.opb.metafix	complete	0.15		complete	0.15		n/c			complete	0.15		complete	0.15		complete	0.06		complete	0.07		complete	0.06		complete	1.15		complete	1.11	
+normalized-lo_12x12_000.opb.metafix	complete	0.29		complete	0.29		n/c			complete	1.52		complete	1.37		complete	0.14		complete	0.10		complete	0.11		complete	3.93		complete	7.17	
+normalized-lo_14x14_007.opb.metafix	complete	0.57		complete	0.42		n/c			complete	40.62		complete	54.16		complete	0.51		complete	0.55		complete	0.70		complete	14.71		complete	10.36	
+normalized-lo_16x16_009.opb.metafix	complete	0.50		complete	1.07		n/c			complete	1.31		complete	1.46		complete	0.52		complete	0.57		complete	0.36		complete	18.81		complete	9.36	
+normalized-lo_6x6_000.opb.metafix	complete	0.10		complete	0.08		n/c			complete	0.06		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.12		complete	0.12	
+normalized-lo_6x6_004.opb.metafix	complete	0.12		complete	0.08		n/c			complete	0.06		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.11		complete	0.12	
+normalized-lo_8x8_000.opb.metafix	complete	0.12		complete	1.15		n/c			complete	0.06		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.12		complete	0.12	
+normalized-lo_8x8_005.opb.metafix	complete	0.08		complete	0.08		n/c			complete	0.07		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.12		complete	0.12	
+normalized-lp4l	complete	0.64		complete	0.54		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	7.48		complete	8.68	
+normalized-m100_300_10_20.r	complete	473.19		complete	865.04		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	2611.78		complete	1956.97	
+normalized-m100_50_40_40.r	complete	0.30		complete	1.33		n/c			complete	0.09		complete	0.09		complete	0.07		complete	0.06		complete	0.06		complete	1.34		complete	3.54	
+normalized-macrophage	complete	556.41		complete	33.88		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_1	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_2	interrupted			interrupted			n/c			complete	1947.08		complete	1962.54		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_3	interrupted			interrupted			n/c			complete	890.10		complete	766.00		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_5	interrupted			interrupted			n/c			complete	250.61		complete	254.83		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_6	interrupted			interrupted			n/c			complete	1524.63		complete	1497.56		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_7	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_8	interrupted			interrupted			n/c			complete	137.70		complete	115.17		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-matrix_5x3_9	interrupted			interrupted			n/c			complete	2331.67		complete	3065.32		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-max1024.r	complete	28.88		complete	41.46		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			complete	1170.69		complete	987.05	
+normalized-maxcut_opt_complete_5-partite_block_nvert_12	complete	0.15		complete	0.14		n/c			complete	0.12		complete	0.16		complete	0.06		complete	0.07		complete	0.05		complete	3.98		complete	1.87	
+normalized-maxcut_opt_complete_5-partite_block_nvert_47	interrupted			complete	371.93		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-maxcut_opt_complete_5-partite_inlv_nvert_20	complete	0.85		complete	10.33		n/c			complete	4.73		complete	8.38		complete	2.92		complete	3.82		complete	1.27		complete	137.96		complete	104.92	
+normalized-maxcut_opt_complete_5-partite_inlv_nvert_25	complete	3.45		complete	65.50		n/c			complete	47.44		complete	24.17		complete	13.44		complete	108.38		complete	29.88		complete	307.38		complete	374.29	
+normalized-maxcut_opt_complete_5-partite_inlv_nvert_50	complete	134.04		complete	2521.54		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-maxcut_opt_complete_6-partite_inlv_nvert_18	complete	4.28		complete	12.19		n/c			complete	5.02		complete	5.50		complete	2.07		complete	2.01		complete	1.31		complete	70.61		complete	58.74	
+normalized-may6.5	interrupted			complete	905.83		n/c			complete	111.44		complete	112.54		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-minisat15_4_4_4_mh_ic	complete	14.06		complete	4.89		n/c			interrupted			interrupted			complete	1012.32		complete	1100.76		complete	297.90		interrupted			interrupted		
+normalized-minisat15_5_3_2_mh	complete	11.92		complete	2.71		n/c			complete	3304.67		interrupted			complete	113.71		complete	99.64		complete	73.05		complete	3367.36		complete	2837.73	
+normalized-minisat15_5_3_3_ic	complete	30.12		complete	1.83		n/c			complete	45.85		complete	62.09		complete	3.93		complete	1.80		complete	1.73		complete	1489.23		interrupted		
+normalized-minisat15_5_3_6_mh	complete	4.80		complete	1.98		n/c			complete	881.60		complete	1269.65		complete	3.78		complete	0.89		complete	3.19		complete	548.02		complete	2094.15	
+normalized-minisat50_4_16_1	n/c			n/c			complete	248.89		interrupted			interrupted			complete	625.82		complete	130.62		complete	346.22		interrupted			interrupted		
+normalized-minisat50_4_16_2	n/c			n/c			complete	402.15		interrupted			interrupted			complete	362.31		complete	104.80		complete	222.01		interrupted			interrupted		
+normalized-mitre	complete	4.98		complete	1.25		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			complete	363.21	
+normalized-mono-gac.cudf.trendy	n/c			n/c			interrupted			complete	41.29		complete	37.81		complete	112.05		complete	926.07		complete	123.42		interrupted			interrupted		
+normalized-mono-mcs.cudf.paranoid	complete	55.26		complete	13.05		n/c			complete	15.81		complete	17.46		complete	118.50		complete	446.47		complete	166.78		interrupted			interrupted		
+normalized-mps-v2-20-10-core2536-691	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-mps-v2-20-10-maros	n/c			n/c			complete	0.10		complete	7.72		complete	13.39		complete	0.06		complete	0.06		complete	0.06		complete	0.37		complete	0.17	
+normalized-mps-v2-20-10-misc01	complete	0.14		complete	0.27		n/c			complete	0.62		complete	0.56		complete	0.07		complete	0.05		complete	0.07		complete	1.81		complete	3.73	
+normalized-mps-v2-20-10-nazareth	n/c			n/c			complete	0.08		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.06		complete	0.12		complete	0.12	
+normalized-mps-v2-20-10-neos11	n/c			n/c			complete	826.07		complete	425.11		complete	390.89		complete	20.48		complete	15.75		complete	8.99		interrupted			interrupted		
+normalized-mps-v2-20-10-rail507	interrupted			interrupted			n/c			interrupted			interrupted			failed			failed			failed			interrupted			interrupted		
+normalized-mps-v2-20-10-testprob	n/c			n/c			complete	0.08		complete	0.11		complete	0.09		complete	0.06		complete	0.06		complete	0.06		complete	0.16		complete	0.12	
+normalized-mul_8_3_shg	complete	1287.20		complete	136.77		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-mul_8_9_shg	interrupted			complete	1991.45		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-mult_diagcomm_opt_greater_teq_nbits_03	complete	0.98		complete	0.39		n/c			complete	0.07		complete	0.07		complete	0.06		complete	0.06		complete	0.06		complete	0.22		complete	0.23	
+normalized-mult_diagcomm_opt_greater_teq_nbits_16	n/c			n/c			complete	9.84		complete	0.28		complete	0.44		complete	0.15		complete	0.07		complete	0.12		interrupted			complete	534.51	
+normalized-mult_diagcomm_opt_less_teq_nbits_04	complete	0.17		complete	0.92		n/c			complete	0.08		complete	0.07		complete	0.06		complete	0.07		complete	0.06		complete	0.31		complete	0.37	
+normalized-mult_diagcomm_opt_less_teq_nbits_08	complete	0.47		complete	1.00		n/c			complete	0.16		complete	0.17		complete	0.06		complete	0.07		complete	0.07		complete	4.69		complete	8.24	
+normalized-mult_diagcomm_opt_less_teq_nbits_17	n/c			n/c			complete	12.67		complete	0.29		complete	0.52		complete	0.15		complete	0.07		complete	0.14		interrupted			complete	120.36	
+normalized-mult_diagcomm_opt_less_teq_nbits_19	n/c			n/c			complete	22.30		complete	0.39		complete	0.67		complete	0.22		complete	0.09		complete	0.15		interrupted			complete	73.81	
+normalized-mult_diagcomm_opt_less_teq_nbits_26	n/c			n/c			complete	4.08		complete	0.71		complete	1.42		complete	0.37		complete	0.17		complete	0.43		interrupted			interrupted		
+normalized-n3div36	interrupted			interrupted			n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-neos-1616732	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-neos-538867	complete	213.17		complete	96.96		n/c			complete	28.06		complete	75.81		interrupted			interrupted			complete	3596.43		interrupted			complete	2166.78	
+normalized-neos-544324	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-oct5.5	interrupted			complete	581.00		n/c			complete	142.37		complete	146.82		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-oct6.5	interrupted			complete	626.67		n/c			complete	128.52		complete	111.90		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-opm2-z7-s2	complete	1043.04		complete	71.14		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			complete	2002.57	
+normalized-opm2-z9-s14	interrupted			complete	1084.39		n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-opt-market-split_4_30_3	complete	192.19		complete	98.28		n/c			complete	3207.55		interrupted			interrupted			interrupted			complete	3270.71		complete	1451.76		complete	167.08	
+normalized-opt-market-split_5_40_3	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-opt-market-split_5_40_4	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ped2.B.recomb1-0.01-3	complete	1350.61		complete	65.80		n/c			complete	62.62		complete	105.29		interrupted			complete	16.74		interrupted			interrupted			died		
+normalized-ped2.B.recomb1-0.20-11	interrupted			interrupted			n/c			complete	125.46		complete	260.01		interrupted			complete	26.24		interrupted			interrupted			interrupted		
+normalized-ped2.G.recomb1-0.01-5	interrupted			complete	1792.91		n/c			complete	419.65		complete	620.06		complete	2514.52		complete	23.66		complete	2539.89		interrupted			interrupted		
+normalized-ped2.G.recomb1-0.20-14	interrupted			interrupted			n/c			complete	1191.27		complete	1451.01		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ped2.G.recomb10-0.10-9	interrupted			interrupted			n/c			complete	2340.31		complete	2021.72		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ped2.G.recomb10-0.20-12	interrupted			interrupted			n/c			complete	2838.74		interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ped3.E.recomb10-0.20-11	interrupted			interrupted			n/c			complete	173.10		complete	185.36		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ped3.G.recomb10-0.01-3	interrupted			interrupted			n/c			complete	285.25		complete	493.41		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ped3.G.recomb10-0.01-4	interrupted			interrupted			n/c			complete	397.60		complete	474.72		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ped3.G.recomb10-0.01-5	interrupted			interrupted			n/c			complete	328.23		complete	395.92		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-python-cairo.cudf.trendy	n/c			n/c			interrupted			complete	63.37		complete	55.14		complete	1767.63		complete	1031.03		complete	45.54		interrupted			interrupted		
+normalized-rand902db1.cudf.trendy	n/c			n/c			complete	2.69		complete	2.63		complete	3.70		complete	0.89		complete	0.25		complete	0.98		interrupted			complete	2863.02	
+normalized-rand9ffe99.cudf.trendy	n/c			n/c			complete	5.80		complete	23.23		complete	15.41		complete	1.67		complete	0.79		complete	0.85		interrupted			interrupted		
+normalized-randa13f2d.cudf.paranoid	complete	4.19		complete	4.75		n/c			complete	2.42		complete	2.90		complete	4.01		complete	0.33		complete	3.97		interrupted			complete	668.82	
+normalized-randbccf2d.cudf.trendy	n/c			n/c			complete	13.03		complete	20.63		complete	17.80		complete	1.25		complete	2.61		complete	1.67		interrupted			interrupted		
+normalized-randd6bc17.cudf.trendy	n/c			n/c			complete	0.50		complete	0.62		complete	0.77		complete	3.22		complete	0.17		complete	3.18		complete	15.39		complete	5.57	
+normalized-rande89f80.cudf.trendy	n/c			n/c			complete	2.12		complete	1.75		complete	3.01		complete	3.45		complete	0.18		complete	3.44		complete	540.65		complete	100.78	
+normalized-randf794d2.cudf.paranoid	complete	5.22		complete	3.13		n/c			complete	5.35		complete	4.09		complete	1.74		complete	0.39		complete	1.60		interrupted			complete	1018.61	
+normalized-s3-3-3-1pb	complete	0.12		complete	1.00		n/c			complete	0.11		complete	0.12		complete	0.06		complete	0.06		complete	0.06		complete	0.88		complete	0.33	
+normalized-s3-3-3-2pb	complete	0.15		complete	0.93		n/c			complete	0.16		complete	0.11		complete	0.06		complete	0.07		complete	0.07		complete	0.84		complete	0.23	
+normalized-s3-3-3-3pb	complete	0.17		complete	0.99		n/c			complete	0.12		complete	0.11		complete	0.06		complete	0.07		complete	0.06		complete	0.90		complete	0.34	
+normalized-s3-3-3-4pb	complete	0.20		complete	0.95		n/c			complete	0.11		complete	0.14		complete	0.06		complete	0.07		complete	0.06		complete	0.89		complete	0.28	
+normalized-s3-3-3-5pb	complete	0.19		complete	1.00		n/c			complete	0.18		complete	0.16		complete	0.05		complete	0.07		complete	0.07		complete	0.99		complete	0.34	
+normalized-s4-4-3-1pb	complete	1.19		complete	1.44		n/c			complete	1.71		complete	2.57		complete	1.06		complete	2.80		complete	1.47		complete	13.40		complete	28.34	
+normalized-s4-4-3-2pb	complete	1.53		complete	2.04		n/c			complete	3.13		complete	2.03		complete	2.47		complete	2.91		complete	1.25		complete	109.88		complete	62.48	
+normalized-s4-4-3-4pb	complete	0.95		complete	1.38		n/c			complete	1.33		complete	1.26		complete	1.87		complete	15.51		complete	2.55		complete	11.82		complete	29.91	
+normalized-s4-4-3-7pb	complete	0.78		complete	0.35		n/c			complete	1.76		complete	2.13		complete	0.31		complete	0.61		complete	0.92		complete	8.04		complete	10.97	
+normalized-s4-4-3-8pb	complete	0.51		complete	0.62		n/c			complete	0.29		complete	0.46		complete	0.31		complete	0.62		complete	0.25		complete	2.36		complete	3.34	
+normalized-sao2.b	complete	1.05		complete	1.20		n/c			complete	761.06		complete	1761.84		complete	0.62		complete	0.19		complete	2.10		complete	19.84		complete	10.10	
+normalized-sbox_4_shg	complete	2.34		complete	4.85		n/c			interrupted			interrupted			complete	7.73		complete	4.62		complete	5.12		complete	20.89		complete	51.20	
+normalized-sep5.5	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-simp-nonunif-100_100.02	interrupted			interrupted			n/c			complete	140.28		complete	233.37		interrupted			complete	111.35		complete	29.38		interrupted			interrupted		
+normalized-simp-nonunif-100_100.07	interrupted			interrupted			n/c			complete	119.16		complete	162.68		complete	24.07		complete	41.58		complete	21.98		interrupted			interrupted		
+normalized-simp-nonunif-100_100.10	interrupted			interrupted			n/c			complete	253.87		complete	307.78		complete	2493.95		interrupted			interrupted			interrupted			interrupted		
+normalized-simp-nonunif-100_100.11	interrupted			interrupted			n/c			complete	117.69		complete	225.73		complete	89.91		complete	959.65		complete	47.42		interrupted			interrupted		
+normalized-simp-nonunif-100_100.12	interrupted			interrupted			n/c			complete	169.25		complete	251.51		complete	23.03		complete	91.27		complete	24.04		interrupted			interrupted		
+normalized-simp-nonunif-100_100.14	interrupted			interrupted			n/c			complete	159.71		complete	236.30		complete	22.60		complete	64.82		complete	34.98		interrupted			interrupted		
+normalized-simp-unif-100_100.00	interrupted			interrupted			n/c			complete	24.44		complete	89.89		interrupted			interrupted			complete	181.17		interrupted			interrupted		
+normalized-simp-unif-100_100.08	interrupted			interrupted			n/c			complete	31.79		complete	65.93		complete	384.17		complete	1431.20		complete	105.94		interrupted			interrupted		
+normalized-single-obj-f12-ACDoubleLoss.seq-B-3-combined-EDCBAir	n/c			n/c			complete	1.79		complete	1.07		complete	1.52		complete	0.22		complete	105.85		complete	0.22		complete	234.75		interrupted		
+normalized-single-obj-f13-ACDoubleLoss.seq-B-2-2-irEDCBA	n/c			n/c			complete	3.23		complete	1.00		complete	1.60		complete	0.27		complete	0.26		complete	0.27		complete	651.17		complete	1013.16	
+normalized-single-obj-f17-DCdoubleLoss.seq-B-2-2-irEDCBA	n/c			n/c			complete	13.35		complete	470.77		complete	1772.09		complete	2.81		complete	11.70		complete	0.78		interrupted			interrupted		
+normalized-single-obj-f3-DataDisplay_1_order6.seq-B-2-2-irabcde	complete	1.77		complete	2.61		n/c			complete	0.27		complete	0.34		complete	0.12		complete	0.12		complete	0.12		complete	213.90		complete	150.77	
+normalized-single-obj-f37-AC_TotalLoss.seq-B-2-2-abcdeir	n/c			n/c			complete	3.83		complete	1.59		complete	2.36		complete	0.31		complete	0.23		complete	0.27		complete	1170.89		complete	2661.29	
+normalized-single-obj-f4-DataDisplay_2_order9.seq-A-3-2-irabcde	complete	2705.03		complete	1687.60		n/c			complete	177.55		complete	206.28		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-single-obj-f47-DC_Side1.seq-B-2-2-irabcde	n/c			n/c			complete	6.24		complete	5.14		complete	6.98		complete	0.47		complete	0.62		complete	0.49		complete	321.02		interrupted		
+normalized-single-obj-f50-DC_side2.seq-B-3-1-EDCBAir	n/c			n/c			complete	17.05		complete	15.40		complete	18.98		complete	42.14		complete	13.68		complete	41.45		interrupted			interrupted		
+normalized-single-obj-f53-AC_FC1.seq-A-2-1-EDCBAir	n/c			n/c			interrupted			complete	208.89		complete	214.56		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-sp98ar	interrupted			complete	3302.83		n/c			failed			failed			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-sporttournament18.lin	complete	1422.14		complete	69.63		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-sporttournament26.lin	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ss97-2	complete	139.61		complete	31.99		n/c			complete	1399.24		complete	1488.82		interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ss97-4	complete	2.14		complete	1.19		n/c			complete	6.19		complete	5.54		complete	41.83		complete	116.57		complete	17.80		interrupted			complete	140.16	
+normalized-ss97-6	complete	0.12		complete	0.12		n/c			complete	0.12		complete	0.12		complete	0.05		complete	0.05		complete	0.07		complete	1.28		complete	0.22	
+normalized-ssa7552-159	complete	2.83		complete	0.92		n/c			complete	7.04		complete	7.78		interrupted			interrupted			interrupted			interrupted			complete	2356.64	
+normalized-synaptic.cudf.trendy	n/c			n/c			interrupted			complete	40.83		complete	53.06		complete	368.03		complete	1525.61		complete	99.04		interrupted			interrupted		
+normalized-vertexcover_opt_grid_evenrowevencolsquare_dim_074	complete	0.43		complete	0.32		n/c			complete	2.77		complete	2.08		interrupted			complete	0.08		interrupted			complete	2.85		complete	1.01	
+normalized-vertexcover_opt_grid_evenrowevencolsquare_dim_120	complete	3.03		complete	1.58		n/c			complete	8.46		complete	6.28		interrupted			complete	0.19		interrupted			complete	15.42		complete	2.83	
+normalized-vertexcover_opt_grid_evenrowevencolsquare_dim_140	complete	5.51		complete	1.00		n/c			complete	12.71		complete	9.40		interrupted			complete	0.25		interrupted			complete	22.25		complete	3.94	
+normalized-vertexcover_opt_grid_evenrowoddcolsquare_dim_038	complete	6.30		complete	0.20		n/c			complete	1.82		complete	1.83		interrupted			complete	0.07		interrupted			complete	6.93		complete	0.79	
+normalized-vertexcover_opt_grid_evenrowoddcolsquare_dim_058	complete	33.71		complete	0.44		n/c			complete	11.90		complete	11.87		interrupted			complete	0.07		interrupted			complete	9.05		complete	2.18	
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_022	complete	0.27		complete	0.12		n/c			complete	0.34		complete	0.37		interrupted			complete	0.07		interrupted			complete	15.35		complete	0.40	
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_042	complete	3.35		complete	0.41		n/c			complete	4.94		complete	4.90		interrupted			complete	0.07		interrupted			interrupted			complete	1.07	
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_054	complete	1.08		complete	1.27		n/c			complete	11.64		complete	13.13		interrupted			complete	0.07		interrupted			interrupted			complete	2.21	
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_070	complete	26.63		complete	1.29		n/c			complete	39.54		complete	32.06		interrupted			complete	0.07		interrupted			interrupted			complete	91.05	
+normalized-vertexcover_opt_grid_oddrowoddcolsquare_dim_071	complete	48.74		complete	0.89		n/c			complete	44.11		complete	44.32		interrupted			interrupted			interrupted			interrupted			complete	3.76	
+normalized-vtxcov_v2000_e4000_11.opb.PB06	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-vtxcov_v2000_e4000_33.opb.PB06	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-vtxcov_v2000_e4000_36.opb.PB06	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-wnq_n100_mw99_12.opb.PB06	interrupted			interrupted			n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ws97-3	complete	22.15		complete	4.85		n/c			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted			interrupted		
+normalized-ws97-5	complete	0.99		complete	0.30		n/c			complete	1010.97		complete	2326.55		interrupted			complete	598.34		interrupted			complete	8.77		complete	1.27	

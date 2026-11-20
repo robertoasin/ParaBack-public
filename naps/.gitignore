@@ -1,0 +1,41 @@
+*~
+*.o
+*.op
+*.od
+*.or
+*.ox
+*.mk
+*.log
+*.bk
+build
+depend.mak
+naps_*
+naps-*
+!naps-*.sh
+*_profile
+*_debug
+*_release
+*_static
+*_pic
+# SCIP static build (source tree & install prefix)
+/scip/
+*cmake_stamps*
+# Python wheel build artifacts
+dist/
+*.egg-info/
+build_python*
+__pycache__/
+# SAT solver binaries
+ccminisat/core/ccminisat
+ccminisat/simp/ccminisat
+es1sat/core/es1sat
+es1sat/simp/es1sat
+glueminisat/core/glueminisat-core
+glueminisat/simp/glueminisat-simp
+glueminisat/glueminisat
+# vscode files
+.vscode
+.project
+TAGS
+.cache
+!naps_bindings.cpp

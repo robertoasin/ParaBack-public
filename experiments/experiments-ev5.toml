@@ -1,0 +1,69 @@
+# Evaluación del artículo, Ronda 5 (ev5, docs/PLAN_EVALUACION.md §5, 2026-10-30): RoundingBack con el
+# sondeo maxflip (RB-PG-mf), solo y sobre el mixto de ev2, como se midió GuroBack-mf en ev1 y ev3. A
+# petición de los coautores. El nombre ev5 era el de la ronda de órdenes, descartada (D14).
+# Formato: paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-ev5.toml
+#
+# RB-PG-mf = roundingsat:pguide=1,chunks=maxflip:5: el RB-PG de los portfolios con la búsqueda lineal
+# SAT-UNSAT del servidor (orden maxflip) en lugar de los chunks, y T = 5 s como GuroBack-mf. Las
+# referencias no se repiten: ev1-rb-pg, ev2-mix3 y ev3-mf (`tools/ev_report.py ev5 --ref ev3 ...`).
+#
+# Comparaciones, un factor cada una:
+#   ev5-solo  frente a ev1-rb-pg:  maxflip frente a los chunks, solo (como ev1-gurobi-mf frente a ev1-gurobi)
+#   ev5-mf    frente a ev2-mix3:   + RB-PG-mf (un trabajador más que además es maxflip)
+#   ev5-mf    frente a ev5-rb:     maxflip frente a un RB-PG clásico en el mismo hueco (control, como ev3-g)
+#   ev5-rb    frente a ev2-mix3:   un RB-PG más
+# Descriptiva: ev5-mf frente a ev3-mf, qué maxflip rinde más en el cuarto hueco. Si ev5-mf mejora a
+# ev5-rb, una segunda etapa (fuera de este archivo) añadiría RB-PG-mf a ev3-mf.
+#
+# Protocolo por bits y sustitución en el sitio como en ev3 para los tres de mix3. RoundingSat admite
+# todos los tamaños, así que el cuarto hueco no se sustituye nunca (por encima de 66 bits, RB-PG-mf es
+# el único maxflip). ev5-solo lleva las opciones de ev1-rb-pg.
+#
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-ev5.toml \
+#       -l tools/cluster/pbo25-eval.txt -o ~/runs/ev5 --solutions ~/soluciones-pbo25
+#
+# Antes: piloto (CLAUDE.md §6: pguide=1 con chunks=maxflip no se ha ejecutado nunca en el cluster) con
+# tools/cluster/ev3-piloto.txt, -o ~/runs/ev5-piloto --time-limit 600.
+# Coste estimado (PLAN_EVALUACION §10): ~44 horas·nodo, alrededor de un día de node906 y node907.
+
+[defaults]
+time_limit = 3600
+repeats = 1
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1"]
+
+[cluster]
+partition = "solver"
+account = "solver"
+cores_per_node = 96
+mem_per_node = "384G"
+cores_per_worker = 4
+mem_per_worker = "15G"
+gurobi_license = "node"
+gurobi_sessions = 2
+max_concurrent = 0
+exclusive = false
+launcher = "mpirun"
+env = "~/paraback-env"
+traces = false                   # la compartición se mide por cobertura y tiempo; las trazas ocupan mucho
+
+# ================================================================ solo
+[[experiment]]
+name = "ev5-solo"
+description = "RB-PG-mf: RB-PG con el sondeo maxflip (frente a ev1-rb-pg)"
+workers = ["roundingsat:pguide=1,chunks=maxflip:5"]
+options = ["--threads-per-worker", "4"]   # las de ev1: aquí no hay nada que sustituir
+
+# ================================================================ sobre mix3
+[[experiment]]
+name = "ev5-mf"
+description = "mix3 + RB-PG-mf"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "roundingsat:pguide=1,chunks=maxflip:5"]
+
+[[experiment]]
+name = "ev5-rb"
+description = "Control de ev5-mf: mix3 + un RB-PG clásico (orden inverso) en el hueco de RB-PG-mf"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "roundingsat:pguide=1,order=reverse"]

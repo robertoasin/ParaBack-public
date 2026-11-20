@@ -1,0 +1,245 @@
+--- a/cadiback.cpp
++++ b/cadiback.cpp
+@@ -37,6 +37,9 @@
+ "\n"
+ "  --paraback=<n>     ParaBack worker mode: only variables 1..<n> are\n"
+ "                     candidates; events on '<stdout>', facts on '<stdin>'\n"
++"  --order=<o>        probe the candidates in order 'reverse', 'random:<s>'\n"
++"                     or 'strided:<offset>/<stride>' (default: by index)\n"
++"  --seed=<n>         random seed and initial variable shuffling of CaDiCaL\n"
+ "\n"
+ "  --default          set optimization options to the default\n"
+ "  --plain            disable all optimizations, which is the same as:\n"
+@@ -210,6 +213,17 @@
+ 
+ static int paraback_vars;
+ static int cand_vars;
++
++// '--order=<o>' (ParaBack): the candidates are probed in the order
++// 'order[0..cand_vars-1]'; 'position[idx]' is its inverse.  Every loop that
++// used to run "from 'idx' on" runs over positions instead, so without
++// '--order' (the identity) nothing changes.  '--seed=<n>' seeds CaDiCaL and
++// shuffles its variables: two workers with different seeds search differently
++// even when they constrain the same candidates.
++static int *order;
++static int *position;
++static const char *order_spec;
++static int seed = -1;
+ static char drop_tag = 'd';    // Why 'drop_candidate' is dropping a candidate.
+ static bool paraback_events;   // Events printed since the last '.' (end of batch).
+ static volatile int paraback_interrupted;
+@@ -626,6 +640,66 @@
+ // support flipping we keep it under compile time control too (beside
+ // allowing to disable it during run-time).
+ 
++// Reproducible shuffle for '--order=random:<seed>' (xorshift64, independent
++// of the C library; the permutation differs from ParaBack's Python one on
++// purpose: a different solver anyway).
++
++static unsigned long long order_rng;
++
++static unsigned long long next_random () {
++  unsigned long long x = order_rng;
++  x ^= x << 13;
++  x ^= x >> 7;
++  x ^= x << 17;
++  return order_rng = x;
++}
++
++// Build 'order' and 'position' once 'cand_vars' is known ('--order=<o>').
++// 'strided:<offset>/<stride>' takes first the candidates at positions
++// 'offset, offset+stride, ...' (as 'StridedOrder' in ParaBack) and then the
++// rest in index order.
++
++static void setup_order () {
++  order = new int[cand_vars + 1];
++  position = new int[vars + 2];
++  if (!order || !position)
++    fatal ("out-of-memory allocating candidate order");
++  for (int p = 0; p < cand_vars; p++)
++    order[p] = p + 1;
++  if (order_spec && *order_spec && strcmp (order_spec, "file")) {
++    if (!strcmp (order_spec, "reverse")) {
++      for (int p = 0; p < cand_vars; p++)
++        order[p] = cand_vars - p;
++    } else if (!strncmp (order_spec, "random:", 7)) {
++      order_rng = (unsigned long long) atoll (order_spec + 7) * 0x9E3779B97F4A7C15ull;
++      if (!order_rng)
++        order_rng = 0x2545F4914F6CDD1Dull;
++      for (int p = cand_vars - 1; p > 0; p--) {
++        int j = (int) (next_random () % (unsigned long long) (p + 1));
++        int tmp = order[p];
++        order[p] = order[j];
++        order[j] = tmp;
++      }
++    } else if (!strncmp (order_spec, "strided:", 8)) {
++      int offset = -1, stride = 0;
++      if (sscanf (order_spec + 8, "%d/%d", &offset, &stride) != 2 || offset < 0 || stride < 1)
++        die ("invalid option '--order=%s' (expected 'strided:<offset>/<stride>')", order_spec);
++      int p = 0;
++      for (int i = offset % stride; i < cand_vars; i += stride)
++        order[p++] = i + 1;
++      for (int i = 0; i < cand_vars; i++)
++        if (i % stride != offset % stride)
++          order[p++] = i + 1;
++      assert (p == cand_vars);
++    } else
++      die ("invalid option '--order=%s' (expected 'reverse', 'random:<seed>' or 'strided:<offset>/<stride>')", order_spec);
++  }
++  for (int idx = 0; idx <= vars + 1; idx++)
++    position[idx] = cand_vars; // not a candidate: nothing comes after it
++  for (int p = 0; p < cand_vars; p++)
++    position[order[p]] = p;
++}
++
+ static void try_to_flip_remaining (int start) {
+ 
+   if (no_flip)
+@@ -633,7 +707,8 @@
+ 
+   start_timer (&flip_time);
+ 
+-  for (int idx = start; idx <= cand_vars; idx++) {
++  for (int p = start; p < cand_vars; p++) {
++    int idx = order[p];
+     int lit = candidates[idx];
+     if (!lit)
+       continue;
+@@ -690,12 +765,12 @@
+ 
+ static void filter_candidates (int start) {
+ 
+-  if (no_filter || start > cand_vars)
++  if (no_filter || start >= cand_vars)
+     return;
+ 
+   unsigned res = 0;
+-  for (int idx = start; idx <= cand_vars; idx++)
+-    if (filter_candidate (idx), !res)
++  for (int p = start; p < cand_vars; p++)
++    if (filter_candidate (order[p]), !res)
+       res++;
+ 
+   assert (res);
+@@ -709,10 +784,11 @@
+ // statistics as well as supporting '--no-filter'.
+ 
+ static int drop_first_candidate (int start) {
+-  assert (start <= cand_vars);
+-  int idx = start, lit = 0, val = 0;
+-  for (;; idx++) {
+-    assert (idx <= cand_vars);
++  assert (start < cand_vars);
++  int p = start, idx = 0, lit = 0, val = 0;
++  for (;; p++) {
++    assert (p < cand_vars);
++    idx = order[p];
+     lit = candidates[idx];
+     if (!lit)
+       continue;
+@@ -1332,6 +1408,12 @@
+       paraback_vars = atoi (arg + 11);
+       if (paraback_vars <= 0)
+         die ("invalid option '%s' (expected '--paraback=<n>' with n > 0)", arg);
++    } else if (!strncmp (arg, "--order=", 8)) {
++      order_spec = arg + 8;
++    } else if (!strncmp (arg, "--seed=", 7)) {
++      seed = atoi (arg + 7);
++      if (seed < 0)
++        die ("invalid option '%s' (expected '--seed=<n>' with n >= 0)", arg);
+     } else if (!strcmp (arg, "--default")) {
+       no_filter = no_fixed = no_inprocessing = one_by_one = 0;
+ #ifndef NFLIP
+@@ -1478,6 +1560,11 @@
+     solver->set ("verbose", verbosity - 2);
+   if (report || verbosity > 1)
+     solver->set ("report", 1);
++  if (seed >= 0) {
++    solver->set ("seed", seed);
++    solver->set ("shuffle", 1);
++    solver->set ("shufflerandom", 1);
++  }
+ 
+   int res = 0;
+   ParaBackTerminator paraback_terminator;
+@@ -1673,6 +1760,7 @@
+       candidates = new int[vars + 1];
+       if (!candidates)
+         fatal ("out-of-memory allocating backbone candidate array");
++      setup_order ();
+ 
+       if (!big) {
+         fixed = new int[vars + 1];
+@@ -1721,7 +1809,7 @@
+       // Use first model to flip as many literals as possible which if
+       // successful is cheaper than calling the SAT solver.
+ 
+-      try_to_flip_remaining (1);
++      try_to_flip_remaining (0);
+ 
+       // Now go over all variables in turn and check whether they still
+       // are candidates for being a backbone variables.  Each step of this
+@@ -1734,7 +1822,8 @@
+       int core_limit = 100;           // TODO make this configurable.
+       int last = 10;                  // Last solver result.
+ 
+-      for (int idx = 1; idx <= cand_vars; idx++) {
++      for (int pos = 0; pos < cand_vars; pos++) {
++        int idx = order[pos]; // '--order': the probing order
+ 
+         // First skip variables that have been dropped as candidates
+         // before.
+@@ -1772,7 +1861,8 @@
+           assert (assumed < vars);
+           core[assumed++] = -lit;
+ 
+-          for (int other = idx + 1; other <= cand_vars; other++) {
++          for (int p = position[idx] + 1; p < cand_vars; p++) {
++            int other = order[p];
+             int lit_other = candidates[other];
+             if (!lit_other)
+               continue;
+@@ -1807,7 +1897,7 @@
+               statistics.failed += assumed;
+ 
+               assert (INT_MAX - assumed >= idx);
+-              filter_candidates (idx);
++              filter_candidates (position[idx]);
+               progress = true;
+               assumed = -1;
+               break;
+@@ -1905,7 +1995,8 @@
+           assert (assumed < vars);
+           constraint[assumed++] = -lit;
+ 
+-          for (int other = idx + 1; other <= cand_vars; other++) {
++          for (int p = position[idx] + 1; p < cand_vars; p++) {
++            int other = order[p];
+             int lit_other = candidates[other];
+             if (!lit_other)
+               continue;
+@@ -1944,9 +2035,9 @@
+             dbg ("constraining negation of %d backbones candidates "
+                  "starting with variable %d all-at-once produced model",
+                  assumed, idx);
+-            int other = drop_first_candidate (idx);
+-            filter_candidates (other + 1);
+-            try_to_flip_remaining (idx);
++            int other = drop_first_candidate (position[idx]);
++            filter_candidates (position[other] + 1);
++            try_to_flip_remaining (position[idx]);
+           }
+ 
+           if (no_constrain) {
+@@ -1984,9 +2075,9 @@
+                "negation %d of backbone candidate %d",
+                -lit, lit);
+           drop_candidate (idx);
+-          filter_candidates (idx + 1);
++          filter_candidates (position[idx] + 1);
+           assert (!candidates[idx]);
+-          try_to_flip_remaining (idx + 1);
++          try_to_flip_remaining (position[idx] + 1);
+         } else {
+           assert (last == 20);
+           dbg ("no model with %d thus found backbone literal %d", -lit,

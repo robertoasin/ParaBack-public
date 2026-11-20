@@ -1,0 +1,556 @@
+instance	status	optimum	solver	wall
+Init-x1-i8_pp_87_merged	resuelta	346.0	roundingsat	2.5
+Init-x2-i2_pp_94	resuelta	1050.0	gurobi	1955.5
+Init-x2-i8_pp_92	resuelta	750.0	roundingsat	13.5
+SMTI_10000_10_0.85_3	resuelta	2.0	roundingsat	51.4
+SMTI_10000_3_0.95_1	resuelta	1176.0	gurobi	6.8
+SMTI_25000_10_0.75_2	resuelta	4.0	roundingsat	1269.6
+SMTI_25000_10_0.85_7	resuelta	0.0	roundingsat	323.0
+SMTI_25000_10_0.95_10	resuelta	0.0	roundingsat	70.7
+SMTI_25000_5_0.75_3	resuelta	440.0	roundingsat	83.4
+SMTI_50000_3_0.85_4	resuelta	6142.0	gurobi	77.2
+normalized-1021.cudf.trendy	infeasible	None		0.1
+normalized-1077.cudf.trendy	infeasible	None		0.1
+normalized-1098.cudf.trendy	resuelta	102017.0	roundingsat	0.4
+normalized-10:10:4.5:0.5:100	resuelta	3.0	gurobi	0.1
+normalized-10:10:4.5:0.95:100	resuelta	0.0	gurobi	0.1
+normalized-10:20:4.5:0.95:100	resuelta	1.0	gurobi	0.2
+normalized-10:20:4.5:0.95:98	resuelta	2.0	gurobi	0.2
+normalized-10_20	resuelta	8034.0	gurobi	0.1
+normalized-11_22	resuelta	8908.0	gurobi	0.2
+normalized-121.cudf.trendy	infeasible	None		0.4
+normalized-1336.cudf.trendy	infeasible	None		0.8
+normalized-1378.cudf.trendy	infeasible	None		0.8
+normalized-2club200v15p5scn	interrupted	None		3595.1
+normalized-30:30:4.5:0.5:100	resuelta	5.0	gurobi	0.7
+normalized-30:30:4.5:0.95:100	resuelta	2.0	gurobi	1.2
+normalized-30:30:4.5:0.95:98	resuelta	4.0	gurobi	0.9
+normalized-30:70:4.5:0.5:100	resuelta	9.0	gurobi	5.0
+normalized-30:70:4.5:0.95:100	resuelta	3.0	gurobi	4.5
+normalized-30:70:4.5:0.95:98	resuelta	12.0	gurobi	3.3
+normalized-50-250-false-45-90-4-1000opt	resuelta	-178.0	roundingsat	3.6
+normalized-50-250-false-45-90-4-2000opt	resuelta	-167.0	napback	21.4
+normalized-50-250-false-45-90-4-3000opt	resuelta	-187.0	roundingsat	25.1
+normalized-50-250-false-45-90-4-4000opt	resuelta	-164.0	napback	14.8
+normalized-50-250-false-45-90-4-5000opt	resuelta	-169.0	roundingsat	21.5
+normalized-50-250-false-45-90-4-6000opt	resuelta	-175.0	napback	13.4
+normalized-50-250-false-45-90-4-8000opt	resuelta	-162.0	napback	61.9
+normalized-50-750-false-45-90-4-2000opt	resuelta	-70.0	napback	8.4
+normalized-50-750-false-45-90-4-3000opt	resuelta	-81.0	napback	7.1
+normalized-50-750-false-45-90-4-8000opt	resuelta	-76.0	napback	10.3
+normalized-557.cudf.trendy	infeasible	None		0.6
+normalized-584.cudf.paranoid	infeasible	None		0.2
+normalized-5_10	resuelta	3951.0	roundingsat	0.1
+normalized-650.cudf.paranoid	resuelta	2.0	roundingsat	3.4
+normalized-6_12	resuelta	5867.0	gurobi	0.1
+normalized-7_14	resuelta	5148.0	gurobi	0.1
+normalized-8_16	resuelta	5852.0	gurobi	0.1
+normalized-990.cudf.trendy	resuelta	277042.0	roundingsat	0.7
+normalized-9symml	resuelta	4517.0	gurobi	0.3
+normalized-AztecDiamondSym-mini-07_c24	interrupted	None		3598.5
+normalized-BA_RDC4.dot_fibo_0null20mast_rapportOE1.0_TMAX180_K67_cod1	resuelta	-370567.0	gurobi	751.8
+normalized-BA_RDC4.dot_fibo_10null50mast_rapportOE2.0_TMAX300_K67_cod2_pbEq1_newVersion	resuelta	-322602.0	gurobi	1332.8
+normalized-BA_RDC4.dot_fibo_20null0mast_rapportOE2.0_TMAX180_K67_cod1	interrupted	None		3598.2
+normalized-BA_RDC4.dot_fibo_50null20mast_rapportOE2.0_TMAX60_K67_cod2	resuelta	-57314.0	gurobi	386.6
+normalized-BA_RDC4.dot_luby_0null50mast_rapportOE2.0_TMAX60_K67_cod2_pbEq1_newVersion_binary	resuelta	-1290.0	gurobi	151.3
+normalized-BA_RDC4.dot_luby_10null0mast_rapportOE2.0_TMAX15_K67_cod2_pbEq1_newVersion_ladder	resuelta	-72.0	gurobi	10.0
+normalized-BA_RDC4.dot_luby_10null20mast_rapportOE2.0_TMAX300_K67_cod2_pbEq1_newVersion_product	resuelta	-7184.0	gurobi	609.6
+normalized-BA_RDC4.dot_luby_20null0mast_rapportOE2.0_TMAX300_K67_cod2_pbEq1_newVersion_sequential	interrupted	None		3597.7
+normalized-BA_RDC4.dot_unif_0null10mast_rapportOE2.0_TMAX300_K67_cod2_pbEq1_newVersion_ladder	interrupted	None		3597.7
+normalized-BA_RDC4.dot_unif_10null0mast_rapportOE2.0_TMAX180_K67_cod3	interrupted	None		3598.3
+normalized-Cargo-24_c24	resuelta	94204.0	roundingsat	477.4
+normalized-Charlotte-06-2_c24	resuelta	5612.0	gurobi	7.8
+normalized-Charlotte-mini-24-2_c24	resuelta	20324.0	gurobi	57.8
+normalized-Clique-c0125-9_c24	resuelta	-34.0	gurobi	0.7
+normalized-FoolSolitaire-table-2-0_c24	resuelta	9.0	napback	3019.8
+normalized-Generated_notes_20140709_1000_0.05-013	resuelta	-118198.0	gurobi	46.5
+normalized-Generated_notes_20140709_1000_0.05-017	resuelta	-119728.0	gurobi	55.8
+normalized-GolombRuler-a3v18-15_c18	interrupted	None		3597.7
+normalized-KE_120_003	resuelta	-2565.0	gurobi	0.9
+normalized-KE_230_000	resuelta	-7236.0	gurobi	1.0
+normalized-KE_260_007	resuelta	-7944.0	gurobi	1.0
+normalized-KE_410_001	resuelta	-13240.0	gurobi	0.4
+normalized-KE_450_009	resuelta	-14822.0	gurobi	0.9
+normalized-KE_60_004	resuelta	-874.0	roundingsat	0.1
+normalized-KE_610_007	resuelta	-26846.0	gurobi	3.0
+normalized-KE_680_004	resuelta	-31248.0	gurobi	2.9
+normalized-NG.dot_fibo_10null10mast_rapportOE1.0_TMAX180_K192_cod1	interrupted	None		3597.8
+normalized-NG.dot_fibo_10null10mast_rapportOE2.0_TMAX15_K192_cod1	resuelta	-66663.0	gurobi	113.2
+normalized-NG.dot_fibo_20null0mast_rapportOE2.0_TMAX300_K192_cod1	interrupted	None		3599.4
+normalized-NG.dot_fibo_50null20mast_rapportOE1.0_TMAX120_K192_cod2	resuelta	-266275.0	gurobi	91.8
+normalized-NG.dot_luby_0null0mast_rapportOE2.0_TMAX120_K192_cod2	interrupted	None		3598.7
+normalized-NG.dot_luby_10null50mast_rapportOE2.0_TMAX180_K192_cod1	interrupted	None		3599.1
+normalized-NG.dot_luby_20null50mast_rapportOE2.0_TMAX120_K192_cod1	interrupted	None		3598.1
+normalized-NG.dot_unif_0null0mast_rapportOE2.0_TMAX120_K192_cod2	interrupted	None		3598.7
+normalized-NG.dot_unif_10null0mast_rapportOE2.0_TMAX180_K192_cod1	interrupted	None		3598.8
+normalized-NG.dot_unif_50null50mast_rapportOE1.0_TMAX180_K192_cod1	interrupted	None		3599.0
+normalized-OGR_11	interrupted	None		3604.1
+normalized-OGR_13	interrupted	None		3607.9
+normalized-OGR_19	interrupted	None		3598.4
+normalized-OGR_7	resuelta	25.0	roundingsat	0.5
+normalized-SameQueensKnights-b-35_c24	interrupted	None		3598.4
+normalized-TestScheduling-t030m10r05-1_c24	resuelta	1986.0	roundingsat	67.2
+normalized-WordGolf-4-ogd2008-50-0_c24	resuelta	6.0	roundingsat	609.7
+normalized-ab51-40-100	resuelta	-1285215.0	gurobi	3.3
+normalized-addm4.r	resuelta	165.0	gurobi	0.2
+normalized-aim-100-6_0-yes1-1	resuelta	100.0	roundingsat	0.1
+normalized-aim-200-2_0-yes1-2	resuelta	200.0	roundingsat	0.1
+normalized-aim-50-2_0-yes1-1	resuelta	50.0	roundingsat	0.1
+normalized-aim-50-6_0-yes1-3	resuelta	50.0	roundingsat	0.1
+normalized-alu4.b	resuelta	50.0	gurobi	0.4
+normalized-aries-da_network_1000_5__369_766__2048	running	None		166.4
+normalized-aries-da_network_1000_5__369_766__256	running	None		257.7
+normalized-aries-da_network_1000_5__369_766__8	resuelta	87132.0	gurobi	1.4
+normalized-aries-da_network_2000_5__647_1792__256	failed	None		547.0
+normalized-aries-da_network_2000_5__647_1792__64	failed	None		1139.5
+normalized-aries-da_network_20_2__17_12	resuelta	46877.0	roundingsat	0.1
+normalized-aries-da_network_500_3__212_366__16	resuelta	95378.0	gurobi	0.5
+normalized-aries-da_network_50_2__8_45	resuelta	45008.0	roundingsat	0.1
+normalized-aries-da_network_50_2__8_45__1024	resuelta	45008.0	gurobi	1.8
+normalized-aries-da_network_50_2__8_45__512	resuelta	45008.0	gurobi	0.9
+normalized-aug5.5	resuelta	101.0	gurobi	646.9
+normalized-aug6.5	resuelta	43.0	gurobi	939.5
+normalized-autocorr_bern60-15.lin	interrupted	None		3597.1
+normalized-autocorr_bern60-45.lin	interrupted	None		3652.5
+normalized-bab3	interrupted	None		3647.3
+normalized-bnatt350	resuelta	0.0	napback	3.9
+normalized-bnn_mnist_7_label9_adversarial_norm_inf	resuelta	1.0	roundingsat	2.3
+normalized-bnn_mnist_back_image_32_label3_adversarial_norm_1	resuelta	4.0	roundingsat	6.3
+normalized-bnn_mnist_back_image_32_label3_adversarial_norm_inf	resuelta	2.0	roundingsat	7.1
+normalized-bnn_mnist_back_image_73_label5_adversarial_norm_1	resuelta	9.0	roundingsat	104.2
+normalized-bnn_mnist_back_image_73_label5_adversarial_norm_inf	resuelta	4.0	roundingsat	147.1
+normalized-bnn_mnist_rot_16_label5_adversarial_norm_0	resuelta	2.0	roundingsat	16.0
+normalized-bnn_mnist_rot_16_label5_adversarial_norm_1	resuelta	2.0	roundingsat	20.1
+normalized-bnn_mnist_rot_16_label5_adversarial_norm_inf	resuelta	1.0	roundingsat	2.1
+normalized-bnn_mnist_rot_8_label1_adversarial_norm_0	resuelta	3.0	roundingsat	417.1
+normalized-bnn_mnist_rot_8_label1_adversarial_norm_2	resuelta	3.0	roundingsat	193.4
+normalized-bogr_12	interrupted	None		3595.3
+normalized-bogr_14	interrupted	None		3599.3
+normalized-bogr_16	interrupted	None		3598.5
+normalized-bogr_4	resuelta	6.0	gurobi	1.0
+normalized-bogr_5	resuelta	11.0	gurobi	0.9
+normalized-bogr_6	resuelta	17.0	roundingsat	0.1
+normalized-cc	resuelta	1567.0	gurobi	0.9
+normalized-circ10_3	interrupted	None		3597.6
+normalized-circ4_3	resuelta	20.0	gurobi	0.9
+normalized-circ6_3	interrupted	None		3595.7
+normalized-circ8_3	interrupted	None		3597.6
+normalized-clique-coloring-max-clique-n=10-t=3	resuelta	7.0	gurobi	0.9
+normalized-clique-coloring-max-clique-n=10-t=9	resuelta	1.0	gurobi	0.4
+normalized-clique-coloring-max-clique-n=11-t=8	resuelta	3.0	gurobi	1.4
+normalized-clique-coloring-max-clique-n=13-t=7	resuelta	6.0	gurobi	6.6
+normalized-clique-coloring-max-clique-n=13-t=8	resuelta	5.0	gurobi	6.8
+normalized-clique-coloring-max-clique-n=14-t=2	resuelta	12.0	napback	60.8
+normalized-clique-coloring-max-clique-n=18-t=2	resuelta	16.0	napback	1014.0
+normalized-clique-coloring-max-clique-n=20-t=2	resuelta	18.0	gurobi	12.1
+normalized-clique-coloring-max-clique-n=7-t=3	resuelta	4.0	gurobi	0.2
+normalized-clique-coloring-max-clique-n=8-t=3	resuelta	5.0	gurobi	0.3
+normalized-composed_pebbling_php_opt_pyramid_height13_pigeons12_holes11	resuelta	105.0	roundingsat	2.0
+normalized-composed_pebbling_php_opt_pyramid_height16_pigeons15_holes14	resuelta	153.0	roundingsat	6.2
+normalized-composed_pebbling_php_opt_pyramid_height30_pigeons29_holes28	resuelta	496.0	roundingsat	32.4
+normalized-composed_pebbling_php_opt_pyramid_height37_pigeons36_holes35	resuelta	741.0	roundingsat	106.2
+normalized-composed_pebbling_php_opt_pyramid_height46_pigeons45_holes44	resuelta	1128.0	roundingsat	328.3
+normalized-comppebphp_opt_pyrheightequalsnholes_05	resuelta	21.0	roundingsat	0.1
+normalized-comppebphp_opt_pyrheightequalsnholes_06	resuelta	28.0	roundingsat	0.2
+normalized-comppebphp_opt_pyrheightequalsnholes_33	resuelta	595.0	roundingsat	58.7
+normalized-comppebphp_opt_pyrheightequalsnholes_54	resuelta	1540.0	roundingsat	945.9
+normalized-comppebvc_opt_75	resuelta	2889.0	roundingsat	23.2
+normalized-count.b	resuelta	24.0	gurobi	0.2
+normalized-data10_3	interrupted	None		3597.6
+normalized-data4_3	resuelta	8276.0	roundingsat	0.2
+normalized-data6_3	interrupted	None		3597.7
+normalized-data8_3	interrupted	None		3601.6
+normalized-dobutsu-shogi-master	resuelta	55733.0	gurobi	112.1
+normalized-dobutsu-shogi-master-noopt	resuelta	110850.0	gurobi	84.0
+normalized-dominating_set_hexgrid_opt_r6_c50	resuelta	76.0	gurobi	0.9
+normalized-dominating_set_hexgrid_opt_r6_c60	resuelta	90.0	gurobi	0.9
+normalized-dominating_set_hexgrid_opt_r6_c80	resuelta	120.0	roundingsat	0.1
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_160	resuelta	400.0	roundingsat	0.2
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_290	resuelta	1016.0	gurobi	52.1
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_380	resuelta	1616.0	gurobi	433.5
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_390	resuelta	1756.0	gurobi	285.4
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_400	resuelta	1800.0	roundingsat	1.2
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_430	resuelta	2044.0	gurobi	3277.8
+normalized-domset_opt_hexgrid_nrowsdiv30add5_ncols_550	interrupted	None		3658.3
+normalized-domset_v500_e2000_w30_mw19_13.opb.PB06	interrupted	None		3599.6
+normalized-domset_v500_e2000_w30_mw19_14.opb.PB06	interrupted	None		3598.7
+normalized-domset_v500_e2000_w30_mw19_16.opb.PB06	interrupted	None		3595.6
+normalized-domset_v500_e2000_w30_mw19_17.opb.PB06	interrupted	None		3598.5
+normalized-domset_v500_e2000_w30_mw19_18.opb.PB06	interrupted	None		3598.7
+normalized-domset_v500_e2000_w30_mw19_19.opb.PB06	interrupted	None		3599.0
+normalized-domset_v500_e2000_w30_mw19_20.opb.PB06	interrupted	None		3598.7
+normalized-domset_v500_e2000_w30_mw19_21.opb.PB06	interrupted	None		3598.7
+normalized-domset_v500_e2000_w30_mw19_22.opb.PB06	interrupted	None		3598.6
+normalized-domset_v500_e2000_w30_mw19_23.opb.PB06	interrupted	None		3600.0
+normalized-edgecross14-019.lin	resuelta	4.0	gurobi	0.2
+normalized-evencolouring_opt_linear_random6regular_nvert_021	resuelta	1.0	roundingsat	0.1
+normalized-evencolouring_opt_linear_random6regular_nvert_071	resuelta	1.0	gurobi	0.1
+normalized-evencolouring_opt_linear_random6regular_nvert_101	resuelta	1.0	roundingsat	0.1
+normalized-evencolouring_opt_unit_random6regular_nvert_031	resuelta	1.0	roundingsat	0.1
+normalized-evencolouring_opt_unit_random6regular_nvert_091	resuelta	1.0	gurobi	0.2
+normalized-evencolouring_opt_unit_random6regular_nvert_111	resuelta	1.0	gurobi	0.2
+normalized-evencolouring_opt_unit_random6regular_nvert_351	resuelta	1.0	gurobi	0.4
+normalized-evencolouring_opt_unit_random6regular_nvert_401	resuelta	1.0	gurobi	0.4
+normalized-evencolouring_opt_unit_random6regular_nvert_451	resuelta	1.0	gurobi	0.4
+normalized-evencolouring_opt_unit_random6regular_nvert_501	resuelta	1.0	gurobi	0.4
+normalized-ex6inp.r	resuelta	4.0	napback	0.7
+normalized-f1000	interrupted	None		3658.3
+normalized-f20c10b_001_area_delay	resuelta	28.0	gurobi	2.5
+normalized-f20c10b_008_area_delay	resuelta	25.0	gurobi	1.0
+normalized-f20c10b_010_area_delay	resuelta	26.0	gurobi	5.7
+normalized-f20c10b_011_area_delay	resuelta	26.0	gurobi	2.8
+normalized-f20c10b_013_area_delay	resuelta	22.0	gurobi	5.0
+normalized-f20c10b_025_area_delay	resuelta	25.0	gurobi	4.4
+normalized-faclay70.lin	interrupted	None		3598.5
+normalized-faclay75.lin	interrupted	None		3598.7
+normalized-factor-size=9-P=109-Q=419	resuelta	109.0	roundingsat	0.1
+normalized-factor-size=9-P=131-Q=277	resuelta	131.0	napback	0.1
+normalized-factor-size=9-P=149-Q=509	resuelta	149.0	roundingsat	0.1
+normalized-factor-size=9-P=223-Q=383	resuelta	223.0	roundingsat	0.1
+normalized-factor-size=9-P=229-Q=239	resuelta	229.0	napback	0.2
+normalized-factor-size=9-P=331-Q=379	resuelta	331.0	gurobi	1.2
+normalized-factor-size=9-P=71-Q=409	resuelta	71.0	roundingsat	0.1
+normalized-factor-sizeN=240-sizeP=121-sizeQ=240-330229238	failed	None		1.0
+normalized-factor-sizeN=440-sizeP=221-sizeQ=440-726468498	failed	None		0.5
+normalized-factor-sizeN=480-sizeP=241-sizeQ=480-57455727	failed	None		0.6
+normalized-fir01_trarea_ac	resuelta	13949.0	gurobi	0.1
+normalized-fir02_trarea_ac	resuelta	24890.0	gurobi	0.1
+normalized-fir03_trarea_ac	resuelta	23978.0	gurobi	0.2
+normalized-fir04_area_delay	resuelta	12.0	roundingsat	0.1
+normalized-fir04_area_partials	resuelta	30.0	napback	0.1
+normalized-fir04_trarea_ac	resuelta	41202.0	gurobi	0.2
+normalized-fir05_area_opers	resuelta	35.0	gurobi	0.4
+normalized-fir05_trarea_ac	resuelta	47342.0	gurobi	0.4
+normalized-fir06_trarea_ac	resuelta	33456.0	gurobi	0.3
+normalized-fir07_trarea_ac	resuelta	50162.0	gurobi	0.2
+normalized-fir08_area_delay	resuelta	23.0	gurobi	26.3
+normalized-fir08_trarea_ac	resuelta	70311.0	gurobi	1.6
+normalized-fir09_trarea_ac	resuelta	50769.0	gurobi	0.5
+normalized-fir10_trarea_ac	resuelta	73649.0	gurobi	1.8
+normalized-frb35-17-2	resuelta	-35.0	napback	81.4
+normalized-frb35-17-3	resuelta	-35.0	napback	24.3
+normalized-frb35-17-4	resuelta	-35.0	napback	21.5
+normalized-frb45-21-3	interrupted	None		3595.6
+normalized-frb50-23-4	interrupted	None		3598.0
+normalized-frb50-23-5	interrupted	None		3597.8
+normalized-frb53-24-1	interrupted	None		3598.0
+normalized-frb53-24-3	interrupted	None		3597.9
+normalized-frb56-25-3	interrupted	None		3594.3
+normalized-frb56-25-4	interrupted	None		3598.0
+normalized-fx30	infeasible	None		3597.6
+normalized-fx49	infeasible	None		3594.0
+normalized-fx57	resuelta	6.0	gurobi	0.6
+normalized-fx60	resuelta	6.0	gurobi	1.6
+normalized-fx63	infeasible	None		3598.3
+normalized-fx75	resuelta	7.0	gurobi	929.0
+normalized-fx84	resuelta	8.0	roundingsat	0.8
+normalized-fx92	resuelta	9.0	roundingsat	1.4
+normalized-fx97	infeasible	None		3598.4
+normalized-g100x100	interrupted	None		3598.5
+normalized-g125.18	interrupted	None		3597.6
+normalized-g15x15	resuelta	53.0	gurobi	10.0
+normalized-g2x2	resuelta	2.0	napback	0.1
+normalized-g4x4	resuelta	4.0	napback	0.1
+normalized-g7x7	resuelta	12.0	roundingsat	0.1
+normalized-g9x3	resuelta	7.0	roundingsat	0.1
+normalized-g9x9	resuelta	20.0	gurobi	0.2
+normalized-gpc-4.1.cudf.paranoid	resuelta	146114.0	roundingsat	1.5
+normalized-graphpart_2pm-0055-0055.lin	resuelta	-20.0	roundingsat	0.2
+normalized-graphpart_2pm-0088-0888.lin	resuelta	-55.0	gurobi	0.5
+normalized-graphpart_clique-40.lin	resuelta	1183.0	gurobi	10.5
+normalized-hanoi5	resuelta	1931.0	napback	7.1
+normalized-hw128-vm50p-opt.opb.negationfix	interrupted	None		3598.8
+normalized-hw128-vm90p-opt.opb.negationfix	resuelta	115.0	gurobi	134.4
+normalized-hw128-vm98p-opt.opb.negationfix	resuelta	126.0	gurobi	320.3
+normalized-hw32-vm25p-opt.opb.negationfix	resuelta	7.0	gurobi	0.2
+normalized-hw32-vm50p-opt.opb.negationfix	interrupted	None		3599.8
+normalized-hw32-vm85p-opt.opb.negationfix	resuelta	27.0	gurobi	3.9
+normalized-hw32-vm90p-opt.opb.negationfix	resuelta	29.0	gurobi	0.6
+normalized-hw32-vm99p-opt.opb.negationfix	resuelta	32.0	gurobi	0.4
+normalized-hw64-vm85p-opt.opb.negationfix	resuelta	54.0	gurobi	2.1
+normalized-hw64-vm99p-opt.opb.negationfix	resuelta	64.0	gurobi	1.3
+normalized-ii16d2	resuelta	785.0	roundingsat	3.5
+normalized-ii32c2	resuelta	207.0	gurobi	1.8
+normalized-injcomp_opt_3layers_maxall_lastlayerdecr1_size_12	resuelta	-22.0	roundingsat	0.1
+normalized-injcomp_opt_3layers_maxall_lastlayerdecr1_size_29	resuelta	-56.0	gurobi	0.2
+normalized-injcomp_opt_3layers_maxall_lastlayerdecr1_size_75	resuelta	-148.0	gurobi	1.0
+normalized-injcomp_opt_3layers_maxall_lastlayerdiv2_size_20	resuelta	-20.0	gurobi	0.2
+normalized-injcomp_opt_3layers_maxall_lastlayerdiv2_size_22	resuelta	-22.0	gurobi	0.2
+normalized-injcomp_opt_3layers_maxfirst_lastlayerdecr1_size_18	resuelta	-17.0	gurobi	0.1
+normalized-injcomp_opt_3layers_maxfirst_lastlayerdiv2_size_60	resuelta	-30.0	gurobi	0.4
+normalized-injcomp_opt_4layers_maxall_lastlayerdecr1_size_26	resuelta	-76.0	gurobi	0.4
+normalized-injcomp_opt_4layers_maxfirst_lastlayerdecr1_size_30	resuelta	-29.0	gurobi	0.5
+normalized-injcomp_opt_4layers_maxfirst_lastlayerdiv2_size_32	interrupted	None		3598.8
+normalized-j12024_1.std	resuelta	93.0	roundingsat	1.9
+normalized-j12024_3.std	resuelta	89.0	roundingsat	2.0
+normalized-j1202_6.std	resuelta	92.0	roundingsat	2.0
+normalized-j12042_6.std	resuelta	119.0	roundingsat	3.8
+normalized-j12055_1.std	resuelta	100.0	napback	2460.0
+normalized-j3046_8.std	resuelta	58.0	roundingsat	0.6
+normalized-j3046_9.std	resuelta	49.0	roundingsat	0.6
+normalized-j6045_4.std	resuelta	108.0	napback	3054.2
+normalized-j9033_7.std	resuelta	109.0	roundingsat	1.7
+normalized-j906_2.std	resuelta	86.0	roundingsat	1.6
+normalized-jul6.5	resuelta	79.0	gurobi	14.8
+normalized-jun5.5	resuelta	145.0	gurobi	62.1
+normalized-jun6.5	resuelta	67.0	gurobi	20.7
+normalized-kdessh.cudf.trendy	resuelta	2624366011833.0	roundingsat	10.4
+normalized-kfilereplace.cudf.trendy	resuelta	2624366011833.0	roundingsat	8.4
+normalized-knapPI_11_1000_1000_5_-23276	resuelta	-109060.0	roundingsat	0.1
+normalized-knapPI_12_1000_1000_3_-17136	resuelta	-17178.0	gurobi	0.2
+normalized-knapPI_14_10000_1000_2_-407357	resuelta	-539657.0	gurobi	0.4
+normalized-knapPI_15_2000_1000_5_-50838	resuelta	-17191.0	gurobi	0.2
+normalized-knapPI_1_500_10000_2_-399276	resuelta	-527203.0	gurobi	0.2
+normalized-knapPI_3_200_10000_5_-93992	resuelta	-141992.0	gurobi	0.1
+normalized-knapPI_3_5000_1000_4_-199683	resuelta	-296283.0	gurobi	0.3
+normalized-knapPI_3_50_1000_2_-1678	resuelta	-2197.0	gurobi	0.1
+normalized-knapPI_6_200_10000_5_-48992	resuelta	-48992.0	gurobi	0.1
+normalized-knapPI_9_5000_1000_1_-48768	resuelta	-48768.0	roundingsat	0.2
+normalized-libgnokii4.cudf.paranoid	resuelta	146081.0	roundingsat	1.3
+normalized-libgnokii4.cudf.trendy	resuelta	2703522196109.0	roundingsat	10.1
+normalized-libnspr4-dev.cudf.trendy	resuelta	3656703476375.0	roundingsat	10.3
+normalized-linearized_pebbling_opt_layeredfan_down_r10_c19_a4	resuelta	722.0	gurobi	0.2
+normalized-linearized_pebbling_opt_layeredfan_down_r10_c20_a6	resuelta	1170.0	gurobi	0.1
+normalized-linearized_pebbling_opt_layeredfan_down_r20_c39_a6	resuelta	4563.0	gurobi	0.3
+normalized-linearized_pebbling_opt_layeredfan_down_r21_c41_a4	resuelta	3362.0	gurobi	0.2
+normalized-linearized_pebbling_opt_layeredfan_down_r26_c52_a5	resuelta	8034.0	gurobi	0.3
+normalized-linearized_pebbling_opt_layeredfan_down_r7_c14_a4	resuelta	378.0	gurobi	0.1
+normalized-linearized_pebbling_opt_layeredfan_up_r17_c34_a4	resuelta	2278.0	gurobi	0.2
+normalized-linearized_pebbling_opt_layeredfan_up_r22_c44_a5	resuelta	5742.0	gurobi	0.3
+normalized-linearized_pebbling_opt_layeredfan_up_r31_c62_a6	resuelta	11439.0	gurobi	0.5
+normalized-linearized_pebbling_opt_layeredfan_up_r33_c65_a6	resuelta	12675.0	gurobi	0.5
+normalized-lo_10x10_002.opb.metafix	resuelta	42.0	roundingsat	0.1
+normalized-lo_10x10_004.opb.metafix	resuelta	51.0	gurobi	0.1
+normalized-lo_10x10_008.opb.metafix	resuelta	50.0	gurobi	0.2
+normalized-lo_12x12_000.opb.metafix	resuelta	66.0	gurobi	0.2
+normalized-lo_14x14_007.opb.metafix	resuelta	96.0	gurobi	0.1
+normalized-lo_16x16_009.opb.metafix	resuelta	115.0	roundingsat	0.1
+normalized-lo_6x6_000.opb.metafix	resuelta	16.0	napback	0.1
+normalized-lo_6x6_004.opb.metafix	resuelta	23.0	napback	0.1
+normalized-lo_8x8_000.opb.metafix	resuelta	30.0	napback	0.1
+normalized-lo_8x8_005.opb.metafix	resuelta	26.0	napback	0.1
+normalized-lp4l	resuelta	2967.0	gurobi	0.2
+normalized-m100_300_10_20.r	resuelta	17.0	gurobi	0.8
+normalized-m100_50_40_40.r	resuelta	2.0	roundingsat	0.1
+normalized-macrophage	resuelta	374.0	gurobi	0.8
+normalized-market-split_4_30_3	infeasible	None		1584.9
+normalized-market-split_6_50_1	interrupted	None		3597.6
+normalized-market-split_7_60_2	interrupted	None		3598.3
+normalized-matrix_5x3_1	resuelta	23.0	napback	1425.5
+normalized-matrix_5x3_10	interrupted	None		3597.7
+normalized-matrix_5x3_2	resuelta	19.0	napback	362.2
+normalized-matrix_5x3_3	resuelta	21.0	napback	116.6
+normalized-matrix_5x3_4	interrupted	None		3598.5
+normalized-matrix_5x3_5	resuelta	20.0	napback	82.0
+normalized-matrix_5x3_6	resuelta	20.0	napback	117.6
+normalized-matrix_5x3_7	resuelta	21.0	napback	336.6
+normalized-matrix_5x3_8	resuelta	18.0	napback	19.5
+normalized-matrix_5x3_9	resuelta	21.0	napback	782.2
+normalized-max1024.r	resuelta	245.0	gurobi	0.5
+normalized-maxcut_opt_complete_5-partite_block_nvert_12	resuelta	-36.0	roundingsat	0.1
+normalized-maxcut_opt_complete_5-partite_block_nvert_47	resuelta	-540.0	gurobi	81.5
+normalized-maxcut_opt_complete_5-partite_block_nvert_90	interrupted	None		3597.7
+normalized-maxcut_opt_complete_5-partite_inlv_nvert_20	resuelta	-96.0	gurobi	0.9
+normalized-maxcut_opt_complete_5-partite_inlv_nvert_25	resuelta	-150.0	gurobi	2.6
+normalized-maxcut_opt_complete_5-partite_inlv_nvert_50	resuelta	-600.0	gurobi	226.2
+normalized-maxcut_opt_complete_6-partite_inlv_nvert_18	resuelta	-81.0	gurobi	0.5
+normalized-maxcut_opt_complete_6-partite_inlv_nvert_69	interrupted	None		3597.6
+normalized-maxcut_opt_complete_6-partite_inlv_nvert_84	interrupted	None		3594.1
+normalized-maxcut_opt_complete_6-partite_inlv_nvert_87	interrupted	None		3597.7
+normalized-may6.5	resuelta	43.0	napback	25.6
+normalized-methanosarcina	interrupted	None		3597.2
+normalized-minisat100_16_6_0_ic	interrupted	None		3599.0
+normalized-minisat100_16_6_1_ic	interrupted	None		3598.9
+normalized-minisat100_16_6_1_mh	failed	None		2009.1
+normalized-minisat100_16_6_2_ic	interrupted	None		3598.4
+normalized-minisat100_16_6_3_ic	interrupted	None		3599.2
+normalized-minisat100_16_6_4_ic	interrupted	None		3598.4
+normalized-minisat100_16_6_4_mh	failed	None		1450.1
+normalized-minisat100_16_6_5_ic	interrupted	None		3599.5
+normalized-minisat100_16_6_6_mh	failed	None		1474.3
+normalized-minisat100_16_6_7_ic	interrupted	None		3598.6
+normalized-minisat100_4_32_6	interrupted	None		3599.3
+normalized-minisat15_4_4_4_mh_ic	resuelta	2218686.0	gurobi	1.9
+normalized-minisat15_5_3_2_mh	resuelta	5950590.0	gurobi	1.6
+normalized-minisat15_5_3_3_ic	resuelta	5900212.0	gurobi	0.6
+normalized-minisat15_5_3_6_mh	resuelta	7586846.0	gurobi	0.7
+normalized-minisat25_4_7_6_mh_ic	interrupted	None		3599.3
+normalized-minisat25_6_3_3_ic	infeasible	None		3598.4
+normalized-minisat25_6_3_8_ic	infeasible	None		3598.3
+normalized-minisat25_6_4_1_mh	interrupted	None		3599.6
+normalized-minisat25_6_4_2_mh	interrupted	None		3598.8
+normalized-minisat25_6_4_4_mh	interrupted	None		3598.9
+normalized-minisat35_4_11_0_mh_ic	interrupted	None		3601.0
+normalized-minisat35_4_11_2_mh_ic	interrupted	None		3602.5
+normalized-minisat35_4_11_4_mh_ic	interrupted	None		3600.7
+normalized-minisat50_4_16_1	resuelta	2899749.0	roundingsat	3464.6
+normalized-minisat50_4_16_2	resuelta	3367493.0	roundingsat	1516.9
+normalized-minisat50_4_16_7_mh_ic	interrupted	None		3622.7
+normalized-minisat50_6_9_0_mh	interrupted	None		3603.2
+normalized-minisat50_6_9_3_ic	interrupted	None		3602.3
+normalized-minisat50_6_9_3_mh	interrupted	None		3605.7
+normalized-minisat50_6_9_4_mh	interrupted	None		3604.4
+normalized-minisat50_6_9_5_mh	interrupted	None		3603.3
+normalized-minisat50_6_9_6_mh	interrupted	None		3603.3
+normalized-minisat70_4_22_0	interrupted	None		3598.1
+normalized-minisat70_4_22_5	interrupted	None		3598.5
+normalized-minisat85_4_27_4	interrupted	None		3599.4
+normalized-minisat85_4_27_5	interrupted	None		3598.8
+normalized-minisat85_4_27_7	interrupted	None		3599.2
+normalized-minisat85_4_27_8	interrupted	None		3599.5
+normalized-minisat85_4_27_9	interrupted	None		3598.7
+normalized-mitre	resuelta	7677.0	gurobi	1.0
+normalized-mono-gac.cudf.trendy	resuelta	2624366011833.0	roundingsat	8.3
+normalized-mono-mcs.cudf.paranoid	resuelta	141778.0	roundingsat	1.5
+normalized-mps-v2-20-10-B2C1S1	interrupted	None		3600.4
+normalized-mps-v2-20-10-bell3a	interrupted	None		3598.6
+normalized-mps-v2-20-10-biella1	failed	None		0.4
+normalized-mps-v2-20-10-blp-ic97	interrupted	None		3599.5
+normalized-mps-v2-20-10-core2536-691	resuelta	689.0	gurobi	20.2
+normalized-mps-v2-20-10-core2586-950	interrupted	None		3598.0
+normalized-mps-v2-20-10-core4284-1064	interrupted	None		3597.9
+normalized-mps-v2-20-10-core4872-1529	interrupted	None		3598.0
+normalized-mps-v2-20-10-d6cube	interrupted	None		3605.9
+normalized-mps-v2-20-10-greenbeb	infeasible	None		3602.1
+normalized-mps-v2-20-10-grow7	interrupted	None		3598.4
+normalized-mps-v2-20-10-maros	resuelta	344750.0	scip-exact	0.3
+normalized-mps-v2-20-10-misc01	resuelta	1074317824.0	roundingsat	0.1
+normalized-mps-v2-20-10-momentum2	failed	None		0.7
+normalized-mps-v2-20-10-nazareth	resuelta	-1073741823.0	roundingsat	0.1
+normalized-mps-v2-20-10-neos11	resuelta	9216.0	roundingsat	2.9
+normalized-mps-v2-20-10-pilot	infeasible	None		3.6
+normalized-mps-v2-20-10-pp08aCUTS	interrupted	None		3598.8
+normalized-mps-v2-20-10-qnet1_o	infeasible	None		3598.6
+normalized-mps-v2-20-10-rail507	resuelta	174.0	gurobi	43.9
+normalized-mps-v2-20-10-roll3000	interrupted	None		3598.8
+normalized-mps-v2-20-10-siena1	failed	None		0.4
+normalized-mps-v2-20-10-testprob	resuelta	9663726592.0	roundingsat	0.1
+normalized-mul_8_11_shg	interrupted	None		3598.5
+normalized-mul_8_13_shg	interrupted	None		3598.6
+normalized-mul_8_14_shg	interrupted	None		3598.5
+normalized-mul_8_3_shg	resuelta	36.0	gurobi	18.1
+normalized-mul_8_9_shg	resuelta	42.0	gurobi	90.5
+normalized-mult_diagcomm_opt_greater_teq_nbits_03	resuelta	0.0	roundingsat	0.1
+normalized-mult_diagcomm_opt_greater_teq_nbits_16	resuelta	0.0	scip-exact	0.5
+normalized-mult_diagcomm_opt_greater_teq_nbits_36	failed	None		0.2
+normalized-mult_diagcomm_opt_greater_teq_nbits_50	failed	None		0.2
+normalized-mult_diagcomm_opt_less_teq_nbits_04	resuelta	0.0	roundingsat	0.1
+normalized-mult_diagcomm_opt_less_teq_nbits_08	resuelta	0.0	gurobi	0.1
+normalized-mult_diagcomm_opt_less_teq_nbits_17	resuelta	0.0	scip-exact	0.5
+normalized-mult_diagcomm_opt_less_teq_nbits_19	resuelta	0.0	scip-exact	0.7
+normalized-mult_diagcomm_opt_less_teq_nbits_26	resuelta	0.0	scip-exact	1.0
+normalized-mult_diagcomm_opt_less_teq_nbits_36	failed	None		0.2
+normalized-n3div36	resuelta	654.0	gurobi	244.1
+normalized-neos-1616732	resuelta	159.0	gurobi	389.0
+normalized-neos-538867	resuelta	122.0	gurobi	5.9
+normalized-neos-544324	resuelta	15.0	gurobi	17.6
+normalized-ns1769397	infeasible	None		170.3
+normalized-oct5.5	resuelta	167.0	gurobi	32.9
+normalized-oct6.5	resuelta	101.0	gurobi	15.0
+normalized-opm2-z7-s2	resuelta	-10280.0	gurobi	13.3
+normalized-opm2-z9-s14	resuelta	-23764.0	gurobi	116.3
+normalized-opt-market-split_4_30_3	resuelta	2.0	gurobi	6.7
+normalized-opt-market-split_5_40_3	resuelta	0.0	gurobi	25.2
+normalized-opt-market-split_5_40_4	resuelta	1.0	gurobi	529.0
+normalized-opt-market-split_7_60_2	interrupted	None		3601.4
+normalized-opt-market-split_8_70_1	interrupted	None		3602.3
+normalized-opt-market-split_8_70_3	interrupted	None		3604.1
+normalized-opt-market-split_8_70_4	interrupted	None		3602.0
+normalized-ped2.B.recomb1-0.01-3	resuelta	6.0	roundingsat	3.0
+normalized-ped2.B.recomb1-0.20-11	resuelta	7.0	roundingsat	4.5
+normalized-ped2.G.recomb1-0.01-5	resuelta	3521.0	roundingsat	27.4
+normalized-ped2.G.recomb1-0.20-14	resuelta	5267.0	roundingsat	95.1
+normalized-ped2.G.recomb10-0.10-9	resuelta	47741.0	roundingsat	80.0
+normalized-ped2.G.recomb10-0.20-12	resuelta	54713.0	napback	294.4
+normalized-ped3.E.recomb10-0.20-11	resuelta	9588.0	roundingsat	9.2
+normalized-ped3.G.recomb10-0.01-3	resuelta	15414.0	roundingsat	9.5
+normalized-ped3.G.recomb10-0.01-4	resuelta	17444.0	roundingsat	14.9
+normalized-ped3.G.recomb10-0.01-5	resuelta	14043.0	roundingsat	13.5
+normalized-protfold	interrupted	None		3597.6
+normalized-python-cairo.cudf.trendy	resuelta	2624366011833.0	roundingsat	10.2
+normalized-rand271a0d.cudf.paranoid	infeasible	None		0.2
+normalized-rand659e05.cudf.trendy	infeasible	None		0.8
+normalized-rand65d021.cudf.trendy	infeasible	None		1.9
+normalized-rand902db1.cudf.trendy	resuelta	394243446.0	roundingsat	0.4
+normalized-rand9ffe99.cudf.trendy	resuelta	10818283609.0	roundingsat	0.8
+normalized-randa13f2d.cudf.paranoid	resuelta	2477.0	gurobi	1.9
+normalized-randbccf2d.cudf.trendy	resuelta	20578507799.0	roundingsat	1.9
+normalized-randd6bc17.cudf.trendy	resuelta	0.0	roundingsat	0.9
+normalized-rande89f80.cudf.trendy	resuelta	2979398.0	roundingsat	3.0
+normalized-randf794d2.cudf.paranoid	resuelta	8228.0	gurobi	0.7
+normalized-s3-3-3-1pb	resuelta	36.0	roundingsat	0.1
+normalized-s3-3-3-2pb	resuelta	36.0	roundingsat	0.1
+normalized-s3-3-3-3pb	resuelta	36.0	roundingsat	0.1
+normalized-s3-3-3-4pb	resuelta	36.0	gurobi	0.1
+normalized-s3-3-3-5pb	resuelta	34.0	roundingsat	0.1
+normalized-s4-4-3-1pb	resuelta	62.0	roundingsat	0.2
+normalized-s4-4-3-2pb	resuelta	64.0	roundingsat	0.2
+normalized-s4-4-3-4pb	resuelta	60.0	roundingsat	0.1
+normalized-s4-4-3-7pb	resuelta	64.0	roundingsat	0.1
+normalized-s4-4-3-8pb	resuelta	36.0	roundingsat	0.1
+normalized-sao2.b	resuelta	25.0	roundingsat	0.1
+normalized-sbox_4_shg	resuelta	22.0	gurobi	0.2
+normalized-sbox_8_shg	interrupted	None		3598.4
+normalized-scpm1	interrupted	None		3617.3
+normalized-sep4.5	infeasible	None		3598.3
+normalized-sep5.5	resuelta	101.0	gurobi	308.8
+normalized-simp-nonunif-100_100.02	resuelta	44.0	roundingsat	15.8
+normalized-simp-nonunif-100_100.07	resuelta	37.0	roundingsat	17.7
+normalized-simp-nonunif-100_100.10	resuelta	49.0	roundingsat	26.6
+normalized-simp-nonunif-100_100.11	resuelta	38.0	roundingsat	15.0
+normalized-simp-nonunif-100_100.12	resuelta	41.0	roundingsat	19.7
+normalized-simp-nonunif-100_100.14	resuelta	42.0	roundingsat	18.1
+normalized-simp-unif-100_100.00	resuelta	34.0	roundingsat	4.5
+normalized-simp-unif-100_100.08	resuelta	34.0	roundingsat	2.9
+normalized-single-obj-f12-ACDoubleLoss.seq-B-3-combined-EDCBAir	resuelta	-310536843.0	napback	5.9
+normalized-single-obj-f13-ACDoubleLoss.seq-B-2-2-irEDCBA	resuelta	4479155252.0	roundingsat	0.2
+normalized-single-obj-f17-DCdoubleLoss.seq-B-2-2-irEDCBA	resuelta	55266674189.0	roundingsat	0.6
+normalized-single-obj-f3-DataDisplay_1_order6.seq-B-2-2-irabcde	resuelta	13739089.0	roundingsat	0.1
+normalized-single-obj-f37-AC_TotalLoss.seq-B-2-2-abcdeir	resuelta	7665979.0	roundingsat	0.2
+normalized-single-obj-f4-DataDisplay_2_order9.seq-A-3-2-irabcde	resuelta	134248448.0	roundingsat	34.8
+normalized-single-obj-f47-DC_Side1.seq-B-2-2-irabcde	resuelta	19643295490.0	roundingsat	0.3
+normalized-single-obj-f50-DC_side2.seq-B-3-1-EDCBAir	resuelta	-2125803880.0	napback	2.9
+normalized-single-obj-f53-AC_FC1.seq-A-2-1-EDCBAir	resuelta	-1336666903.0	roundingsat	1.0
+normalized-single-obj-f58-fob_fxl_loss.seq-A-3-1-irEDCBA	interrupted	None		3658.3
+normalized-sorrell8	interrupted	None		3599.0
+normalized-sp98ar	resuelta	800773.0	gurobi	105.2
+normalized-sporttournament18.lin	resuelta	-80.0	gurobi	0.4
+normalized-sporttournament26.lin	resuelta	-167.0	gurobi	35.4
+normalized-ss97-2	resuelta	939.0	gurobi	0.4
+normalized-ss97-4	resuelta	813.0	gurobi	0.2
+normalized-ss97-6	resuelta	304.0	roundingsat	0.1
+normalized-ssa6288-047	infeasible	None		0.3
+normalized-ssa7552-159	resuelta	1327.0	gurobi	0.3
+normalized-synaptic.cudf.trendy	resuelta	2624366011833.0	roundingsat	10.8
+normalized-vertexcover_opt_grid_evenrowevencolsquare_dim_074	resuelta	2738.0	gurobi	0.3
+normalized-vertexcover_opt_grid_evenrowevencolsquare_dim_120	resuelta	7200.0	gurobi	0.7
+normalized-vertexcover_opt_grid_evenrowevencolsquare_dim_140	resuelta	9800.0	gurobi	0.9
+normalized-vertexcover_opt_grid_evenrowoddcolsquare_dim_038	resuelta	760.0	roundingsat	0.6
+normalized-vertexcover_opt_grid_evenrowoddcolsquare_dim_058	resuelta	1740.0	roundingsat	2.8
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_022	resuelta	264.0	napback	0.2
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_042	resuelta	924.0	roundingsat	1.0
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_054	resuelta	1512.0	roundingsat	1.5
+normalized-vertexcover_opt_grid_oddrowevencolsquare_dim_070	resuelta	2520.0	roundingsat	4.2
+normalized-vertexcover_opt_grid_oddrowoddcolsquare_dim_071	resuelta	2556.0	napback	25.0
+normalized-vtxcov_v2000_e4000_1.opb.PB06	interrupted	None		3601.7
+normalized-vtxcov_v2000_e4000_11.opb.PB06	resuelta	1028.0	gurobi	1953.2
+normalized-vtxcov_v2000_e4000_12.opb.PB06	interrupted	None		3597.7
+normalized-vtxcov_v2000_e4000_2.opb.PB06	interrupted	None		3597.6
+normalized-vtxcov_v2000_e4000_21.opb.PB06	interrupted	None		3597.6
+normalized-vtxcov_v2000_e4000_33.opb.PB06	resuelta	1034.0	gurobi	1684.2
+normalized-vtxcov_v2000_e4000_34.opb.PB06	interrupted	None		3597.7
+normalized-vtxcov_v2000_e4000_36.opb.PB06	resuelta	1036.0	gurobi	806.8
+normalized-vtxcov_v2000_e4000_6.opb.PB06	interrupted	None		3597.6
+normalized-vtxcov_v2000_e4000_7.opb.PB06	interrupted	None		3601.6
+normalized-wnq_n100_mw99_0.opb.PB06	interrupted	None		3598.3
+normalized-wnq_n100_mw99_10.opb.PB06	interrupted	None		3599.7
+normalized-wnq_n100_mw99_11.opb.PB06	interrupted	None		3599.2
+normalized-wnq_n100_mw99_12.opb.PB06	resuelta	236.0	gurobi	1996.7
+normalized-wnq_n100_mw99_13.opb.PB06	interrupted	None		3599.8
+normalized-wnq_n100_mw99_2.opb.PB06	interrupted	None		3598.5
+normalized-wnq_n100_mw99_4.opb.PB06	interrupted	None		3598.2
+normalized-wnq_n100_mw99_5.opb.PB06	interrupted	None		3598.6
+normalized-wnq_n100_mw99_6.opb.PB06	interrupted	None		3598.7
+normalized-wnq_n100_mw99_8.opb.PB06	interrupted	None		3595.0
+normalized-ws97-3	resuelta	3031.0	gurobi	0.2
+normalized-ws97-5	resuelta	2642.0	gurobi	0.1

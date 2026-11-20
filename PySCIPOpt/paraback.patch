@@ -1,0 +1,345 @@
+diff -ru a/src/pyscipopt/scip.pxd b/src/pyscipopt/scip.pxd
+--- a/src/pyscipopt/scip.pxd	2026-09-16 18:04:45.000000000 +0200
++++ b/src/pyscipopt/scip.pxd	2026-11-20 10:25:23.000000000 +0100
+@@ -587,6 +587,7 @@
+                           const char*           suffix,
+                           SCIP_Bool             globalcopy,
+                           SCIP_Bool             enablepricing,
++                          SCIP_Bool             copysymhdlrs,
+                           SCIP_Bool             threadsafe,
+                           SCIP_Bool             passmessagehdlr,
+                           SCIP_Bool*            valid)
+@@ -596,6 +597,7 @@
+                               SCIP_HASHMAP*         consmap,
+                               const char*           suffix,
+                               SCIP_Bool             enablepricing,
++                              SCIP_Bool             copysymhdlrs,
+                               SCIP_Bool             threadsafe,
+                               SCIP_Bool             passmessagehdlr,
+                               SCIP_Bool*            valid)
+@@ -704,6 +706,7 @@
+     SCIP_NODE* SCIPeventGetNode(SCIP_EVENT* event)
+     SCIP_ROW* SCIPeventGetRow(SCIP_EVENT* event)
+     SCIP_RETCODE SCIPinterruptSolve(SCIP* scip)
++    SCIP_RETCODE SCIPinterruptLP(SCIP* scip, SCIP_Bool interrupt)
+     SCIP_RETCODE SCIPrestartSolve(SCIP* scip)
+ 
+ 
+@@ -776,7 +779,7 @@
+     void SCIPnodeGetAddedConss(SCIP_NODE* node, SCIP_CONS** addedconss,
+                                int* naddedconss, int addedconsssize)
+     void SCIPnodeGetNDomchg(SCIP_NODE* node, int* nbranchings, int* nconsprop,
+-                            int* nprop)
++                            int* nprop, int* nsymprop)
+     SCIP_DOMCHG* SCIPnodeGetDomchg(SCIP_NODE* node)
+ 
+     # Domain change methods
+@@ -1230,6 +1233,7 @@
+                                       const char* name,
+                                       const char* desc,
+                                       int         priority,
++                                      SCIP_Bool   enable,
+                                       SCIP_RETCODE (*iisfindercopy) (SCIP* scip, SCIP_IISFINDER* iisfinder),
+                                       SCIP_RETCODE (*iisfinderfree) (SCIP* scip, SCIP_IISFINDER* iisfinder),
+                                       SCIP_RETCODE (*iisfinderexec) (SCIP_IIS* iis, SCIP_IISFINDER* iisfinder, SCIP_RESULT* result),
+@@ -1568,6 +1572,36 @@
+ 
+     BMS_BLKMEM* SCIPblkmem(SCIP* scip)
+ 
++# ---- Modo exacto (ParaBack): racionales, restricciones lineales exactas y valores exactos
++cdef extern from "scip/rational.h":
++    SCIP_RETCODE SCIPrationalCreate(SCIP_RATIONAL** rational)
++    void SCIPrationalFree(SCIP_RATIONAL** rational)
++    SCIP_Bool SCIPrationalIsString(const char* desc)
++    void SCIPrationalSetString(SCIP_RATIONAL* res, const char* desc)
++    void SCIPrationalSetInfinity(SCIP_RATIONAL* res)
++    void SCIPrationalSetNegInfinity(SCIP_RATIONAL* res)
++    SCIP_Bool SCIPrationalIsInfinity(SCIP_RATIONAL* rational)
++    SCIP_Bool SCIPrationalIsNegInfinity(SCIP_RATIONAL* rational)
++    int SCIPrationalStrLen(SCIP_RATIONAL* rational)
++    int SCIPrationalToString(SCIP_RATIONAL* rational, char* str, int strlen)
++
++cdef extern from "scip/cons_exactlinear.h":
++    SCIP_RETCODE SCIPcreateConsBasicExactLinear(SCIP* scip, SCIP_CONS** cons, const char* name, int nvars,
++                                                SCIP_VAR** vars, SCIP_RATIONAL** vals, SCIP_RATIONAL* lhs,
++                                                SCIP_RATIONAL* rhs)
++
++cdef extern from "scip/scip.h":
++    SCIP_RETCODE SCIPchgVarLbExact(SCIP* scip, SCIP_VAR* var, SCIP_RATIONAL* newbound)
++    SCIP_RETCODE SCIPchgVarUbExact(SCIP* scip, SCIP_VAR* var, SCIP_RATIONAL* newbound)
++    void SCIPgetPrimalboundExact(SCIP* scip, SCIP_RATIONAL* result)
++    void SCIPgetSolOrigObjExact(SCIP* scip, SCIP_SOL* sol, SCIP_RATIONAL* res)
++    void SCIPgetSolValExact(SCIP* scip, SCIP_SOL* sol, SCIP_VAR* var, SCIP_RATIONAL* res)
++    SCIP_RETCODE SCIPchgVarObjExact(SCIP* scip, SCIP_VAR* var, SCIP_RATIONAL* newobj)
++    SCIP_RATIONAL* SCIPgetOrigObjoffsetExact(SCIP* scip)
++    SCIP_RATIONAL* SCIPvarGetObjExact(SCIP_VAR* var)
++    SCIP_RATIONAL* SCIPvarGetLbOriginalExact(SCIP_VAR* var)
++    SCIP_RATIONAL* SCIPvarGetUbOriginalExact(SCIP_VAR* var)
++
+ cdef extern from "scip/tree.h":
+     int SCIPnodeGetNAddedConss(SCIP_NODE* node)
+ 
+diff -ru a/src/pyscipopt/scip.pxi b/src/pyscipopt/scip.pxi
+--- a/src/pyscipopt/scip.pxi	2026-09-16 18:04:45.000000000 +0200
++++ b/src/pyscipopt/scip.pxi	2026-11-20 10:25:23.000000000 +0100
+@@ -1506,7 +1506,8 @@
+         cdef int nbranchings
+         cdef int nconsprop
+         cdef int nprop
+-        SCIPnodeGetNDomchg(self.scip_node, &nbranchings, &nconsprop, &nprop)
++        # SCIP 11 añade un cuarto contador (propagaciones de simetría); la API de Python no cambia.
++        SCIPnodeGetNDomchg(self.scip_node, &nbranchings, &nconsprop, &nprop, NULL)
+         return nbranchings, nconsprop, nprop
+ 
+     def getDomchg(self):
+@@ -1802,6 +1803,18 @@
+         """
+         return SCIPvarGetObj(self.scip_var)
+ 
++    def getObjExact(self):
++        """Exact objective coefficient (exact solving mode), as a string."""
++        return _rational_to_str(SCIPvarGetObjExact(self.scip_var))
++
++    def getLbOriginalExact(self):
++        """Exact original lower bound (exact solving mode), as a string."""
++        return _rational_to_str(SCIPvarGetLbOriginalExact(self.scip_var))
++
++    def getUbOriginalExact(self):
++        """Exact original upper bound (exact solving mode), as a string."""
++        return _rational_to_str(SCIPvarGetUbOriginalExact(self.scip_var))
++
+     def getLPSol(self):
+         """
+         Retrieve the current LP solution value of variable.
+@@ -2660,6 +2673,37 @@
+             fputs(msg, file)
+         fflush(file)
+ 
++cdef _rational_text(value):
++    """Texto exacto de un int, str o fractions.Fraction (nunca un float: perdería precisión)."""
++    if isinstance(value, float):
++        raise TypeError("exact values must be int, str or fractions.Fraction, not float")
++    if hasattr(value, "numerator") and hasattr(value, "denominator") and not isinstance(value, int):
++        return f"{value.numerator}/{value.denominator}"
++    return str(value)
++
++
++cdef void _set_rational(SCIP_RATIONAL* r, value) except *:
++    text = _rational_text(value)
++    ctext = str_conversion(text)
++    if not SCIPrationalIsString(ctext):
++        raise ValueError(f"not a rational number: {text!r}")
++    SCIPrationalSetString(r, ctext)
++
++
++cdef _rational_to_str(SCIP_RATIONAL* r):
++    if SCIPrationalIsInfinity(r):
++        return "inf"
++    if SCIPrationalIsNegInfinity(r):
++        return "-inf"
++    cdef int size = SCIPrationalStrLen(r) + 2
++    cdef char* buffer = <char*> malloc(size)
++    try:
++        SCIPrationalToString(r, buffer, size)
++        return buffer.decode("utf-8")
++    finally:
++        free(buffer)
++
++
+ cdef class _VarArray:
+     cdef SCIP_VAR** ptr
+     cdef int size
+@@ -2860,9 +2904,10 @@
+             self._bestSol = <Solution> sourceModel._bestSol
+             n = str_conversion(problemName)
+             if origcopy:
+-                PY_SCIP_CALL(SCIPcopyOrig(sourceModel._scip, self._scip, NULL, NULL, n, enablepricing, threadsafe, True, self._valid))
++                # SCIP 11: copysymhdlrs (copia completa, como SCIP en sus copias de Benders).
++                PY_SCIP_CALL(SCIPcopyOrig(sourceModel._scip, self._scip, NULL, NULL, n, enablepricing, True, threadsafe, True, self._valid))
+             else:
+-                PY_SCIP_CALL(SCIPcopy(sourceModel._scip, self._scip, NULL, NULL, n, globalcopy, enablepricing, threadsafe, True, self._valid))
++                PY_SCIP_CALL(SCIPcopy(sourceModel._scip, self._scip, NULL, NULL, n, globalcopy, enablepricing, True, threadsafe, True, self._valid))
+ 
+     def attachEventHandlerCallback(self,
+         callback,
+@@ -10220,7 +10265,7 @@
+         heur.name = name
+         self._plugins.append(heur)
+     
+-    def includeIISfinder(self, IISfinder iisfinder, name, desc, priority=10000, freq=1):
++    def includeIISfinder(self, IISfinder iisfinder, name, desc, priority=10000, freq=1, enable=True):
+         """
+         Include an IIS (Irreducible Infeasible Set) finder handler.
+ 
+@@ -10236,6 +10281,8 @@
+             priority of the IISfinder (#todo description)
+         freq : int, optional
+             frequency for calling IIS finder
++        enable : bool, optional
++            whether the IIS finder is enabled (SCIP 11)
+ 
+         """
+         cdef SCIP_IISFINDER* scip_iisfinder
+@@ -10245,7 +10292,7 @@
+ 
+         iisfinder.iis = IIS()
+ 
+-        PY_SCIP_CALL(SCIPincludeIISfinder(self._scip, nam, des, priority, PyiisfinderCopy, PyiisfinderFree,
++        PY_SCIP_CALL(SCIPincludeIISfinder(self._scip, nam, des, priority, enable, PyiisfinderCopy, PyiisfinderFree,
+                                          PyiisfinderExec, <SCIP_IISFINDERDATA*> iisfinder))
+ 
+         scip_iisfinder = SCIPfindIISfinder(self._scip, nam)
+@@ -11031,6 +11078,19 @@
+         """Interrupt the solving process as soon as possible."""
+         PY_SCIP_CALL(SCIPinterruptSolve(self._scip))
+ 
++    def interruptLP(self, interrupt=True):
++        """Interrupt the LP solve in progress (also the exact LPs of exact solving mode) and the solving process.
++
++        Unlike interruptSolve(), the LP solver itself stops, instead of SCIP noticing the interrupt when the LP
++        returns. Safe to call from another thread during optimizeNogil(). With interrupt=False the LP interrupt
++        is disabled again (SCIPsolve() also does so when it starts).
++
++        Parameters
++        ----------
++        interrupt : bool
++        """
++        PY_SCIP_CALL(SCIPinterruptLP(self._scip, interrupt))
++
+     def restartSolve(self):
+         """Restarts the solving process as soon as possible."""
+         PY_SCIP_CALL(SCIPrestartSolve(self._scip))
+@@ -12876,6 +12936,133 @@
+         PY_SCIP_CALL(SCIPbranchLPExact(self._scip, &result))
+         return result
+ 
++    # ---- Modo exacto (ParaBack) --------------------------------------------------------------
++    # Los valores exactos viajan como texto ("12", "-3/4", Fraction, int): nunca pasan por double.
++
++    def addConsExactLinear(self, vars, coefs, lhs=None, rhs=None, name="exactlinear"):
++        """
++        Adds an exact linear constraint  lhs <= sum_i coefs[i] * vars[i] <= rhs  (exact solving mode).
++
++        Parameters
++        ----------
++        vars : list of Variable
++        coefs : list of int, str or fractions.Fraction
++            exact coefficients (integers of any size are kept exactly)
++        lhs, rhs : int, str, fractions.Fraction or None
++            exact sides; None means -infinity / +infinity
++        name : str
++
++        Returns
++        -------
++        Constraint
++        """
++        if len(vars) != len(coefs):
++            raise ValueError("vars and coefs must have the same length")
++        cdef _VarArray wrapper = _VarArray(list(vars))
++        cdef int n = wrapper.size
++        cdef SCIP_RATIONAL** vals = <SCIP_RATIONAL**> malloc(max(n, 1) * sizeof(SCIP_RATIONAL*))
++        cdef SCIP_RATIONAL* rlhs = NULL
++        cdef SCIP_RATIONAL* rrhs = NULL
++        cdef SCIP_CONS* scip_cons
++        cdef int i
++        for i in range(n):
++            vals[i] = NULL
++        try:
++            for i in range(n):
++                PY_SCIP_CALL(SCIPrationalCreate(&vals[i]))
++                _set_rational(vals[i], coefs[i])
++            PY_SCIP_CALL(SCIPrationalCreate(&rlhs))
++            PY_SCIP_CALL(SCIPrationalCreate(&rrhs))
++            if lhs is None:
++                SCIPrationalSetNegInfinity(rlhs)
++            else:
++                _set_rational(rlhs, lhs)
++            if rhs is None:
++                SCIPrationalSetInfinity(rrhs)
++            else:
++                _set_rational(rrhs, rhs)
++            PY_SCIP_CALL(SCIPcreateConsBasicExactLinear(self._scip, &scip_cons, str_conversion(name), n,
++                                                        wrapper.ptr, vals, rlhs, rrhs))
++            PY_SCIP_CALL(SCIPaddCons(self._scip, scip_cons))
++            pycons = self._getOrCreateCons(scip_cons)
++            PY_SCIP_CALL(SCIPreleaseCons(self._scip, &scip_cons))
++            return pycons
++        finally:
++            for i in range(n):
++                if vals[i] != NULL:
++                    SCIPrationalFree(&vals[i])
++            free(vals)
++            if rlhs != NULL:
++                SCIPrationalFree(&rlhs)
++            if rrhs != NULL:
++                SCIPrationalFree(&rrhs)
++
++    def chgVarLbExact(self, Variable var, value):
++        """Changes the exact lower bound of a variable (exact solving mode)."""
++        cdef SCIP_RATIONAL* r = NULL
++        PY_SCIP_CALL(SCIPrationalCreate(&r))
++        try:
++            _set_rational(r, value)
++            PY_SCIP_CALL(SCIPchgVarLbExact(self._scip, var.scip_var, r))
++        finally:
++            SCIPrationalFree(&r)
++
++    def chgVarUbExact(self, Variable var, value):
++        """Changes the exact upper bound of a variable (exact solving mode)."""
++        cdef SCIP_RATIONAL* r = NULL
++        PY_SCIP_CALL(SCIPrationalCreate(&r))
++        try:
++            _set_rational(r, value)
++            PY_SCIP_CALL(SCIPchgVarUbExact(self._scip, var.scip_var, r))
++        finally:
++            SCIPrationalFree(&r)
++
++    def chgVarObjExact(self, Variable var, value):
++        """Changes the exact objective coefficient of a variable (exact solving mode)."""
++        cdef SCIP_RATIONAL* r = NULL
++        PY_SCIP_CALL(SCIPrationalCreate(&r))
++        try:
++            _set_rational(r, value)
++            PY_SCIP_CALL(SCIPchgVarObjExact(self._scip, var.scip_var, r))
++        finally:
++            SCIPrationalFree(&r)
++
++    def getOrigObjoffsetExact(self):
++        """Exact objective offset of the original problem (exact solving mode), as a string."""
++        return _rational_to_str(SCIPgetOrigObjoffsetExact(self._scip))
++
++    def getPrimalboundExact(self):
++        """Exact primal bound (objective of the best solution) as a string ("inf" if none)."""
++        cdef SCIP_RATIONAL* r = NULL
++        PY_SCIP_CALL(SCIPrationalCreate(&r))
++        try:
++            SCIPgetPrimalboundExact(self._scip, r)
++            return _rational_to_str(r)
++        finally:
++            SCIPrationalFree(&r)
++
++    def getSolOrigObjExact(self, Solution sol=None):
++        """Exact original objective value of a solution (default: the best one), as a string."""
++        cdef SCIP_RATIONAL* r = NULL
++        cdef SCIP_SOL* s = SCIPgetBestSol(self._scip) if sol is None else sol.sol
++        PY_SCIP_CALL(SCIPrationalCreate(&r))
++        try:
++            SCIPgetSolOrigObjExact(self._scip, s, r)
++            return _rational_to_str(r)
++        finally:
++            SCIPrationalFree(&r)
++
++    def getSolValExact(self, Solution sol, Variable var):
++        """Exact value of a variable in a solution (None: the best one), as a string."""
++        cdef SCIP_RATIONAL* r = NULL
++        cdef SCIP_SOL* s = SCIPgetBestSol(self._scip) if sol is None else sol.sol
++        PY_SCIP_CALL(SCIPrationalCreate(&r))
++        try:
++            SCIPgetSolValExact(self._scip, s, var.scip_var, r)
++            return _rational_to_str(r)
++        finally:
++            SCIPrationalFree(&r)
++
+     def addRowExact(self, RowExact rowexact):
+         """
+         Adds an exact row to the LP.

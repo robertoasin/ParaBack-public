@@ -1,0 +1,61 @@
+# Óptimos y soluciones iniciales de un conjunto de instancias (las 555 de la PBO Competition 2025)
+# con el portfolio como buscador de óptimos: --base-only para en cuanto un trabajador resuelve la
+# base y --solution-out (lo añade run.sbatch) escribe x* en el formato de la competición, que es
+# lo que después lee --solutions. Formato: paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-base.toml
+#
+# Cómo funciona la fase base (README "solver"; paraback/worker.py): cada trabajador optimiza por su
+# cuenta (Gurobi; RoundingSat como optimizador; Naps en napback), el primero en terminar releva
+# z* y x* y los demás interrumpen su búsqueda y sólo verifican x*. No se comparte nada antes
+# (ni unidades ni cotas). Cada base se comprueba con enteros (factibilidad y coste); la
+# optimalidad es la que afirma el solver que ganó: exacta con RoundingSat y Naps, en coma
+# flotante con Gurobi. Por eso, con --float-max-bits 32, en las instancias con enteros de más de
+# 32 bits (cabecera 'intsize=') Gurobi se sustituye por scip-exact (--float-fallback).
+#
+#   python tools/cluster/make_instance_list.py ~/instancias_planas -o pbo25.txt        # rutas absolutas, sin repetidos
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-base.toml -l pbo25.txt -o ~/runs/base25
+#   python tools/cluster/gather_solutions.py ~/runs/base25/base-pbo25 ~/soluciones-pbo25   # x* resueltas + tabla
+#
+# Coste: 555 instancias × 1 ejecución × 4 huecos (3 trabajadores + orquestador, cada hueco 4
+# núcleos y 15 GB: 16 núcleos y 60 GB por ejecución), 3600 s como mucho cada una. Caben 6
+# ejecuciones por nodo (96 núcleos, 384 GB) y 12 en los dos: 555/12 ≈ 47 tandas; si todas
+# agotaran el límite, 47 h de pared; con los tiempos habituales (la mayoría resueltas en
+# segundos o minutos), bastante menos.
+
+[defaults]
+time_limit = 3600
+repeats = 1
+options = ["--threads-per-worker", "4", "--base-only", "--float-max-bits", "32", "--float-fallback", "scip-exact"]
+
+[cluster]
+partition = "solver"
+account = "solver"
+cores_per_node = 96
+mem_per_node = "384G"
+cores_per_worker = 4
+mem_per_worker = "15G"
+gurobi_license = "node"
+gurobi_sessions = 2
+max_concurrent = 0
+exclusive = false
+launcher = "mpirun"
+env = "~/paraback-env"
+
+[[experiment]]
+name = "base-pbo25"
+description = "óptimo y x* de cada instancia: Gurobi (o scip-exact con enteros de > 32 bits), RoundingSat y Naps; gana el primero"
+workers = ["gurobi", "roundingsat", "napback"]
+
+# Repetición (2026-10-19) de las 9 instancias de base25 con enteros de 73 a 721 bits, en las que
+# scip-exact (sustituto de Gurobi) no puede ni leer la instancia (todo racional ≥ 1e20 es
+# "infinito" para SCIP: `SCIP: read error!`) y tumbaba la ejecución. Sin hueco de Gurobi: sólo los
+# dos solvers sin tope de bits, que es lo que el protocolo por tamaño de entero hace ahora solo
+# (paraback/launch.py FALLBACK_MAX_BITS). Las 7 muertes por memoria de base25 (aries, minisat100)
+# no se repiten: quedan fuera del conjunto de evaluación.
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-base.toml -l tools/cluster/pbo25-retry.txt -o ~/runs/base25-retry --only base-pbo25-retry
+#   python tools/cluster/gather_solutions.py ~/runs/base25-retry/base-pbo25-retry ~/soluciones-pbo25
+[[experiment]]
+name = "base-pbo25-retry"
+description = "las 9 instancias de > 66 bits de base25: RoundingSat y Naps, sin Gurobi ni scip-exact; gana el primero"
+workers = ["roundingsat", "napback"]
+options = ["--threads-per-worker", "4", "--base-only"]

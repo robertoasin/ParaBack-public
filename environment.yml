@@ -1,0 +1,28 @@
+# Conda environment for building and running ParaBack (everything from conda-forge).
+# SCIP, SoPlex and PySCIPOpt are not taken from here: `make scip-exact` builds the vendored
+# sources, as `make roundingsat napback` does for RoundingSat, NaPS, CaDiCaL and CadiBack.
+name: paraback
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - numpy
+  - c-compiler
+  - cxx-compiler
+  # With newer sysroots, CaDiCaL fails to configure on CPUs without AVX2.
+  - sysroot_linux-64=2.28
+  - cmake
+  - make
+  - patch
+  - gmp
+  - mpfr
+  - zlib
+  - libboost-devel
+  - openmpi=5
+  - mpi4py
+  # Symmetry worker (bliss through igraph); optional.
+  - python-igraph
+  - pip:
+      # Needs a Gurobi license for the integer-programming workers; optional.
+      - gurobipy==13.0.3

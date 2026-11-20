@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paraback"
+version = "1.0.0"
+description = "Parallel backbone extraction for pseudo-Boolean optimization"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Roberto Asín-Achá", email = "roberto.asin@usm.cl" }]
+
+[project.optional-dependencies]
+gurobi = ["gurobipy>=10"]
+scip = ["pyscipopt>=5"]
+# RoundingBack es un ejecutable C++ (roundingsat/), no un paquete Python: se compila con `make roundingsat`.
+# ParaBack se ejecuta sobre MPI (mpi4py + un mpirun: Open MPI o MPICH); la referencia
+# local (`paraback --launcher local`, paraback.local) no necesita mpi4py.
+mpi = ["mpi4py>=3"]
+# Trabajador de simetrías (paraback/symmetry.py): automorfismos del grafo de la instancia con bliss.
+symmetry = ["python-igraph>=0.11"]
+test = ["pytest>=7"]
+# Todos los solvers y MPI a la vez: necesario para la validación diferencial de la Fase 3.
+all = ["gurobipy>=10", "pyscipopt>=5", "mpi4py>=3", "pytest>=7", "python-igraph>=0.11"]
+
+[project.scripts]
+guroback = "guroback.cli:main"
+paraback = "paraback.cli:main"
+
+[tool.setuptools]
+packages = ["guroback", "paraback"]

@@ -1,0 +1,104 @@
+# Evaluación del artículo, Ronda 1 (ev1, docs/PLAN_EVALUACION.md §5): los extractores
+# secuenciales sobre las 386 instancias de la PBO Competition 2025 con óptimo conocido.
+# Formato: paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-ev1.toml
+#
+# Un trabajador por experimento (4 núcleos y 15 GB, más el orquestador), una sola ejecución
+# (P9: los secuenciales son reproducibles con la misma semilla) y 3600 s (P10). Todas parten de
+# z* y x* (P3: --solutions). Cada extractor va sólo sobre las instancias que admite (P4–P5):
+# Gurobi hasta 32 bits y SCIP exacto hasta 66 (max_bits); las demás quedan en omitted.txt y
+# collect.sh las marca n/c. Sin --float-max-bits: aquí no se sustituye nada, se omite.
+#
+# NapBack (`cadiback`, Naps → CNF → CadiBack) y NapBack-servidor (`napback`) van sobre las 386:
+# sus traducciones (translation_time, cnf_vars, cnf_clauses en --stats-json) calibran la regla
+# sintáctica de compatibilidad de Naps para las rondas de portfolio (D11).
+#
+# ev1-gurobi-x: GuroBack en las 29 instancias de 33–66 bits, FUERA DE LA COBERTURA. Mide si
+# Gurobi declara backbones o refutaciones falsos con enteros grandes (la paridad con
+# ScipBack-exacto y RoundingBack lo detecta): la prueba de por qué existe el protocolo por bits.
+#
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-ev1.toml \
+#       -l tools/cluster/pbo25-eval.txt -o ~/runs/ev1 --solutions ~/soluciones-pbo25
+#
+# Coste estimado (PLAN_EVALUACION §10): ~140 horas·nodo, unas 3 jornadas de node906 y node907.
+
+[defaults]
+time_limit = 3600
+repeats = 1
+options = ["--threads-per-worker", "4"]
+
+[cluster]
+partition = "solver"
+account = "solver"
+cores_per_node = 96
+mem_per_node = "384G"
+cores_per_worker = 4
+mem_per_worker = "15G"
+gurobi_license = "node"
+gurobi_sessions = 2
+max_concurrent = 0
+exclusive = false
+launcher = "mpirun"
+env = "~/paraback-env"
+traces = false                   # secuenciales: no hay compartición que medir (y las trazas ocupan mucho)
+
+# ================================================================ RoundingBack (artículo de RB)
+[[experiment]]
+name = "ev1-rb"
+description = "RB-Base"
+workers = ["roundingsat"]
+
+[[experiment]]
+name = "ev1-rb-pg"
+description = "RB-PG (guiado por fases; el mejor del artículo de RoundingBack)"
+workers = ["roundingsat:pguide=1"]
+
+[[experiment]]
+name = "ev1-rb-wp"
+description = "RB-WP (orden por propagación ponderada)"
+workers = ["roundingsat:order=wp"]
+
+# ================================================================ GuroBack (≤ 32 bits)
+[[experiment]]
+name = "ev1-gurobi"
+description = "GuroBack"
+workers = ["gurobi"]
+max_bits = 32
+
+[[experiment]]
+name = "ev1-gurobi-mf"
+description = "GuroBack con el sondeo maxflip"
+workers = ["gurobi:chunks=maxflip:5"]
+max_bits = 32
+
+# ================================================================ ScipBack-exacto (≤ 66 bits)
+[[experiment]]
+name = "ev1-scipx"
+description = "ScipBack-exacto"
+workers = ["scip-exact"]
+max_bits = 66
+
+[[experiment]]
+name = "ev1-scipx-mf"
+description = "ScipBack-exacto con el sondeo maxflip"
+workers = ["scip-exact:chunks=maxflip:5"]
+max_bits = 66
+
+# ================================================================ NapBack (todas: calibran D11)
+[[experiment]]
+name = "ev1-napback"
+description = "NapBack: Naps → CNF → CadiBack (el del artículo de RB, candidatas congeladas)"
+workers = ["cadiback"]
+
+[[experiment]]
+name = "ev1-napback-srv"
+description = "NapBack-servidor: el extractor de ParaBack sobre la CNF de Naps (servidor CaDiCaL)"
+workers = ["napback"]
+
+# ================================================================ fuera de la cobertura
+[[experiment]]
+name = "ev1-gurobi-x"
+description = "GuroBack con enteros de 33 a 66 bits: ¿hechos falsos? (no cuenta en la cobertura)"
+workers = ["gurobi"]
+min_bits = 33
+max_bits = 66

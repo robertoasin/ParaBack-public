@@ -1,0 +1,82 @@
+# Evaluación del artículo, Ronda 3 (ev3, docs/PLAN_EVALUACION.md §5, 2026-10-26): las técnicas de
+# este trabajo sobre el mixto de ev2 (`ev2-mix3`: RB-PG, NapBack y GuroBack, strided:i/3), sobre las 386.
+# Formato: paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-ev3.toml
+#
+# Primero `maxflip` (GuroBack-mf) y, sobre `mix3` + GuroBack-mf, `lp` y `symmetry` una a una y las
+# dos juntas. Los tres de `mix3` conservan su orden en todas: lo único que cambia es lo que se añade.
+# `ev2-mix3` es la referencia y no se repite (`tools/ev_report.py ev3 --ref ev2`).
+#
+# Comparaciones, un factor cada una:
+#   ev3-mf     frente a ev2-mix3:  + GuroBack-mf (un trabajador más que además es maxflip)
+#   ev3-mf     frente a ev3-g:     maxflip frente a un GuroBack clásico en el mismo hueco (control: el
+#                                  4.º trabajador sin la técnica; ev2 mostró que replicar acelera)
+#   ev3-mf-lp  frente a ev3-mf:    + lp (pasivo: no sondea, sólo aporta sus hechos)
+#   ev3-mf-sym frente a ev3-mf:    + symmetry (ídem)
+#   ev3-mf-all frente a ev3-mf-lp y ev3-mf-sym: si lp y symmetry se suman (ParaBack completo)
+#
+# Protocolo por bits (CLAUDE.md), automático con estas opciones: hasta 32 bits, Gurobi y lp con
+# Gurobi; de 33 a 66, ScipBack-exacto con el mismo orden (y -mf con maxflip) y lp con SoPlex; por
+# encima, RB-PG en los huecos de Gurobi y de lp (random:<posición> en los que no siguen un orden).
+# symmetry no depende de los bits (se retira con grafos de más de 200 000 vértices). Sustitución en
+# el sitio del hueco de NapBack cuando Naps no traduce (--substitute), como en ev2-mix3.
+#
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-ev3.toml \
+#       -l tools/cluster/pbo25-eval.txt -o ~/runs/ev3 --solutions ~/soluciones-pbo25
+#
+# Antes: piloto (CLAUDE.md §6: lp con SoPlex y symmetry tras su arreglo de STOP no se han ejecutado
+# nunca en el cluster) con tools/cluster/ev3-piloto.txt, -o ~/runs/ev3-piloto --time-limit 600.
+# Coste estimado (PLAN_EVALUACION §10): ~80 horas·nodo, unos 1,7 días de node906 y node907.
+
+[defaults]
+time_limit = 3600
+repeats = 1
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1"]
+
+[cluster]
+partition = "solver"
+account = "solver"
+cores_per_node = 96
+mem_per_node = "384G"
+cores_per_worker = 4
+mem_per_worker = "15G"
+gurobi_license = "node"
+gurobi_sessions = 2
+max_concurrent = 0
+exclusive = false
+launcher = "mpirun"
+env = "~/paraback-env"
+traces = false                   # la compartición se mide por cobertura y tiempo; las trazas ocupan mucho
+
+# ================================================================ maxflip
+[[experiment]]
+name = "ev3-mf"
+description = "mix3 + GuroBack-mf"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5"]
+
+[[experiment]]
+name = "ev3-g"
+description = "Control de ev3-mf: mix3 + un GuroBack clásico (orden inverso) en el hueco de GuroBack-mf"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:order=reverse"]
+
+# ================================================================ pasivos sobre ev3-mf
+[[experiment]]
+name = "ev3-mf-lp"
+description = "ev3-mf + lp (costes reducidos con cota segura)"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5", "lp"]
+
+[[experiment]]
+name = "ev3-mf-sym"
+description = "ev3-mf + symmetry (órbitas de los hechos y de x*)"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5", "symmetry"]
+
+[[experiment]]
+name = "ev3-mf-all"
+description = "ev3-mf + lp + symmetry: ParaBack con las tres técnicas"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5", "lp", "symmetry"]

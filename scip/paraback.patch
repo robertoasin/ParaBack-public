@@ -1,0 +1,835 @@
+diff -ru a/src/lpi/lpi_spx.cpp b/src/lpi/lpi_spx.cpp
+--- a/src/lpi/lpi_spx.cpp	2026-09-28 11:46:38.000000000 +0200
++++ b/src/lpi/lpi_spx.cpp	2026-11-20 10:25:23.000000000 +0100
+@@ -1088,45 +1088,51 @@
+    assert(name != NULL);
+ 
+    /* create SoPlex object */
+-   SCIP_ALLOC( BMSallocMemory(lpi) );
++   /* build the structure in a local variable and publish it last: SCIPinterruptLP() may read *lpi from
++    * another thread while SCIPsolve() runs (ParaBack), so it must never see a half-initialized object */
++   SCIP_LPI* newlpi = NULL;
++
++   SCIP_ALLOC( BMSallocMemory(&newlpi) );
+ 
+    /* we use this construction to allocate the memory for the SoPlex class also via the blockmemshell */
+-   (*lpi)->spx = static_cast<SPxSCIP*>(BMSallocMemoryCPP(sizeof(SPxSCIP)));
+-   SOPLEX_TRY( messagehdlr, (*lpi)->spx = new ((*lpi)->spx) SPxSCIP(messagehdlr, name) );
+-   (void) (*lpi)->spx->setIntParam(SoPlex::SYNCMODE, SoPlex::SYNCMODE_ONLYREAL);
+-   (void) (*lpi)->spx->setIntParam(SoPlex::SOLVEMODE, SoPlex::SOLVEMODE_REAL);
+-   (void) (*lpi)->spx->setIntParam(SoPlex::REPRESENTATION, SoPlex::REPRESENTATION_AUTO);
++   newlpi->spx = static_cast<SPxSCIP*>(BMSallocMemoryCPP(sizeof(SPxSCIP)));
++   SOPLEX_TRY( messagehdlr, newlpi->spx = new (newlpi->spx) SPxSCIP(messagehdlr, name) );
++   (void) newlpi->spx->setIntParam(SoPlex::SYNCMODE, SoPlex::SYNCMODE_ONLYREAL);
++   (void) newlpi->spx->setIntParam(SoPlex::SOLVEMODE, SoPlex::SOLVEMODE_REAL);
++   (void) newlpi->spx->setIntParam(SoPlex::REPRESENTATION, SoPlex::REPRESENTATION_AUTO);
+ 
+    /* disable time-measurement for statistics */
+ #if SOPLEX_APIVERSION >= 10
+-   (void) (*lpi)->spx->setIntParam(SoPlex::STATTIMER, 0);
++   (void) newlpi->spx->setIntParam(SoPlex::STATTIMER, 0);
+ #endif
+ 
+-   (*lpi)->cstat = NULL;
+-   (*lpi)->rstat = NULL;
+-   (*lpi)->cstatsize = 0;
+-   (*lpi)->rstatsize = 0;
+-   (*lpi)->pricing = SCIP_PRICING_LPIDEFAULT;
+-   (*lpi)->conditionlimit = -1.0;
+-   (*lpi)->checkcondition = FALSE;
+-   (*lpi)->messagehdlr = messagehdlr;
++   newlpi->cstat = NULL;
++   newlpi->rstat = NULL;
++   newlpi->cstatsize = 0;
++   newlpi->rstatsize = 0;
++   newlpi->pricing = SCIP_PRICING_LPIDEFAULT;
++   newlpi->conditionlimit = -1.0;
++   newlpi->checkcondition = FALSE;
++   newlpi->messagehdlr = messagehdlr;
+ 
+-   invalidateSolution(*lpi);
++   invalidateSolution(newlpi);
+ 
+    /* set objective sense */
+-   SCIP_CALL( SCIPlpiChgObjsen(*lpi, objsen) );
++   SCIP_CALL( SCIPlpiChgObjsen(newlpi, objsen) );
+ 
+    /* set default pricing */
+-   SCIP_CALL( SCIPlpiSetIntpar(*lpi, SCIP_LPPAR_PRICING, (int)(*lpi)->pricing) );
++   SCIP_CALL( SCIPlpiSetIntpar(newlpi, SCIP_LPPAR_PRICING, (int)newlpi->pricing) );
+ 
+    {
+-      (*lpi)->spx->setInterrupt(FALSE);
+-      SPxOut::Verbosity verbosity = (*lpi)->spx->spxout.getVerbosity();
+-      (*lpi)->spx->spxout.setVerbosity((SPxOut::Verbosity)((*lpi)->spx->getLpInfo() ? SOPLEX_VERBLEVEL : 0));
+-      (*lpi)->spx->printVersion();
+-      (*lpi)->spx->spxout.setVerbosity(verbosity);
++      newlpi->spx->setInterrupt(FALSE);
++      SPxOut::Verbosity verbosity = newlpi->spx->spxout.getVerbosity();
++      newlpi->spx->spxout.setVerbosity((SPxOut::Verbosity)(newlpi->spx->getLpInfo() ? SOPLEX_VERBLEVEL : 0));
++      newlpi->spx->printVersion();
++      newlpi->spx->spxout.setVerbosity(verbosity);
+    }
+ 
++   *lpi = newlpi;
++
+    return SCIP_OKAY;
+ }
+ 
+diff -ru a/src/lpiexact/lpiexact.h b/src/lpiexact/lpiexact.h
+--- a/src/lpiexact/lpiexact.h	2026-09-28 11:46:38.000000000 +0200
++++ b/src/lpiexact/lpiexact.h	2026-11-20 10:25:23.000000000 +0100
+@@ -936,6 +936,17 @@
+    SCIP_Real             dval                /**< parameter value */
+    );
+ 
++/** interrupts the currently ongoing lp solve or disables the interrupt
++ *
++ *  May be called from another thread while the LP is being solved; the solve then stops as if the time limit had been
++ *  reached.
++ */
++SCIP_EXPORT
++SCIP_RETCODE SCIPlpiExactInterrupt(
++   SCIP_LPIEXACT*        lpi,                /**< LP interface structure */
++   SCIP_Bool             interrupt           /**< TRUE if interrupt should be set, FALSE if it should be disabled */
++   );
++
+ /**@} */
+ 
+ 
+diff -ru a/src/lpiexact/lpiexact_none.c b/src/lpiexact/lpiexact_none.c
+--- a/src/lpiexact/lpiexact_none.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/lpiexact/lpiexact_none.c	2026-11-20 10:25:23.000000000 +0100
+@@ -1201,6 +1201,17 @@
+    return SCIP_PARAMETERUNKNOWN;
+ }
+ 
++/** interrupts the currently ongoing lp solve or disables the interrupt */
++SCIP_RETCODE SCIPlpiExactInterrupt(
++   SCIP_LPIEXACT*        lpi,                /**< LP interface structure */
++   SCIP_Bool             interrupt           /**< TRUE if interrupt should be set, FALSE if it should be disabled */
++   )
++{  /*lint --e{715}*/
++   assert(lpi != NULL);
++
++   return SCIP_OKAY;
++}
++
+ /**@} */
+ 
+ 
+diff -ru a/src/lpiexact/lpiexact_qsoex.c b/src/lpiexact/lpiexact_qsoex.c
+--- a/src/lpiexact/lpiexact_qsoex.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/lpiexact/lpiexact_qsoex.c	2026-11-20 10:25:23.000000000 +0100
+@@ -2943,6 +2943,17 @@
+    QS_RETURN(rval);
+ }
+ 
++/** interrupts the currently ongoing lp solve or disables the interrupt */
++SCIP_RETCODE SCIPlpiExactInterrupt(
++   SCIP_LPIEXACT*        lpi,                /**< LP interface structure */
++   SCIP_Bool             interrupt           /**< TRUE if interrupt should be set, FALSE if it should be disabled */
++   )
++{  /*lint --e{715}*/
++   assert(lpi != NULL);
++
++   return SCIP_OKAY;
++}
++
+ /**@} */
+ 
+ /*
+diff -ru a/src/lpiexact/lpiexact_spx.cpp b/src/lpiexact/lpiexact_spx.cpp
+--- a/src/lpiexact/lpiexact_spx.cpp	2026-09-28 11:46:38.000000000 +0200
++++ b/src/lpiexact/lpiexact_spx.cpp	2026-11-20 10:25:23.000000000 +0100
+@@ -262,6 +262,7 @@
+ {/*lint !e1790*/
+    bool                  _lpinfo;
+    bool                  _fromscratch;
++   volatile bool         _interrupt;         /**< interrupt flag passed to SoPlex, set by SCIPlpiExactInterrupt() */
+    char*                 _probname;
+    DataArray<SPxSolver::VarStatus> _colStat; /**< column basis status used for strong branching */
+    DataArray<SPxSolver::VarStatus> _rowStat; /**< row basis status used for strong branching */
+@@ -274,6 +275,7 @@
+       )
+       : _lpinfo(false),
+         _fromscratch(false),
++        _interrupt(false),
+         _probname(NULL),
+         _colStat(0),
+         _rowStat(0),
+@@ -295,6 +297,14 @@
+       freePreStrongbranchingBasis(); /*lint !e1551*/
+    }/*lint -e1579*/
+ 
++   /** sets or clears the interrupt flag of the solves */
++   void setInterrupt(
++      bool               interrupt           /**< TRUE to interrupt the ongoing and later solves */
++      )
++   {
++      _interrupt = interrupt;
++   }
++
+    /** get objective limit according to objective sense */
+    Real getObjLimit() const
+    {
+@@ -392,7 +402,7 @@
+ 
+       try
+       {
+-         (void) optimize();
++         (void) optimize(&_interrupt);
+       }
+       catch(const SPxException& x)
+       {
+@@ -848,41 +858,47 @@
+    assert(name != NULL);
+ 
+    /* create SoPlex object */
+-   SCIP_ALLOC( BMSallocMemory(lpi) );
++   /* build the structure in a local variable and publish it last: SCIPinterruptLP() may read *lpi from
++    * another thread while SCIPsolve() runs (ParaBack), so it must never see a half-initialized object */
++   SCIP_LPIEXACT* newlpi = NULL;
++
++   SCIP_ALLOC( BMSallocMemory(&newlpi) );
+ 
+    /* we use this construction to allocate the memory for the SoPlex class also via the blockmemshell */
+-   (*lpi)->spx = static_cast<SPxexSCIP*>(BMSallocMemoryCPP(sizeof(SPxexSCIP)));
+-   SOPLEX_TRY( messagehdlr, (*lpi)->spx = new ((*lpi)->spx) SPxexSCIP(messagehdlr, name) );
+-   (void) (*lpi)->spx->setIntParam(SoPlex::SYNCMODE, (int) SoPlex::SYNCMODE_AUTO);
+-   (void) (*lpi)->spx->setIntParam(SoPlex::SOLVEMODE, (int) SoPlex::SOLVEMODE_RATIONAL);
+-   (void) (*lpi)->spx->setRealParam(SoPlex::FEASTOL, 0.0, true);
+-   (void) (*lpi)->spx->setRealParam(SoPlex::OPTTOL, 0.0, true);
+-   (void) (*lpi)->spx->setBoolParam(SoPlex::FORCEBASIC, true);
+-
+-   (*lpi)->cstat = NULL;
+-   (*lpi)->rstat = NULL;
+-   (*lpi)->cstatsize = 0;
+-   (*lpi)->rstatsize = 0;
+-   (*lpi)->pricing = SCIP_PRICING_LPIDEFAULT;
+-   (*lpi)->conditionlimit = -1.0;
+-   (*lpi)->checkcondition = FALSE;
+-   (*lpi)->messagehdlr = messagehdlr;
++   newlpi->spx = static_cast<SPxexSCIP*>(BMSallocMemoryCPP(sizeof(SPxexSCIP)));
++   SOPLEX_TRY( messagehdlr, newlpi->spx = new (newlpi->spx) SPxexSCIP(messagehdlr, name) );
++   (void) newlpi->spx->setIntParam(SoPlex::SYNCMODE, (int) SoPlex::SYNCMODE_AUTO);
++   (void) newlpi->spx->setIntParam(SoPlex::SOLVEMODE, (int) SoPlex::SOLVEMODE_RATIONAL);
++   (void) newlpi->spx->setRealParam(SoPlex::FEASTOL, 0.0, true);
++   (void) newlpi->spx->setRealParam(SoPlex::OPTTOL, 0.0, true);
++   (void) newlpi->spx->setBoolParam(SoPlex::FORCEBASIC, true);
++
++   newlpi->cstat = NULL;
++   newlpi->rstat = NULL;
++   newlpi->cstatsize = 0;
++   newlpi->rstatsize = 0;
++   newlpi->pricing = SCIP_PRICING_LPIDEFAULT;
++   newlpi->conditionlimit = -1.0;
++   newlpi->checkcondition = FALSE;
++   newlpi->messagehdlr = messagehdlr;
+ 
+-   invalidateSolution(*lpi);
++   invalidateSolution(newlpi);
+ 
+    /* set objective sense */
+-   SCIP_CALL( SCIPlpiExactChgObjsen(*lpi, objsen) );
++   SCIP_CALL( SCIPlpiExactChgObjsen(newlpi, objsen) );
+ 
+    /* set default pricing */
+-   SCIP_CALL( SCIPlpiExactSetIntpar(*lpi, SCIP_LPPAR_PRICING, (int)(*lpi)->pricing) );
++   SCIP_CALL( SCIPlpiExactSetIntpar(newlpi, SCIP_LPPAR_PRICING, (int)newlpi->pricing) );
+ 
+    {
+-      SPxOut::Verbosity verbosity = (*lpi)->spx->spxout.getVerbosity();
+-      (*lpi)->spx->spxout.setVerbosity((SPxOut::Verbosity)((*lpi)->spx->getLpInfo() ? SOPLEX_VERBLEVEL : 0));
+-      (*lpi)->spx->printVersion();
+-      (*lpi)->spx->spxout.setVerbosity(verbosity);
++      SPxOut::Verbosity verbosity = newlpi->spx->spxout.getVerbosity();
++      newlpi->spx->spxout.setVerbosity((SPxOut::Verbosity)(newlpi->spx->getLpInfo() ? SOPLEX_VERBLEVEL : 0));
++      newlpi->spx->printVersion();
++      newlpi->spx->spxout.setVerbosity(verbosity);
+    }
+ 
++   *lpi = newlpi;
++
+    return SCIP_OKAY;
+ }
+ 
+@@ -3343,6 +3359,20 @@
+ 
+    return SCIP_OKAY;
+ }
++
++/** interrupts the currently ongoing lp solve or disables the interrupt */
++SCIP_RETCODE SCIPlpiExactInterrupt(
++   SCIP_LPIEXACT*        lpi,                /**< LP interface structure */
++   SCIP_Bool             interrupt           /**< TRUE if interrupt should be set, FALSE if it should be disabled */
++   )
++{
++   assert(lpi != NULL);
++   assert(lpi->spx != NULL);
++
++   lpi->spx->setInterrupt(interrupt);
++
++   return SCIP_OKAY;
++}
+ 
+ /**@} */
+ 
+diff -ru a/src/rectlu/rectlu_factor.c b/src/rectlu/rectlu_factor.c
+--- a/src/rectlu/rectlu_factor.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/rectlu/rectlu_factor.c	2026-11-20 10:25:23.000000000 +0100
+@@ -49,9 +49,22 @@
+ #pragma GCC diagnostic ignored "-Wpedantic"
+ 
+ #ifdef SCIP_WITH_GMP
+-static QSnum_type qsnum_zeroLpNum;
+-static QSnum_type qsnum_oneLpNum;
+-static QSnum_type __t__;
++/* ParaBack: these three rationals used to be plain globals initialized by every
++ * RECTLUbuildFactorization and freed by every RECTLUfreeFactorization.  With two SCIP instances
++ * in exact mode in the same process (e.g. two ParaBack workers as threads), the second
++ * initialization overwrote the first and the second free was a double free (heap corruption,
++ * found with valgrind).  They are now thread-local (__t__ is also a scratch variable of the
++ * elimination, which concurrent factorizations must not share) and reference counted, so they
++ * are initialized by the first live factorization and freed by the last one. */
++#if defined(_MSC_VER)
++#define QSNUM_THREADLOCAL __declspec(thread)
++#else
++#define QSNUM_THREADLOCAL __thread
++#endif
++static QSNUM_THREADLOCAL QSnum_type qsnum_zeroLpNum;
++static QSNUM_THREADLOCAL QSnum_type qsnum_oneLpNum;
++static QSNUM_THREADLOCAL QSnum_type __t__;
++static QSNUM_THREADLOCAL int qsnum_nfactorizations = 0;
+ 
+ /** allocates memory */
+ void *CGutil_allocrus (
+@@ -86,9 +99,11 @@
+    free(p);
+ }
+ 
+-/** initializes global zero and one */
++/** initializes global zero and one (only for the first live factorization of this thread) */
+ void QSnum_factor_init (void)
+ {
++   if( qsnum_nfactorizations++ > 0 )
++      return;
+    QSnum_Init(qsnum_zeroLpNum);
+    QSnum_Init(qsnum_oneLpNum);
+    QSnum_Init(__t__);
+@@ -96,9 +111,12 @@
+    QSnum_SetOne(qsnum_oneLpNum);
+ }
+ 
+-/** frees global zero and one */
++/** frees global zero and one (only when the last live factorization of this thread is freed) */
+ void QSnum_factor_clear (void)
+ {
++   assert(qsnum_nfactorizations > 0);
++   if( --qsnum_nfactorizations > 0 )
++      return;
+    QSnum_Clear(qsnum_zeroLpNum);
+    QSnum_Clear(qsnum_oneLpNum);
+    QSnum_Clear(__t__);
+diff -ru a/src/scip/lpexact.c b/src/scip/lpexact.c
+--- a/src/scip/lpexact.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/scip/lpexact.c	2026-11-20 10:25:23.000000000 +0100
+@@ -4085,6 +4085,29 @@
+    return SCIP_OKAY;
+ }
+ 
++/** interrupts the currently ongoing exact lp solves (the exact LP and the project-and-shift LP), or disables the
++ *  interrupt
++ */
++SCIP_RETCODE SCIPlpExactInterrupt(
++   SCIP_LPEXACT*         lpexact,            /**< exact LP data */
++   SCIP_Bool             interrupt           /**< TRUE if interrupt should be set, FALSE if it should be disabled */
++   )
++{
++   assert(lpexact != NULL);
++
++   if( lpexact->lpiexact != NULL )
++   {
++      SCIP_CALL( SCIPlpiExactInterrupt(lpexact->lpiexact, interrupt) );
++   }
++
++   if( lpexact->projshiftdata != NULL && lpexact->projshiftdata->lpiexact != NULL )
++   {
++      SCIP_CALL( SCIPlpiExactInterrupt(lpexact->projshiftdata->lpiexact, interrupt) );
++   }
++
++   return SCIP_OKAY;
++}
++
+ /** adds a column to the LP and captures the variable */
+ SCIP_RETCODE SCIPlpExactAddCol(
+    SCIP_LPEXACT*         lpexact,            /**< LP data */
+diff -ru a/src/scip/lpexact.h b/src/scip/lpexact.h
+--- a/src/scip/lpexact.h	2026-09-28 11:46:38.000000000 +0200
++++ b/src/scip/lpexact.h	2026-11-20 10:25:23.000000000 +0100
+@@ -314,6 +314,14 @@
+    SCIP_SET*             set                 /**< global SCIP settings */
+    );
+ 
++/** interrupts the currently ongoing exact lp solves (the exact LP and the project-and-shift LP), or disables the
++ *  interrupt
++ */
++SCIP_RETCODE SCIPlpExactInterrupt(
++   SCIP_LPEXACT*         lpexact,            /**< exact LP data */
++   SCIP_Bool             interrupt           /**< TRUE if interrupt should be set, FALSE if it should be disabled */
++   );
++
+ /** adds a column to the LP and captures the variable */
+ SCIP_RETCODE SCIPlpExactAddCol(
+    SCIP_LPEXACT*         lpexact,            /**< LP data */
+diff -ru a/src/scip/reader_opb.c b/src/scip/reader_opb.c
+--- a/src/scip/reader_opb.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/scip/reader_opb.c	2026-11-20 10:25:23.000000000 +0100
+@@ -605,6 +605,27 @@
+    return FALSE;
+ }
+ 
++/** sets a rational to the exact value of the current token, which must be a value according to isValue()
++ *
++ *  isValue() parses with strtod(), which rounds integers above 2^53; in exact solving mode, the value is taken from the
++ *  token text instead, and the double is only used for formats that the rational parser does not understand
++ */
++static
++void getTokenValueExact(
++   OPBINPUT*             opbinput,           /**< OPB reading data */
++   SCIP_Real             value,              /**< value of the token as given by isValue() */
++   SCIP_RATIONAL*        rational            /**< the rational to set */
++   )
++{
++   assert(opbinput != NULL);
++   assert(rational != NULL);
++
++   if( SCIPrationalIsString(opbinput->token) )
++      SCIPrationalSetString(rational, opbinput->token);
++   else
++      SCIPrationalSetReal(rational, value);
++}
++
+ /** returns whether the current token is an equation sense */
+ static
+ SCIP_Bool isSense(
+@@ -789,6 +810,8 @@
+                                               *   OPB_MAX_LINELEN */
+    SCIP_VAR***           linvars,            /**< pointer to store the array with linear variables (must be freed by caller) */
+    SCIP_Real**           lincoefs,           /**< pointer to store the array with linear coefficients (must be freed by caller) */
++   SCIP_RATIONAL***      lincoefsrat,        /**< pointer to store the array with exact linear coefficients in exact solving
++                                              *   mode, or NULL otherwise (must be freed by caller with freeCoefsExact()) */
+    int*const             nlincoefs,          /**< pointer to store the number of linear coefficients */
+    int*                  lincoefssize,       /**< pointer to store the size of linvars/lincoefs arrays */
+    SCIP_VAR****          terms,              /**< pointer to store the array with nonlinear variables (must be freed by caller) */
+@@ -809,6 +832,7 @@
+    SCIP_Bool haveweightstart;
+    SCIP_Bool haveweightend;
+    SCIP_Real coef;
++   SCIP_RATIONAL* coefrat;
+    int coefsign;
+    int tmpvarssize;
+    int ntmpcoefs;
+@@ -818,6 +842,7 @@
+    assert(name != NULL);
+    assert(linvars != NULL);
+    assert(lincoefs != NULL);
++   assert(lincoefsrat != NULL);
+    assert(lincoefssize != NULL);
+    assert(nlincoefs != NULL);
+    assert(terms != NULL);
+@@ -829,6 +854,7 @@
+ 
+    *linvars = NULL;
+    *lincoefs = NULL;
++   *lincoefsrat = NULL;
+    *lincoefssize = 0;
+    *terms = NULL;
+    *termcoefs = NULL;
+@@ -894,12 +920,23 @@
+    tmpvarssize = OPB_INIT_COEFSSIZE;
+    SCIP_CALL( SCIPallocBlockMemoryArray(scip, linvars, *lincoefssize) );
+    SCIP_CALL( SCIPallocBlockMemoryArray(scip, lincoefs, *lincoefssize) );
++   if( SCIPisExact(scip) )
++   {
++      /* only the pointers: each rational is created when its coefficient is stored */
++      SCIP_CALL( SCIPallocBlockMemoryArray(scip, lincoefsrat, *lincoefssize) );
++   }
+    SCIP_CALL( SCIPallocBlockMemoryArray(scip, terms, *termcoefssize) );
+    SCIP_CALL( SCIPallocBlockMemoryArray(scip, termcoefs, *termcoefssize) );
+    SCIP_CALL( SCIPallocBlockMemoryArray(scip, ntermvars, *termcoefssize) );
+ 
+    SCIP_CALL( SCIPallocBufferArray(scip, &tmpvars, tmpvarssize) );
+    SCIP_CALL( SCIPallocBufferArray(scip, &tmpcoefs, tmpvarssize) );
++   coefrat = NULL;
++   if( SCIPisExact(scip) )
++   {
++      SCIP_CALL( SCIPrationalCreateBuffer(SCIPbuffer(scip), &coefrat) );
++      SCIPrationalSetReal(coefrat, 1.0);
++   }
+ 
+    /* read the coefficients */
+    coefsign = +1;
+@@ -938,6 +975,9 @@
+       /* check if we read a value */
+       if( isValue(scip, opbinput, &coef) )
+       {
++         if( coefrat != NULL )
++            getTokenValueExact(opbinput, coef, coefrat);
++
+          /* coefficients without a sign are treated as "+" */
+          if( (*nlincoefs > 0 || *ntermcoefs > 0 || ntmpcoefs > 0) && !havesign )
+          {
+@@ -982,6 +1022,9 @@
+          SCIPdebugMsg(scip, "(line %d) found soft constraint weight: %g\n", opbinput->linenumber, *weight);
+ 
+          coefsign = +1;
++         coef = 1.0;
++         if( coefrat != NULL )
++            SCIPrationalSetReal(coefrat, 1.0);
+          havesign = FALSE;
+          havevalue = FALSE;
+          haveweightend = TRUE;
+@@ -1066,6 +1109,8 @@
+          /* reset the flags and coefficient value for the next coefficient */
+          coefsign = +1;
+          coef = 1.0;
++         if( coefrat != NULL )
++            SCIPrationalSetReal(coefrat, 1.0);
+          havesign = FALSE;
+          havevalue = FALSE;
+          ntmpvars = 0;
+@@ -1075,7 +1120,7 @@
+          assert(ntmpvars == 1);
+          /* insert linear term */
+          SCIPdebugMsg(scip, "(line %d) found linear term: %+g<%s>\n", opbinput->linenumber, coefsign * coef, SCIPvarGetName(tmpvars[0]));
+-         if( !SCIPisZero(scip, coef) )
++         if( coefrat != NULL ? !SCIPrationalIsZero(coefrat) : !SCIPisZero(scip, coef) )
+          {
+             assert(*nlincoefs <= *lincoefssize);
+             /* resize the vars and coefs array if needed */
+@@ -1086,6 +1131,10 @@
+                newsize = SCIPcalcMemGrowSize(scip, *nlincoefs + 1);
+                SCIP_CALL( SCIPreallocBlockMemoryArray(scip, linvars, *lincoefssize, newsize) );
+                SCIP_CALL( SCIPreallocBlockMemoryArray(scip, lincoefs, *lincoefssize, newsize) );
++               if( *lincoefsrat != NULL )
++               {
++                  SCIP_CALL( SCIPreallocBlockMemoryArray(scip, lincoefsrat, *lincoefssize, newsize) );
++               }
+                *lincoefssize = newsize;
+             }
+             assert(*nlincoefs < *lincoefssize);
+@@ -1093,6 +1142,14 @@
+             /* add coefficient */
+             (*linvars)[*nlincoefs] = tmpvars[0];
+             (*lincoefs)[*nlincoefs] = coefsign * coef;
++            if( coefrat != NULL )
++            {
++               SCIP_CALL( SCIPrationalCreateBlock(SCIPblkmem(scip), &(*lincoefsrat)[*nlincoefs]) );
++               if( coefsign < 0 )
++                  SCIPrationalNegate((*lincoefsrat)[*nlincoefs], coefrat);
++               else
++                  SCIPrationalSetRational((*lincoefsrat)[*nlincoefs], coefrat);
++            }
+ 
+             /***********************/
+             if( !SCIPisIntegral(scip, (*lincoefs)[*nlincoefs]) )
+@@ -1106,6 +1163,8 @@
+          /* reset the flags and coefficient value for the next coefficient */
+          coefsign = +1;
+          coef = 1.0;
++         if( coefrat != NULL )
++            SCIPrationalSetReal(coefrat, 1.0);
+          havesign = FALSE;
+          havevalue = FALSE;
+          ntmpvars = 0;
+@@ -1128,6 +1187,12 @@
+ 
+          /* copy value */
+          (*lincoefs)[*nlincoefs] = tmpcoefs[0];
++         if( *lincoefsrat != NULL )
++         {
++            /* the topcost is only used as a double (soft constraints are not supported in exact solving mode) */
++            SCIP_CALL( SCIPrationalCreateBlock(SCIPblkmem(scip), &(*lincoefsrat)[*nlincoefs]) );
++            SCIPrationalSetReal((*lincoefsrat)[*nlincoefs], tmpcoefs[0]);
++         }
+ 
+          /***********************/
+          if( !SCIPisIntegral(scip, (*lincoefs)[*nlincoefs]) )
+@@ -1139,12 +1204,33 @@
+       }
+    }
+    /* clear memory */
++   if( coefrat != NULL )
++      SCIPrationalFreeBuffer(SCIPbuffer(scip), &coefrat);
+    SCIPfreeBufferArray(scip, &tmpcoefs);
+    SCIPfreeBufferArray(scip, &tmpvars);
+ 
+    return SCIP_OKAY;
+ }
+ 
++/** frees the exact linear coefficients stored by readCoefficients() */
++static
++void freeCoefsExact(
++   SCIP*                 scip,               /**< SCIP data structure */
++   SCIP_RATIONAL***      lincoefsrat,        /**< pointer to the array with exact linear coefficients, or to NULL */
++   int                   nlincoefs,          /**< number of coefficients */
++   int                   lincoefssize        /**< size of the array */
++   )
++{
++   assert(lincoefsrat != NULL);
++
++   if( *lincoefsrat == NULL )
++      return;
++
++   for( int i = nlincoefs - 1; i >= 0; --i )
++      SCIPrationalFreeBlock(SCIPblkmem(scip), &(*lincoefsrat)[i]);
++   SCIPfreeBlockMemoryArray(scip, lincoefsrat, lincoefssize);
++}
++
+ /** set the objective section */
+ static
+ SCIP_RETCODE setObjective(
+@@ -1154,6 +1240,8 @@
+    SCIP_Real const       scale,              /**< objective scale */
+    SCIP_VAR**const       linvars,            /**< array of linear variables */
+    SCIP_Real*const       coefs,              /**< array of objective values for linear variables */
++   SCIP_RATIONAL**const  coefsrat,           /**< array of exact objective values for linear variables in exact solving
++                                              *   mode, or NULL otherwise */
+    int const             ncoefs,             /**< number of coefficients for linear part */
+    SCIP_VAR***const      terms,              /**< array with nonlinear variables */
+    SCIP_Real*const       termcoefs,          /**< array of objective values for nonlinear variables */
+@@ -1165,6 +1253,7 @@
+    assert(opbinput != NULL);
+    assert(isEndLine(opbinput));
+    assert(ncoefs == 0 || (linvars != NULL && coefs != NULL));
++   assert(ncoefs == 0 || !SCIPisExact(scip) || coefsrat != NULL);
+    assert(ntermcoefs == 0 || (terms != NULL && ntermvars != NULL && termcoefs != NULL));
+ 
+    if( !hasError(opbinput) )
+@@ -1292,7 +1381,7 @@
+             {
+                SCIP_VAR* negvar = SCIPvarGetNegationVar(linvars[v]);
+ 
+-               SCIPrationalSetReal(obj, coefs[v]);
++               SCIPrationalSetRational(obj, coefsrat[v]);
+                SCIP_CALL_TERMINATE( retcode, SCIPaddOrigObjoffsetExact(scip, obj), TERMINATE );
+ 
+                SCIPrationalMultReal(obj, obj, -scale);
+@@ -1301,7 +1390,7 @@
+             }
+             else
+             {
+-               SCIPrationalSetReal(obj, coefs[v]);
++               SCIPrationalSetRational(obj, coefsrat[v]);
+                SCIPrationalMultReal(obj, obj, scale);
+                SCIPrationalAdd(obj, obj, SCIPvarGetObjExact(linvars[v]));
+                SCIP_CALL_TERMINATE( retcode, SCIPchgVarObjExact(scip, linvars[v], obj), TERMINATE );
+@@ -1344,6 +1433,7 @@
+    SCIP_CONS* cons;
+    SCIP_VAR** linvars;
+    SCIP_Real* lincoefs;
++   SCIP_RATIONAL** lincoefsrat;
+    int lincoefssize;
+    int nlincoefs;
+    SCIP_VAR*** terms;
+@@ -1354,6 +1444,7 @@
+    OPBSENSE sense;
+    SCIP_RETCODE retcode;
+    SCIP_Real sidevalue;
++   SCIP_RATIONAL* siderat;
+    SCIP_Real lhs;
+    SCIP_Real rhs;
+    SCIP_Bool newsection;
+@@ -1383,9 +1474,10 @@
+ 
+    weight = -SCIPinfinity(scip);
+    retcode = SCIP_OKAY;
++   siderat = NULL;
+ 
+    /* read the objective coefficients */
+-   SCIP_CALL( readCoefficients(scip, opbinput, name, &linvars, &lincoefs, &nlincoefs, &lincoefssize, &terms, &termcoefs, &ntermvars, &termcoefssize,
++   SCIP_CALL( readCoefficients(scip, opbinput, name, &linvars, &lincoefs, &lincoefsrat, &nlincoefs, &lincoefssize, &terms, &termcoefs, &ntermvars, &termcoefssize,
+          &ntermcoefs, &newsection, &isNonlinear, &issoftcons, &weight) );
+ 
+    if( hasError(opbinput) || opbinput->eof )
+@@ -1401,7 +1493,7 @@
+          }
+ 
+          /* set objective function  */
+-         SCIP_CALL_TERMINATE( retcode, setObjective(scip, opbinput, name, objscale, linvars, lincoefs, nlincoefs, terms, termcoefs, ntermvars, ntermcoefs), TERMINATE );
++         SCIP_CALL_TERMINATE( retcode, setObjective(scip, opbinput, name, objscale, linvars, lincoefs, lincoefsrat, nlincoefs, terms, termcoefs, ntermvars, ntermcoefs), TERMINATE );
+       }
+       else if( strcmp(name, "soft") == 0 )
+       {
+@@ -1455,6 +1547,13 @@
+       goto TERMINATE;
+    }
+    sidevalue *= sidesign;
++   if( SCIPisExact(scip) )
++   {
++      SCIP_CALL_TERMINATE( retcode, SCIPrationalCreateBlock(SCIPblkmem(scip), &siderat), TERMINATE );
++      getTokenValueExact(opbinput, sidesign * sidevalue, siderat);
++      if( sidesign < 0 )
++         SCIPrationalNegate(siderat, siderat);
++   }
+ 
+    /* check if we reached the line end */
+    if( !getNextToken(scip, opbinput) || !isEndLine(opbinput) )
+@@ -1580,22 +1679,26 @@
+       }
+       else
+       {
+-         SCIP_RATIONAL** lincoefsrat;
+          SCIP_RATIONAL* lhsrat;
+          SCIP_RATIONAL* rhsrat;
+ 
+-         SCIP_CALL( SCIPrationalCreateBufferArray(SCIPbuffer(scip), &lincoefsrat, nlincoefs) );
++         assert(siderat != NULL);
++         assert(nlincoefs == 0 || lincoefsrat != NULL);
++
+          SCIP_CALL( SCIPrationalCreateBuffer(SCIPbuffer(scip), &lhsrat) );
+          SCIP_CALL( SCIPrationalCreateBuffer(SCIPbuffer(scip), &rhsrat) );
+-         SCIPrationalSetReal(lhsrat, lhs); /*lint !e644*/
+-         SCIPrationalSetReal(rhsrat, rhs); /*lint !e644*/
+-         for( int i = 0; i < nlincoefs; ++i )
+-            SCIPrationalSetReal(lincoefsrat[i], lincoefs[i]);
++         if( SCIPisInfinity(scip, -lhs) ) /*lint !e644*/
++            SCIPrationalSetNegInfinity(lhsrat);
++         else
++            SCIPrationalSetRational(lhsrat, siderat);
++         if( SCIPisInfinity(scip, rhs) ) /*lint !e644*/
++            SCIPrationalSetInfinity(rhsrat);
++         else
++            SCIPrationalSetRational(rhsrat, siderat);
+          retcode = SCIPcreateConsExactLinear(scip, &cons, name, nlincoefs, linvars, lincoefsrat, lhsrat, rhsrat,
+             initial, separate, enforce, check, propagate, local, modifiable, dynamic, removable, FALSE);
+          SCIPrationalFreeBuffer(SCIPbuffer(scip), &rhsrat);
+          SCIPrationalFreeBuffer(SCIPbuffer(scip), &lhsrat);
+-         SCIPrationalFreeBufferArray(SCIPbuffer(scip), &lincoefsrat, nlincoefs);
+       }
+ 
+       if( retcode != SCIP_OKAY )
+@@ -1619,9 +1722,12 @@
+       SCIPfreeBlockMemoryArray(scip, &(terms[t]), ntermvars[t]);
+    }
+ 
++   if( siderat != NULL )
++      SCIPrationalFreeBlock(SCIPblkmem(scip), &siderat);
+    SCIPfreeBlockMemoryArrayNull(scip, &ntermvars, termcoefssize);
+    SCIPfreeBlockMemoryArrayNull(scip, &termcoefs, termcoefssize);
+    SCIPfreeBlockMemoryArrayNull(scip, &terms, termcoefssize);
++   freeCoefsExact(scip, &lincoefsrat, nlincoefs, lincoefssize);
+    SCIPfreeBlockMemoryArrayNull(scip, &lincoefs, lincoefssize);
+    SCIPfreeBlockMemoryArrayNull(scip, &linvars, lincoefssize);
+ 
+diff -ru a/src/scip/scip_lp.c b/src/scip/scip_lp.c
+--- a/src/scip/scip_lp.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/scip/scip_lp.c	2026-11-20 10:25:23.000000000 +0100
+@@ -887,6 +887,20 @@
+    if( interrupt )
+       scip->stat->userinterrupt = TRUE;
+ 
++   /* This method is meant to be called from another thread while SCIPsolve() runs. The LP structures are only
++    * complete and stable in the solving stage: SCIPlpCreate() (called while transforming) publishes scip->lp
++    * before its LP interface exists, and SCIPlpFree() destroys it while freeing the transformed problem.
++    * Touching them in any other stage reads uninitialized or freed memory; the user interrupt flag set above is
++    * then enough, SCIP checks it at the next stage transition. */
++   if( scip->set->stage != SCIP_STAGE_SOLVING )
++      return SCIP_OKAY;
++
++   /* the exact LPs of exact solving mode, which may run for a long time without any other stopping check */
++   if( scip->lpexact != NULL )
++   {
++      SCIP_CALL( SCIPlpExactInterrupt(scip->lpexact, interrupt) );
++   }
++
+    if( scip->lp == NULL )
+       return SCIP_OKAY;
+ 
+diff -ru a/src/scip/scip_solve.c b/src/scip/scip_solve.c
+--- a/src/scip/scip_solve.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/scip/scip_solve.c	2026-11-20 10:25:23.000000000 +0100
+@@ -2622,6 +2622,18 @@
+    return FALSE;
+ }
+ 
++/** transforms and presolves problem; body of SCIPpresolve()
++ *
++ *  SCIPsolve() clears the user interrupt itself and then calls this method with resetinterrupt = FALSE, also after
++ *  restarts: an interrupt requested from another thread meanwhile (e.g., while the problem is being transformed) must
++ *  not be erased.
++ */
++static
++SCIP_RETCODE presolveProblem(
++   SCIP*                 scip,               /**< SCIP data structure */
++   SCIP_Bool             resetinterrupt      /**< should the user interrupt and the LP interrupt be cleared? */
++   );
++
+ /** transforms and presolves problem
+  *
+  *  @return \ref SCIP_OKAY is returned if everything worked. Otherwise a suitable error code is passed. See \ref
+@@ -2645,12 +2657,23 @@
+    SCIP*                 scip                /**< SCIP data structure */
+    )
+ {
++   SCIP_CALL( SCIPcheckStage(scip, "SCIPpresolve", FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE) );
++
++   SCIP_CALL( presolveProblem(scip, TRUE) );
++
++   return SCIP_OKAY;
++}
++
++static
++SCIP_RETCODE presolveProblem(
++   SCIP*                 scip,               /**< SCIP data structure */
++   SCIP_Bool             resetinterrupt      /**< should the user interrupt and the LP interrupt be cleared? */
++   )
++{
+    SCIP_Bool unbounded;
+    SCIP_Bool infeasible;
+    SCIP_Bool vanished;
+ 
+-   SCIP_CALL( SCIPcheckStage(scip, "SCIPpresolve", FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE) );
+-
+    /* start solving timer */
+    SCIPclockStart(scip->stat->solvingtime, scip->set);
+    SCIPclockStart(scip->stat->solvingtimeoverall, scip->set);
+@@ -2660,8 +2683,11 @@
+       SCIPinterruptCapture(scip->interrupt);
+ 
+    /* reset the user interrupt flag */
+-   scip->stat->userinterrupt = FALSE;
+-   SCIP_CALL( SCIPinterruptLP(scip, FALSE) );
++   if( resetinterrupt )
++   {
++      scip->stat->userinterrupt = FALSE;
++      SCIP_CALL( SCIPinterruptLP(scip, FALSE) );
++   }
+ 
+    switch( scip->set->stage )
+    {
+@@ -2936,9 +2962,9 @@
+       case SCIP_STAGE_PROBLEM:
+       case SCIP_STAGE_TRANSFORMED:
+       case SCIP_STAGE_PRESOLVING:
+-         /* initialize solving data structures, transform and problem */
++         /* initialize solving data structures, transform and problem; the user interrupt was cleared above */
+ 
+-         SCIP_CALL( SCIPpresolve(scip) );
++         SCIP_CALL( presolveProblem(scip, FALSE) );
+          /* remember that we already printed the relevant statistics */
+          if( scip->set->stage == SCIP_STAGE_SOLVED )
+             statsprinted = TRUE;
+diff -ru a/src/scip/stat.c b/src/scip/stat.c
+--- a/src/scip/stat.c	2026-09-28 11:46:38.000000000 +0200
++++ b/src/scip/stat.c	2026-11-20 10:25:23.000000000 +0100
+@@ -458,6 +458,8 @@
+    stat->lastprimalbound = SCIP_UNKNOWN;
+    stat->lastdualbound = SCIP_UNKNOWN;
+    stat->lastlowerbound = -SCIPsetInfinity(set);
++   if( stat->lastlowerboundexact != NULL )
++      SCIPrationalSetNegInfinity(stat->lastlowerboundexact);
+    stat->lastupperbound = SCIPsetInfinity(set);
+ 
+    /* partial resets keep the integral value and previous evaluation time */

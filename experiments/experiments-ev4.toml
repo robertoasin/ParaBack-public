@@ -1,0 +1,69 @@
+# Evaluación del artículo, Ronda 4 (ev4, docs/PLAN_EVALUACION.md §5, 2026-10-28): escalabilidad de
+# ParaBack-Full (ev3-mf-all: RB-PG, NapBack, GuroBack, GuroBack-mf, lp y symmetry) a medio nodo y a un
+# nodo entero, sobre las 386, imposibles incluidas (si más trabajadores ganan alguna, es un resultado).
+# Formato: paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-ev4.toml
+#
+# Sólo cambia el número de réplicas de los tres paradigmas que sondean. Las altas siguen el ciclo
+# RB-PG, NapBack, GuroBack desde ParaBack-Full, así que cada configuración contiene a la anterior:
+#   ev3-mf-all  6 trabajadores (7 huecos):   1 RB-PG, 1 NapBack, 1 GuroBack + GuroBack-mf, lp, symmetry
+#   ev4-medio  11 trabajadores (12 huecos):  3 RB-PG, 3 NapBack, 2 GuroBack + los tres
+#   ev4-nodo   23 trabajadores (24 huecos):  7 RB-PG, 7 NapBack, 6 GuroBack + los tres
+# GuroBack-mf, lp y symmetry no se replican: otra llamada maxflip toma las mismas candidatas, y los
+# pasivos no sondean. Órdenes (P7): con n trabajadores que siguen un orden, el i-ésimo strided:i/n, con
+# i en el orden del ciclo (RB-PG 0, NapBack 1, GuroBack 2, RB-PG 3, …): cada réplica empieza por su
+# región, y al crecer cambian también las de los que ya estaban. Sin semillas. ev3-mf-all es la
+# referencia y no se repite (`tools/ev_report.py ev4 --ref ev3 ...`).
+#
+# Protocolo por bits y sustitución en el sitio como en ev3: de 33 a 66 bits cada GuroBack pasa a
+# ScipBack-exacto con su orden (en ev4-nodo, 6 a la vez: lo más pesado en memoria) y lp a SoPlex; por
+# encima, RB-PG en los huecos de Gurobi y de lp; cada NapBack que Naps no traduce sigue como RB-PG.
+#
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-ev4.toml \
+#       -l tools/cluster/pbo25-eval.txt -o ~/runs/ev4 --solutions ~/soluciones-pbo25
+#
+# Antes: piloto (CLAUDE.md §6: nunca se han ejecutado 23 trabajadores con lp y symmetry, ni 6
+# ScipBack-exacto a la vez) con tools/cluster/ev3-piloto.txt, -o ~/runs/ev4-piloto --time-limit 600.
+# Coste estimado (PLAN_EVALUACION §10): ~78 horas·nodo, unos 1,6 días de node906 y node907.
+# Primera ronda con complete_time en --stats-json (el instante en que el backbone quedó completo).
+
+[defaults]
+time_limit = 3600
+repeats = 1
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1"]
+
+[cluster]
+partition = "solver"
+account = "solver"
+cores_per_node = 96
+mem_per_node = "384G"
+cores_per_worker = 4
+mem_per_worker = "15G"
+gurobi_license = "node"
+gurobi_sessions = 2
+max_concurrent = 0
+exclusive = false
+launcher = "mpirun"
+env = "~/paraback-env"
+traces = false                   # la compartición se mide por cobertura y tiempo; las trazas ocupan mucho
+
+[[experiment]]
+name = "ev4-medio"
+description = "ParaBack-Full a medio nodo: 3 RB-PG, 3 NapBack, 2 GuroBack, GuroBack-mf, lp y symmetry"
+workers = ["roundingsat:pguide=1,order=strided:0/8", "cadiback:order=strided:1/8", "gurobi:order=strided:2/8",
+           "gurobi:chunks=maxflip:5", "lp", "symmetry",
+           "roundingsat:pguide=1,order=strided:3/8", "cadiback:order=strided:4/8", "gurobi:order=strided:5/8",
+           "roundingsat:pguide=1,order=strided:6/8", "cadiback:order=strided:7/8"]
+
+[[experiment]]
+name = "ev4-nodo"
+description = "ParaBack-Full a un nodo entero: 7 RB-PG, 7 NapBack, 6 GuroBack, GuroBack-mf, lp y symmetry"
+workers = ["roundingsat:pguide=1,order=strided:0/20", "cadiback:order=strided:1/20", "gurobi:order=strided:2/20",
+           "gurobi:chunks=maxflip:5", "lp", "symmetry",
+           "roundingsat:pguide=1,order=strided:3/20", "cadiback:order=strided:4/20", "gurobi:order=strided:5/20",
+           "roundingsat:pguide=1,order=strided:6/20", "cadiback:order=strided:7/20", "gurobi:order=strided:8/20",
+           "roundingsat:pguide=1,order=strided:9/20", "cadiback:order=strided:10/20", "gurobi:order=strided:11/20",
+           "roundingsat:pguide=1,order=strided:12/20", "cadiback:order=strided:13/20", "gurobi:order=strided:14/20",
+           "roundingsat:pguide=1,order=strided:15/20", "cadiback:order=strided:16/20", "gurobi:order=strided:17/20",
+           "roundingsat:pguide=1,order=strided:18/20", "cadiback:order=strided:19/20"]

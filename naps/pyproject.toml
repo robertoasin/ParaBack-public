@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61", "wheel", "pybind11>=2.10"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pynaps"
+description = "Python bindings for the NaPS pseudo-Boolean/SAT solver"
+readme = "python/README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Masahiko Sakai" }]
+keywords = ["pseudo-boolean", "SAT", "solver", "optimization", "SCIP"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://gitlab.com/naps2040334/naps"
+Repository = "https://gitlab.com/naps2040334/naps"
+
+# GitLab CI (.gitlab-ci.yml) から呼ばれる cibuildwheel の設定。
+# wheel 対象は Linux x86_64 の CPython 3.9–3.13 のみ
+# （plans/20260716_pypi_deployment.md。musllinux は before-all が dnf 前提のため除外）。
+[tool.cibuildwheel]
+build = ["cp39-*", "cp310-*", "cp311-*", "cp312-*", "cp313-*"]
+skip = "*-musllinux_*"
+archs = ["x86_64"]
+manylinux-x86_64-image = "manylinux_2_28"
+# PIC 付き静的 SCIP をコンテナ内でビルドし、拡張モジュールに静的リンクする
+before-all = "bash {project}/ci/build_static_scip.sh"
+environment = { SCIP_STATIC_PREFIX = "/project/scip_static" }
+build-verbosity = 1
+test-requires = ["pytest"]
+test-command = "python -m pytest {project}/tests/python -v"

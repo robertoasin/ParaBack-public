@@ -1,0 +1,83 @@
+# pynaps wheel のビルドと PyPI 公開（plans/20260716_pypi_deployment.md Phase 2）
+#
+# パイプラインが動くのは次の 2 つの場合のみ（gitlab.com 無料 CI 分数の節約）:
+#   - タグ push 時       : wheel ビルド → 公開ジョブ（手動トリガ）が選択可能に
+#   - Web UI の Run pipeline: wheel ビルドのリハーサル（TestPyPI へは手動で公開可能）
+#     Run pipeline の変数に CIBW_BUILD=cp312-* などを与えると対象 Python を絞れる
+#
+# 公開は PyPI Trusted Publishing (OIDC) を使うため API トークンの登録は不要。
+# 事前に PyPI / TestPyPI 側で Trusted Publisher (pending publisher) の登録が必要。
+# 手順は report/20260717_pypi_deployment_phase2.md を参照。
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+stages:
+  - build
+  - publish
+
+# manylinux_2_28 コンテナ (docker:dind 経由) で cp39–cp313 の wheel を生成する。
+# 静的 SCIP のビルド (ci/build_static_scip.sh) と wheel 化・auditwheel repair は
+# すべてコンテナ内で行われる。設定本体は pyproject.toml の [tool.cibuildwheel]。
+build_wheels:
+  stage: build
+  image: python:3.12
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    # タグと Version.h の不一致による誤バージョン公開を防ぐ
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        python -m pip install packaging
+        python ci/check_version_tag.py "$CI_COMMIT_TAG"
+      fi
+    - curl -sSL https://get.docker.com/ | sh
+    - python -m pip install cibuildwheel==4.1.0
+    - cibuildwheel --output-dir wheelhouse
+  artifacts:
+    paths:
+      - wheelhouse/
+    expire_in: 30 days
+
+# TestPyPI へのリハーサル公開（手動トリガ）。
+# 注意: 同じバージョン番号は再アップロードできない。リハーサルをやり直す場合は
+# Version.h の版を進めること（例: 1.4.1.dev1 → 1.4.1.dev2）。
+# id_tokens の名前は twine が参照する環境変数名と一致させる必要がある。
+# twine は --repository <name> のとき <NAME>_ID_TOKEN を探す（testpypi → TESTPYPI_ID_TOKEN）。
+publish_testpypi:
+  stage: publish
+  image: python:3.12
+  dependencies:
+    - build_wheels
+  id_tokens:
+    TESTPYPI_ID_TOKEN:
+      aud: testpypi
+  rules:
+    - when: manual
+  script:
+    - python -m pip install -U twine
+    - twine upload --repository testpypi wheelhouse/*
+
+# 本番 PyPI への公開（タグパイプラインのみ・手動トリガ）。
+publish_pypi:
+  stage: publish
+  image: python:3.12
+  dependencies:
+    - build_wheels
+  id_tokens:
+    PYPI_ID_TOKEN:
+      aud: pypi
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+  script:
+    - python -m pip install -U twine
+    - twine upload wheelhouse/*

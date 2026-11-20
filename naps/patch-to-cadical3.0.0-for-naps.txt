@@ -1,0 +1,299 @@
+diff --git a/src/cadical.hpp b/src/cadical.hpp
+index 49adee9e..85647e34 100644
+--- a/src/cadical.hpp
++++ b/src/cadical.hpp
+@@ -5,6 +5,10 @@
+ #include <cstdio>
+ #include <vector>
+ 
++// addded by nabesima
++#include "flags.hpp"
++#include "stats.hpp"
++
+ namespace CaDiCaL {
+ 
+ /*========================================================================*/
+@@ -211,6 +215,7 @@ class Terminator;
+ class ClauseIterator;
+ class WitnessIterator;
+ class ExternalPropagator;
++class FixedListener2;  // added by nabesima
+ class Tracer;
+ class InternalTracer;
+ class FileTracer;
+@@ -438,6 +443,10 @@ public:
+ 
+   // ====== END IPASIR-UP ==================================================
+ 
++  // added by nabesima
++  void connect_fixed_listener (FixedListener2 *listener);
++  void disconnect_fixed_listener2 ();
++
+   //------------------------------------------------------------------------
+   // Adds a literal to the constraint clause. Same functionality as 'add'
+   // but the clause only exists for the next call to solve (same lifetime as
+@@ -701,6 +710,10 @@ public:
+   //
+   int simplify (int rounds = 3);
+ 
++  // added by nabesima
++  // Returns the statistics
++  const Stats& get_stats () const;
++
+   //------------------------------------------------------------------------
+   // Force termination of 'solve' asynchronously.
+   //
+@@ -754,6 +767,9 @@ public:
+   //
+   int fixed (int lit) const;
+ 
++  // added by nabesima
++  bool eliminated (int lit) const;
++
+   //------------------------------------------------------------------------
+   // Force the default decision phase of a variable to a certain value.
+   //
+@@ -1257,6 +1273,14 @@ public:
+   virtual int cb_add_external_clause_lit () = 0;
+ };
+ 
++// added by nabesima
++class FixedListener2 {
++public:
++  virtual ~FixedListener2 () {}
++  // Notify the listener about the fixed literal.
++  virtual void notify_fixed (int lit) = 0;
++};
++
+ /*------------------------------------------------------------------------*/
+ 
+ // Allows to traverse all remaining irredundant clauses.  Satisfied and
+diff --git a/src/external.cpp b/src/external.cpp
+index 9f298814..a967d683 100644
+--- a/src/external.cpp
++++ b/src/external.cpp
+@@ -10,6 +10,8 @@ External::External (Internal *i)
+   assert (internal);
+   assert (!internal->external);
+   internal->external = this;
++  // added by nabesima
++  fixed_listener2 = NULL;
+ }
+ 
+ External::~External () {
+diff --git a/src/external.hpp b/src/external.hpp
+index 22969427..09f6cb5e 100644
+--- a/src/external.hpp
++++ b/src/external.hpp
+@@ -124,6 +124,9 @@ struct External {
+ 
+   void force_backtrack (size_t new_level);
+ 
++  // added by nabesima
++  FixedListener2 *fixed_listener2;
++
+   //----------------------------------------------------------------------//
+ 
+   signed char *solution; // Given solution checking for debugging.
+@@ -353,6 +356,11 @@ struct External {
+ 
+   int fixed (int elit) const; // Implemented in 'internal.hpp'.
+ 
++  // added by nabesima
++  int active (int elit) const; // Implemented in 'internal.hpp'.
++  // added by nabesima
++  int eliminated (int elit) const; // Implemented in 'internal.hpp'.    
++
+   /*----------------------------------------------------------------------*/
+ 
+   void phase (int elit);
+diff --git a/src/flags.cpp b/src/flags.cpp
+index 1806c6ba..faa3577f 100644
+--- a/src/flags.cpp
++++ b/src/flags.cpp
+@@ -8,6 +8,13 @@ void Internal::mark_fixed (int lit) {
+     assert (elit);
+     external->fixed_listener->notify_fixed_assignment (elit);
+   }
++
++  // added by nabesima
++  if (external->fixed_listener2) {
++    int elit = externalize (lit);
++    external->fixed_listener2->notify_fixed (elit);
++  }
++
+   Flags &f = flags (lit);
+   assert (f.status == Flags::ACTIVE);
+   f.status = Flags::FIXED;
+diff --git a/src/internal.hpp b/src/internal.hpp
+index 0a5314ec..9a80c548 100644
+--- a/src/internal.hpp
++++ b/src/internal.hpp
+@@ -328,6 +328,9 @@ struct Internal {
+   //
+   bool active (int lit) { return flags (lit).active (); }
+ 
++  // added by nabesima
++  bool eliminated (int lit) { return flags (lit).eliminated (); }
++
+   int active () const {
+     int res = stats.active;
+ #ifndef NDEBUG
+@@ -1522,6 +1525,36 @@ inline int External::fixed (int elit) const {
+   return internal->fixed (ilit);
+ }
+ 
++// added by nabesima
++inline int External::active (int elit) const {
++  assert (elit);
++  assert (elit != INT_MIN);
++  int eidx = abs (elit);
++  if (eidx > max_var)
++    return 0;
++  int ilit = e2i[eidx];
++  if (!ilit)
++    return 0;
++  if (elit < 0)
++    ilit = -ilit;
++  return internal->active (ilit);
++}
++// added by nabesima
++inline int External::eliminated (int elit) const {
++  assert (elit);
++  assert (elit != INT_MIN);
++  int eidx = abs (elit);
++  if (eidx > max_var)
++    return 0;
++  int ilit = e2i[eidx];
++  if (!ilit)
++    return 0;
++  if (elit < 0)
++    ilit = -ilit;
++  return internal->eliminated (ilit);
++}
++
++
+ /*------------------------------------------------------------------------*/
+ 
+ // We want to have termination checks inlined, particularly the first
+diff --git a/src/options.hpp b/src/options.hpp
+index ac5acc78..7a5f1ada 100644
+--- a/src/options.hpp
++++ b/src/options.hpp
+@@ -161,6 +161,7 @@ OPTION( stabilizefactor, 200,101,2e9,0,0,1, "phase increase in percent") \
+ OPTION( stabilizeint,    1e3,  1,2e9,0,0,1, "stabilizing interval") \
+ OPTION( stabilizemaxint, 2e9,  1,2e9,0,0,1, "maximum stabilizing phase") \
+ OPTION( stabilizeonly,     0,  0,  1,0,0,1, "only stabilizing phases") \
++OPTION( stabilizeratio,   50,  0,1e2,0,0,1, "stabilizing phase ratio in percent") /* added by nabesima */ \
+ OPTION( stats,             0,  0,  1,0,0,1, "print all statistics at the end of the run") \
+ OPTION( subsume,           1,  0,  1,0,1,1, "enable clause subsumption") \
+ OPTION( subsumebinlim,   1e4,  0,2e9,1,0,1, "watch list length limit") \
+diff --git a/src/random.cpp b/src/random.cpp
+index b5f02e71..86fd280b 100644
+--- a/src/random.cpp
++++ b/src/random.cpp
+@@ -81,12 +81,14 @@ static uint64_t hash_machine_identifier () {
+ #ifndef __WIN32
+ 
+ extern "C" {
++#include <netinet/in.h>
+ #include <ifaddrs.h>
+ #include <netdb.h>
+ #include <netinet/in.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/socket.h>
++#include <netinet/in.h>
+ }
+ 
+ #endif
+diff --git a/src/restart.cpp b/src/restart.cpp
+index c1a30ca4..9e19ad51 100644
+--- a/src/restart.cpp
++++ b/src/restart.cpp
+@@ -36,7 +36,10 @@ bool Internal::stabilizing () {
+     inc.stabilize *= opts.stabilizefactor * 1e-2;
+     if (inc.stabilize > opts.stabilizemaxint)
+       inc.stabilize = opts.stabilizemaxint;
+-    lim.stabilize = stats.conflicts + inc.stabilize;
++    // modified by nabesima
++    //lim.stabilize = stats.conflicts + inc.stabilize;
++    int64_t ratio = stable ? opts.stabilizeratio : 100 - opts.stabilizeratio;
++    lim.stabilize = stats.conflicts + (inc.stabilize * 2 * ratio) * 1e-2;
+     if (lim.stabilize <= stats.conflicts)
+       lim.stabilize = stats.conflicts + 1;
+     swap_averages ();
+diff --git a/src/solver.cpp b/src/solver.cpp
+index 9c002f3a..9c8fa5de 100644
+--- a/src/solver.cpp
++++ b/src/solver.cpp
+@@ -784,6 +784,13 @@ int Solver::simplify (int rounds) {
+   return res;
+ }
+ 
++/*------------------------------------------------------------------------*/
++// added by nabesima
++// Returns the statistics
++const Stats& Solver::get_stats () const {
++  return internal->stats;
++}
++
+ /*------------------------------------------------------------------------*/
+ 
+ int Solver::val (int lit) {
+@@ -859,6 +866,26 @@ int Solver::fixed (int lit) const {
+   return res;
+ }
+ 
++// added by nabesima
++bool Solver::eliminated (int lit) const {
++  TRACE ("eliminated", lit);
++  REQUIRE_VALID_STATE ();
++  REQUIRE_VALID_LIT (lit);
++  bool res = external->eliminated (lit);
++  LOG_API_CALL_RETURNS ("eliminated", lit, res);
++  return res;
++}
++
++// int Solver::active (int lit) const {
++//   TRACE ("active", lit);
++//   REQUIRE_VALID_STATE ();
++//   REQUIRE_VALID_LIT (lit);
++//   int res = external->active (lit);
++//   LOG_API_CALL_RETURNS ("active", lit, res);
++//   return res;
++// }
++
++
+ void Solver::phase (int lit) {
+   TRACE ("phase", lit);
+   REQUIRE_VALID_OR_SOLVING_STATE ();
+@@ -1046,6 +1073,28 @@ void Solver::reset_observed_vars () {
+ 
+ /*===== IPASIR-UP END ====================================================*/
+ 
++// added by nabesima
++void Solver::connect_fixed_listener (FixedListener2 *listener) {
++  LOG_API_CALL_BEGIN ("connect_fixed_listener");
++  REQUIRE_VALID_STATE ();
++  REQUIRE (listener, "can not connect zero listener");
++
++  if (external->fixed_listener2)
++    disconnect_fixed_listener ();
++
++  external->fixed_listener2 = listener;
++  LOG_API_CALL_END ("connect_fixed_listener");
++}
++
++void Solver::disconnect_fixed_listener2 () {
++  LOG_API_CALL_BEGIN ("disconnect_fixed_listener");
++  REQUIRE_VALID_STATE ();
++
++  external->fixed_listener2 = 0;
++  LOG_API_CALL_END ("disconnect_fixed_listener");
++}
++
++
+ int Solver::active () const {
+   TRACE ("active");
+   REQUIRE_VALID_STATE ();

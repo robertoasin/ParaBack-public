@@ -1,0 +1,88 @@
+# Experimento largo, Ronda 2 (results/hist1/README.md, tools/pbhist/README.md), diseñada con el usuario el
+# 2026-11-09 sobre la Ronda 1 (h1-mf, 300 s) y su repetición sin mirador-node02 (Ronda 1b). Objetivo: el mayor
+# número de backbones nuevos en una ronda de unos 4 días con los 11 nodos de mirador. Formato:
+# paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-hist2.toml
+#
+# Tres partes, cada una con su lista (tools/pbhist/ronda.py sobre hist1 + hist1b), su directorio y su envío:
+#
+# Listas en results/hist2/ (README.md): 1 905 a extraer, 1 150 a confirmar, 218 de memoria; ≤ 114 h con 11 nodos.
+#
+# * h2-extraer: las interrumpidas con z* (1 903), con su x* (--solutions ~/soluciones-hist1), la misma
+#   configuración que la Ronda 1 y 1800 s. Por qué 1800 s: de las que ev3-mf (x* dada) no había completado a
+#   los 300 s, el 16,5 % completa antes de 900 s, el 35 % antes de 1800 s y el 48 % antes de 3600 s (la
+#   tasa no cae). Unos 500–650 backbones esperados (mirador tiene la mitad de núcleos por trabajador que
+#   node906); ≤ 87 h. La lista va de menos a más candidatas sin decidir: si hay que cortar la ronda, se corta
+#   la cola (scancel) y se pierde lo menos probable. Al principio, par8-2-c y aim-200-3_4-yes1-2, sin x*: en
+#   la Ronda 1 fallaban por RoundingSat con --cg-resprop=1 (desde eccdbb7 se retira y buscan la base los demás).
+# * h2-confirmar: las que sólo Gurobi declaró infactibles (1 150, casi todas DEC: ProofComplexity, j120,
+#   even-colouring, domset), sólo con solvers exactos: los dos huecos de GuroBack los ocupan ScipBack-exacto
+#   (la contrapartida exacta de la prueba de Gurobi, ramificación con LP) y RB-Base. 600 s de criba; las que
+#   no se confirmen se publican aparte ("infactible según Gurobi, sin certificado"). ≤ 17 h. Todas tienen
+#   enteros de ≤ 32 bits (sólo ahí corre Gurobi), así que ScipBack-exacto las lee.
+# * h2-memoria: las 192 de más de 100 MB (nunca enviadas) y las 26 que el OOM de Slurm mató en la Ronda 1
+#   (aries, FoolSolitaire, van, sp97ar, maros), con dos trabajadores de 4 CPU y 13 GB: RB-PG y GuroBack-mf, los
+#   dos mejores extractores solos (Naps no traduce casi ninguna de este tamaño). Sin x*: buscan la base. ≤ 10 h.
+#
+# La búsqueda de la base de las 6 438 sin z* queda para la Ronda 3: en base25, de las que no tenían base a
+# los 300 s, sólo el 13 % la encuentra antes de 1800 s (unos 12 días aquí). También neos17 y sctap2, que fallan
+# siempre por ScipBack-exacto en el hueco de Gurobi.
+#
+# Mismos [defaults] y [cluster] que experiments-hist1.toml (Gurobi por servidor de tokens: 2 por ejecución de
+# h2-extraer, 1 de h2-memoria, ninguno de h2-confirmar; como mucho 22 a la vez). Desde el directorio unicas/,
+# con las listas de results/hist2/ (ronda.py):
+#   for p in extraer confirmar memoria; do sed "s|^|$PWD/instancias/|" ~/paraback/results/hist2/ronda2-$p.txt > ~/hist2-$p.txt; done
+# Envíos, primero los cortos (la cola es FIFO: h2-extraer, la larga, va al final y es la que se corta):
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-hist2.toml --only h2-confirmar \
+#       -l ~/hist2-confirmar.txt -o ~/runs/hist2-confirmar --dry-run
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-hist2.toml --only h2-memoria \
+#       -l ~/hist2-memoria.txt -o ~/runs/hist2-memoria --dry-run
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-hist2.toml --only h2-extraer \
+#       -l ~/hist2-extraer.txt -o ~/runs/hist2-extraer --solutions ~/soluciones-hist1 --dry-run
+# (y lo mismo sin --dry-run). El resumen de cada una, con collect_mirador.sbatch y gather_solutions.py como en
+# la Ronda 1 (results/hist1/README.md).
+
+[defaults]
+time_limit = 1800
+repeats = 1
+options = ["--threads-per-worker", "2", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1"]
+
+[cluster]
+partition = "fondecyt1261266"    # la del proyecto (MaxTime 1 día)
+account = ""
+cores_per_node = 8
+mem_per_node = "30000M"
+cores_per_worker = 2
+mem_per_worker = "6500M"
+orchestrator_slot = false
+max_array_size = 1000
+gurobi_license = "server"
+max_concurrent = 0
+exclude = "mirador-node[02,13-15]"  # 15 para judging; 13 y 14 no responden; 02 averiado
+exclusive = false
+extra_minutes = 5
+launcher = "mpirun"
+env = "~/paraback-env"
+traces = false
+
+[[experiment]]
+name = "h2-extraer"
+description = "Mix-3+MF (h1-mf) con la x* de la Ronda 1 (--solutions): 4 trabajadores de 2 CPU y 6,5 GB, 1800 s"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5"]
+
+[[experiment]]
+name = "h2-confirmar"
+description = "Sólo exactos (RB-PG, NapBack, ScipBack-exacto, RB-Base) sobre las infactibles de Gurobi sin confirmar, 600 s"
+time_limit = 600
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "scip-exact:order=strided:2/3",
+           "roundingsat"]
+
+[[experiment]]
+name = "h2-memoria"
+description = "RB-PG y GuroBack-mf con 4 CPU y 13 GB cada uno, para las que no caben en 6,5 GB por trabajador, 1800 s"
+workers = ["roundingsat:pguide=1", "gurobi:chunks=maxflip:5"]
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1"]
+cluster = { cores_per_worker = 4, mem_per_worker = "13000M" }

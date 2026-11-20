@@ -1,0 +1,81 @@
+# Evaluación del artículo, Ronda 2 (ev2, docs/PLAN_EVALUACION.md §5, rediseñada el 2026-10-23):
+# portfolios uniformes frente a uno mixto, y compartir hechos frente a no compartir, sobre las 386.
+# Formato: paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-ev2.toml
+#
+# Tres trabajadores en todas (cuatro huecos con el orquestador), sólo extractores publicados: el
+# único factor entre el mixto y cada uniforme es mezclar paradigmas (P1). maxflip, lp y symmetry
+# son aportaciones de este trabajo y se miden en la ronda siguiente, sobre mix3. Cada trabajador
+# empieza por su región de las candidatas (strided:i/3, P7) y sin semillas distintas: con
+# variables distintas la búsqueda ya es distinta.
+#
+# Protocolo por bits (CLAUDE.md): Gurobi hasta 32 bits; de 33 a 66, ScipBack-exacto con el mismo
+# orden (--float-max-bits 32 --float-fallback scip-exact, D12); por encima, nada MIP. Sustitución
+# (§3.1) sólo en el mixto: --substitute roundingsat:pguide=1 ocupa los huecos de Gurobi por encima
+# de 66 bits y, en el sitio, el de NapBack si Naps no traduce. En las puras no se sustituye (P5):
+# mip3 es n/c por encima de 66 bits (max_bits) y nap3 donde Naps no traduce (los tres se retiran y
+# la ejecución sale "failed": se informa como n/c, son 18 instancias en ev1).
+#
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-ev2.toml \
+#       -l tools/cluster/pbo25-eval.txt -o ~/runs/ev2 --solutions ~/soluciones-pbo25
+#
+# Antes: recompilar Naps (patches/naps/0002) y el piloto (tools/cluster/ev2-piloto.txt, -o ~/runs/ev2-piloto).
+# Coste estimado (PLAN_EVALUACION §10): ~124 horas·nodo, unos 2,6 días de node906 y node907.
+
+[defaults]
+time_limit = 3600
+repeats = 1
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact"]
+
+[cluster]
+partition = "solver"
+account = "solver"
+cores_per_node = 96
+mem_per_node = "384G"
+cores_per_worker = 4
+mem_per_worker = "15G"
+gurobi_license = "node"
+gurobi_sessions = 2
+max_concurrent = 0
+exclusive = false
+launcher = "mpirun"
+env = "~/paraback-env"
+traces = false                   # la compartición se mide por cobertura y tiempo; las trazas ocupan mucho
+
+# ================================================================ mixto
+[[experiment]]
+name = "ev2-mix3"
+description = "Mixto: RB-PG, NapBack y GuroBack, cada uno en su región"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3"]
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1"]
+
+[[experiment]]
+name = "ev2-mix3-iso"
+description = "El mixto sin compartir hechos (el orquestador sólo une lo demostrado)"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3"]
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1", "--no-share-facts"]
+
+# ================================================================ uniformes
+[[experiment]]
+name = "ev2-rb3"
+description = "Uniforme: 3 RB-PG"
+workers = [{ spec = "roundingsat:pguide=1,order=strided:{i}/3", count = 3 }]
+
+[[experiment]]
+name = "ev2-nap3"
+description = "Uniforme: 3 NapBack (el mejor secuencial sobre las 386)"
+workers = [{ spec = "cadiback:order=strided:{i}/3", count = 3 }]
+
+[[experiment]]
+name = "ev2-nap3-iso"
+description = "3 NapBack sin compartir hechos"
+workers = [{ spec = "cadiback:order=strided:{i}/3", count = 3 }]
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "scip-exact", "--no-share-facts"]
+
+[[experiment]]
+name = "ev2-mip3"
+description = "Uniforme: 3 GuroBack (ScipBack-exacto con 33-66 bits)"
+workers = [{ spec = "gurobi:order=strided:{i}/3", count = 3 }]
+max_bits = 66

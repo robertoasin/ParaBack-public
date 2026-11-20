@@ -1,0 +1,92 @@
+# Experimento largo, Ronda 3 (results/hist3/README.md, tools/pbhist/README.md), diseñada con el usuario el
+# 2026-11-12 sobre las Rondas 1, 1b y 2 combinadas (results/hist2/). Objetivo: los backbones de las que ya tienen
+# z* y x*, en los 4 días que el usuario está fuera, con los 11 nodos de mirador (node02 sigue averiado). Formato:
+# paraback/experiments.py. Comprobar:
+#   python -m paraback --config tools/cluster/experiments-hist3.toml
+#
+# Cuatro partes, cada una con su lista (results/hist3/), su directorio y su envío; cotas con 11 nodos si todas
+# agotan el límite:
+#
+# * h3-memoria (90, ≤ 4 h): dos trabajadores de 4 CPU y 13 GB, como h2-memoria, pero con --float-fallback
+#   roundingsat (con enteros de más de 32 bits, el hueco de Gurobi lo toma RoundingSat con el mismo orden y
+#   chunks, no ScipBack-exacto, que no respeta limits/memory: 29 OOM de Slurm en h2-memoria). Las 48 de
+#   h2-memoria con z* y las 7 que el OOM de Slurm mató en h2-extraer, con su x*; las 30 perdidas por el OOM y
+#   las 5 por repetir (neos17 y sctap2 fallaban por ScipBack-exacto), buscando la base.
+# * h3-reextraer (418, ≤ 19 h): las con z* que no tuvieron su ejecución de h2-extraer (417 en node02 y
+#   comppebphp_38), lo mismo que h2-extraer: h1-mf con su x*, 1800 s. Allí completó el 49 %.
+# * h3-largo (744, ≤ 68 h): las interrumpidas a los 1800 s de h2-extraer, h1-mf con su x* y 3600 s (empiezan de
+#   cero: ParaBack no reanuda lo demostrado). De menos a más candidatas sin decidir: si hay que cortar, la cola.
+# * h3-base (855, ≤ 39 h, opcional, la última en la cola): sin z* pero con respuesta SAT u OPT en alguna
+#   competición (782 OPT, 73 DEC), h1-mf sin x* y 1800 s (la configuración de la Ronda 1 con más tiempo). SIN
+#   --solutions: el directorio de x* no tiene nada fiable para ellas.
+#
+# Las x* están en dos directorios; se unen en uno (los de hist2 son posteriores y mandan), sin la única x* de
+# node02 que la Ronda 1b no sustituyó (results/hist3/README.md):
+#   mkdir ~/soluciones-hist3 && cp -a ~/soluciones-hist1/. ~/soluciones-hist3/ && cp -a ~/soluciones-hist2/. ~/soluciones-hist3/
+#   rm ~/soluciones-hist3/normalized-BA_RDC4.dot_fibo_20null0mast_rapportOE1.0_TMAX60_K67_cod2_pbEq1_newVersion.out
+# Desde el directorio unicas/, con las listas de results/hist3/:
+#   for p in memoria reextraer largo base; do sed "s|^|$PWD/instancias/|" ~/paraback/results/hist3/ronda3-$p.txt > ~/hist3-$p.txt; done
+# Envíos, en este orden (la cola es FIFO: lo más corto y seguro primero), cada uno con --dry-run antes:
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-hist3.toml --only h3-memoria \
+#       -l ~/hist3-memoria.txt -o ~/runs/hist3-memoria --solutions ~/soluciones-hist3 --dry-run
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-hist3.toml --only h3-reextraer \
+#       -l ~/hist3-reextraer.txt -o ~/runs/hist3-reextraer --solutions ~/soluciones-hist3 --dry-run
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-hist3.toml --only h3-largo \
+#       -l ~/hist3-largo.txt -o ~/runs/hist3-largo --solutions ~/soluciones-hist3 --dry-run
+#   python tools/cluster/submit_experiments.py tools/cluster/experiments-hist3.toml --only h3-base \
+#       -l ~/hist3-base.txt -o ~/runs/hist3-base --dry-run
+# El resumen de cada una, con collect_mirador.sbatch y gather_solutions.py (x* nuevas a ~/soluciones-hist3).
+
+[defaults]
+time_limit = 1800
+repeats = 1
+options = ["--threads-per-worker", "2", "--float-max-bits", "32", "--float-fallback", "scip-exact",
+           "--substitute", "roundingsat:pguide=1"]
+
+[cluster]
+partition = "fondecyt1261266"    # la del proyecto (MaxTime 1 día)
+account = ""
+cores_per_node = 8
+mem_per_node = "30000M"
+cores_per_worker = 2
+mem_per_worker = "6500M"
+orchestrator_slot = false
+max_array_size = 1000
+gurobi_license = "server"
+max_concurrent = 0
+exclude = "mirador-node15"         # para judging; 02, 13 y 14 volvieron el 2026-11-17 (problemas de red, prueba de 40)
+exclusive = false
+extra_minutes = 5
+# Micro-cortes del home (2026-11-14 y 2026-11-17: un nodo sin home se tragó la cola en segundos): log en el
+# nodo, espera de hasta 10 min al home y reencolado (run.sbatch); --time suma 2 × 10 min.
+home_wait = 10
+launcher = "mpirun"
+env = "~/paraback-env"
+traces = false
+
+[[experiment]]
+name = "h3-memoria"
+description = "RB-PG y GuroBack-mf con 4 CPU y 13 GB cada uno; con más de 32 bits, RoundingSat en el hueco de Gurobi; 1800 s"
+workers = ["roundingsat:pguide=1", "gurobi:chunks=maxflip:5"]
+options = ["--threads-per-worker", "4", "--float-max-bits", "32", "--float-fallback", "roundingsat",
+           "--substitute", "roundingsat:pguide=1"]
+cluster = { cores_per_worker = 4, mem_per_worker = "13000M" }
+
+[[experiment]]
+name = "h3-reextraer"
+description = "Mix-3+MF (h1-mf) con la x* (--solutions), como h2-extraer: 4 trabajadores de 2 CPU y 6,5 GB, 1800 s"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5"]
+
+[[experiment]]
+name = "h3-largo"
+description = "Mix-3+MF (h1-mf) con la x* (--solutions), 3600 s, sobre las interrumpidas a los 1800 s"
+time_limit = 3600
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5"]
+
+[[experiment]]
+name = "h3-base"
+description = "Mix-3+MF (h1-mf) sin x*, 1800 s, sobre las sin z* con respuesta en las competiciones"
+workers = ["roundingsat:pguide=1,order=strided:0/3", "cadiback:order=strided:1/3", "gurobi:order=strided:2/3",
+           "gurobi:chunks=maxflip:5"]

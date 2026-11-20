@@ -1,0 +1,34 @@
+# Clones originales de guroback y roundingback (ver README, "Procedencia del código")
+/.upstream/
+
+# Colección de benchmarks PB06 (≈200 MB): se descarga aparte (ver README)
+/normalized-PB06/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.venv/
+
+# NapBack: clones y compilación de Naps, CaDiCaL y Cadiback (make napback)
+/napback/build/
+
+# SCIP exacto: compilación e instalación de soplex/ y scip/ (make scip-exact)
+/scip_exact/
+
+# Artefactos de compilación de RoundingBack (roundingsat/build*/ tienen su propio .gitignore)
+guroback/guroback
+guroback/*.o
+
+# Licencias y entorno local
+*.lic
+.gurobi-limited-home/
+
+# Salidas de ejecución
+*.bb
+backbone.out
+*.stats.json

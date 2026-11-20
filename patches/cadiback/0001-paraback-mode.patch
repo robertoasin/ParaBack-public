@@ -1,0 +1,480 @@
+--- a/cadiback.cpp
++++ b/cadiback.cpp
+@@ -35,6 +35,9 @@
+ "  --big-no-els       do not apply ELS to the BIG before extracting backbones\n"
+ "  --big-roots        only probe the roots of the ELS\n"
+ "\n"
++"  --paraback=<n>     ParaBack worker mode: only variables 1..<n> are\n"
++"                     candidates; events on '<stdout>', facts on '<stdin>'\n"
++"\n"
+ "  --default          set optimization options to the default\n"
+ "  --plain            disable all optimizations, which is the same as:\n"
+ "\n"
+@@ -68,6 +71,12 @@
+ 
+ #include <algorithm>
+ #include <numeric>
++#include <string>
++
++#include <cerrno>
++#include <csignal>
++#include <fcntl.h>
++#include <unistd.h>
+ 
+ // Include the main 'CaDiCaL' API from 'cadical.hpp', but also some helper
+ // code from its library (from the 'CaDiCaL' source code directory').
+@@ -190,6 +199,20 @@
+ static const char *big_roots;
+ 
+ static int vars;        // The number of variables in the CNF.
++
++// ParaBack worker mode ('--paraback=<n>'): only the variables '1..n' (the
++// pseudo-Boolean variables of a NaPS translation; its auxiliary variables come
++// after them) are backbone candidates.  All candidate loops run up to
++// 'cand_vars', which is 'vars' in the normal mode.  Events are printed on
++// '<stdout>' ('m' models, 'd'/'f' dropped by model/flippable, 'b' backbones)
++// and facts found by other ParaBack workers are read from '<stdin>' at safe
++// points of the main loop ('fix <lit>', 'drop <var>', 'stop').
++
++static int paraback_vars;
++static int cand_vars;
++static char drop_tag = 'd';    // Why 'drop_candidate' is dropping a candidate.
++static bool paraback_events;   // Events printed since the last '.' (end of batch).
++static volatile int paraback_interrupted;
+ static int *fixed;      // The resulting fixed backbone literals.
+ static int *candidates; // The backbone candidates (if non-zero).
+ static int *constraint; // Literals to constrain.
+@@ -449,8 +472,8 @@
+ 
+ static int remaining_candidates () {
+   size_t determined = statistics.dropped + statistics.backbones;
+-  assert (determined <= (size_t) vars);
+-  return vars - determined;
++  assert (determined <= (size_t) cand_vars);
++  return cand_vars - determined;
+ }
+ 
+ // Provide a wrapper function for calling the main solver.
+@@ -475,9 +498,31 @@
+   } else if (verbosity > 0)
+     msg ("SAT solver call %zu (%d candidates remain %0.f%%)",
+          statistics.calls.total, remain, percent (remain, vars));
++  if (paraback_vars) {
++    if (paraback_events) {
++      // End of a batch: everything learned since the previous solver call
++      // is published before a call that may take long.
++      fputs (".\n", stdout);
++      paraback_events = false;
++    }
++    fflush (stdout);
++  }
+   int res = solver->solve ();
++  if (!res && paraback_vars) {
++    printf ("s interrupted\n");
++    fflush (stdout);
++    exit (0);
++  }
+   if (res == 10) {
+     statistics.calls.sat++;
++    if (paraback_vars) {
++      // The witness of every candidate dropped until the next model.
++      paraback_events = true;
++      fputc ('m', stdout);
++      for (int idx = 1; idx <= cand_vars; idx++)
++        printf (" %d", solver->val (idx) < 0 ? -idx : idx);
++      fputc ('\n', stdout);
++    }
+   } else {
+     assert (res == 20);
+     statistics.calls.unsat++;
+@@ -546,8 +591,12 @@
+   assert (lit);
+   candidates[idx] = 0;
+   assert (!fixed[idx]);
+-  assert (statistics.dropped < (size_t) vars);
++  assert (statistics.dropped < (size_t) cand_vars);
+   statistics.dropped++;
++  if (paraback_vars && drop_tag != 'x') {
++    printf ("%c %d\n", drop_tag, lit);
++    paraback_events = true;
++  }
+   if (set_phase)
+     solver->unphase (idx);
+   if (check)
+@@ -584,7 +633,7 @@
+ 
+   start_timer (&flip_time);
+ 
+-  for (int idx = start; idx <= vars; idx++) {
++  for (int idx = start; idx <= cand_vars; idx++) {
+     int lit = candidates[idx];
+     if (!lit)
+       continue;
+@@ -599,7 +648,9 @@
+       dbg ("literal %d can be flipped", lit);
+       statistics.flippable++;
+     }
++    drop_tag = 'f';
+     drop_candidate (idx);
++    drop_tag = 'd';
+   }
+ 
+   stop_timer ();
+@@ -639,11 +690,11 @@
+ 
+ static void filter_candidates (int start) {
+ 
+-  if (no_filter || start > vars)
++  if (no_filter || start > cand_vars)
+     return;
+ 
+   unsigned res = 0;
+-  for (int idx = start; idx <= vars; idx++)
++  for (int idx = start; idx <= cand_vars; idx++)
+     if (filter_candidate (idx), !res)
+       res++;
+ 
+@@ -658,10 +709,10 @@
+ // statistics as well as supporting '--no-filter'.
+ 
+ static int drop_first_candidate (int start) {
+-  assert (start <= vars);
++  assert (start <= cand_vars);
+   int idx = start, lit = 0, val = 0;
+   for (;; idx++) {
+-    assert (idx <= vars);
++    assert (idx <= cand_vars);
+     lit = candidates[idx];
+     if (!lit)
+       continue;
+@@ -672,7 +723,7 @@
+   }
+   assert (lit);
+   assert (lit == -val);
+-  assert (idx <= vars);
++  assert (idx <= cand_vars);
+   assert (candidates[idx] == lit);
+   dbg ("model satisfies negation %d "
+        "of backbone candidate %d thus dropping %d",
+@@ -692,11 +743,14 @@
+   candidates[idx] = 0;
+   if (!no_print) {
+     fprintf (files.backbone.file, "b %d\n", lit);
+-    fflush (files.backbone.file);
++    if (paraback_vars)
++      paraback_events = true; // flushed as a batch at the next safe point
++    else
++      fflush (files.backbone.file);
+   }
+   if (checker)
+     check_backbone (lit);
+-  assert (statistics.backbones < (size_t) vars);
++  assert (statistics.backbones < (size_t) cand_vars);
+   statistics.backbones++;
+   return true;
+ }
+@@ -718,7 +772,9 @@
+ 
+   if (tmp < 0) {
+     dbg ("removing fixed backbone %d candidate", lit);
++    drop_tag = 'z'; // No model witness: ParaBack treats it as an error.
+     drop_candidate (idx);
++    drop_tag = 'd';
+   }
+ 
+   statistics.fixed++;
+@@ -740,6 +796,90 @@
+   (void) count;
+ }
+ 
++// ParaBack worker mode: facts proven by other workers, read from '<stdin>'
++// between solver calls (never while assumptions or a constraint are pending).
++// A backbone found elsewhere is added as a unit and taken out of the
++// candidates without printing it; a refuted variable is just dropped.  Any
++// contradiction with what this worker has proven is fatal: the knowledge of
++// the portfolio would be inconsistent.
++
++static std::string paraback_input;
++
++static void paraback_contradiction (const char *what, int lit) {
++  printf ("e %s %d\n", what, lit);
++  fflush (stdout);
++  exit (1);
++}
++
++static void paraback_fact (const char *line) {
++  char command[16];
++  int value = 0;
++  if (sscanf (line, "%15s %d", command, &value) < 1)
++    return;
++  if (!strcmp (command, "stop")) {
++    printf ("s interrupted\n");
++    fflush (stdout);
++    exit (0);
++  }
++  int idx = abs (value);
++  if (!value || idx > cand_vars)
++    paraback_contradiction ("invalid", value);
++  if (!strcmp (command, "fix")) {
++    int lit = value;
++    solver->add (lit);
++    solver->add (0);
++    if (candidates[idx] == lit) {
++      fixed[idx] = lit;
++      candidates[idx] = 0;
++      statistics.backbones++;
++    } else if (fixed[idx] != lit)
++      paraback_contradiction ("fix", lit); // Dropped or opposite backbone.
++  } else if (!strcmp (command, "drop")) {
++    if (candidates[idx]) {
++      drop_tag = 'x';
++      drop_candidate (idx);
++      drop_tag = 'd';
++    } else if (fixed[idx])
++      paraback_contradiction ("drop", idx);
++  } else
++    paraback_contradiction ("unknown", value);
++}
++
++static void paraback_poll () {
++  if (!paraback_vars)
++    return;
++  if (paraback_interrupted) {
++    printf ("s interrupted\n");
++    fflush (stdout);
++    exit (0);
++  }
++  fflush (stdout);
++  char buffer[4096];
++  for (;;) {
++    ssize_t n = read (0, buffer, sizeof buffer);
++    if (n > 0) {
++      paraback_input.append (buffer, n);
++      continue;
++    }
++    if (n < 0 && errno == EINTR)
++      continue;
++    break; // EAGAIN or end of input.
++  }
++  size_t start = 0, end;
++  while ((end = paraback_input.find ('\n', start)) != std::string::npos) {
++    paraback_fact (paraback_input.substr (start, end - start).c_str ());
++    start = end + 1;
++  }
++  paraback_input.erase (0, start);
++}
++
++class ParaBackTerminator : public CaDiCaL::Terminator {
++public:
++  bool terminate () override { return paraback_interrupted; }
++};
++
++static void paraback_on_sigint (int) { paraback_interrupted = 1; }
++
+ // Want to make sure not to overwrite accidentally (without '--force') files
+ // which look like CNF files (as this happened to me all the time).
+ 
+@@ -1188,6 +1328,10 @@
+       big_roots = arg;
+       if (!big)
+         big = arg;
++    } else if (!strncmp (arg, "--paraback=", 11)) {
++      paraback_vars = atoi (arg + 11);
++      if (paraback_vars <= 0)
++        die ("invalid option '%s' (expected '--paraback=<n>' with n > 0)", arg);
+     } else if (!strcmp (arg, "--default")) {
+       no_filter = no_fixed = no_inprocessing = one_by_one = 0;
+ #ifndef NFLIP
+@@ -1236,6 +1380,19 @@
+     die ("'%s' does not make sense in combination with '%s'", big_no_els,
+          big_roots);
+ 
++  if (paraback_vars) {
++    if (big)
++      die ("'--paraback' does not support '%s'", big);
++#ifndef NFLIP
++    if (really_flip)
++      die ("'--paraback' does not support '%s' (flip witnesses must be "
++           "the last model with one literal flipped)", really_flip);
++#endif
++    if (files.backbone.path || no_print)
++      die ("'--paraback' prints its events on '<stdout>'");
++    verbosity = -1;
++  }
++
+   msg ("CadiBack BackBone Extractor");
+   msg ("Copyright (c) 2023 Armin Biere University of Freiburg");
+   msg ("Version " VERSION " " GITID);
+@@ -1323,9 +1480,18 @@
+     solver->set ("report", 1);
+ 
+   int res = 0;
++  ParaBackTerminator paraback_terminator;
+   {
+     CadiBackSignalHandler handler;
+-    CaDiCaL::Signal::set (&handler);
++    if (paraback_vars) {
++      struct sigaction sa;
++      memset (&sa, 0, sizeof sa);
++      sa.sa_handler = paraback_on_sigint;
++      sa.sa_flags = SA_RESTART;
++      sigaction (SIGINT, &sa, 0);
++      solver->connect_terminator (&paraback_terminator);
++    } else
++      CaDiCaL::Signal::set (&handler);
+     dbg ("initialized solver");
+     {
+       const char *err;
+@@ -1349,6 +1515,50 @@
+     }
+     msg ("found %d variables", vars);
+ 
++    cand_vars = vars;
++    if (paraback_vars) {
++      if (paraback_vars > vars)
++        die ("'--paraback=%d' exceeds the %d variables of the CNF",
++             paraback_vars, vars);
++      cand_vars = paraback_vars;
++      // The candidates (the pseudo-Boolean variables) are never eliminated
++      // nor substituted: the witness of an 'f' event is the last model with
++      // that literal flipped, and 'flippable' only checks the clauses still
++      // in the solver.  The value of an eliminated variable comes from the
++      // reconstruction stack and may have to change after a flip, so with an
++      // eliminated candidate the last model with one flip need not be a model
++      // (ped3: 3 of 8554 flip witnesses violated a constraint).  Auxiliary
++      // variables may still be eliminated: witnesses only matter on candidates.
++      for (int idx = 1; idx <= cand_vars; idx++)
++        solver->freeze (idx);
++      printf ("r ready %d\n", cand_vars);
++      fflush (stdout);
++      // 'start l1 l2 ...': assumptions for the first solver call (the
++      // optimal assignment x* found by another worker, if any).
++      // Byte by byte with 'read' (not 'stdio'): facts sent right after
++      // 'start' must stay unread for 'paraback_poll', which uses 'read' too.
++      std::string start;
++      char ch;
++      ssize_t got;
++      while ((got = read (0, &ch, 1)) == 1 || (got < 0 && errno == EINTR))
++        if (got == 1) {
++          if (ch == '\n')
++            break;
++          start.push_back (ch);
++        }
++      if (start.compare (0, 5, "start"))
++        die ("expected 'start' but got '%s'", start.c_str ());
++      const char *p = start.c_str () + 5;
++      int lit, used;
++      while (sscanf (p, "%d%n", &lit, &used) == 1) {
++        if (!lit || abs (lit) > cand_vars)
++          die ("invalid 'start' literal %d", lit);
++        solver->assume (lit);
++        p += used;
++      }
++      fcntl (0, F_SETFL, fcntl (0, F_GETFL) | O_NONBLOCK);
++    }
++
+     if (big) {
+       msg ("starting BIG search after %.2f seconds", time ());
+       std::vector<int> f, e;
+@@ -1487,6 +1697,12 @@
+       for (int idx = 1; idx <= vars; idx++) {
+         int lit = solver->val (idx) < 0 ? -idx : idx; // Legacy support.
+         assert (lit == idx || lit == -idx);
++        if (idx > cand_vars) {
++          candidates[idx] = 0; // Not a candidate: never a fact of its own.
++          if (!big)
++            fixed[idx] = 0;
++          continue;
++        }
+         if (!big) {
+           candidates[idx] = lit;
+           fixed[idx] = 0;
+@@ -1518,7 +1734,7 @@
+       int core_limit = 100;           // TODO make this configurable.
+       int last = 10;                  // Last solver result.
+ 
+-      for (int idx = 1; idx <= vars; idx++) {
++      for (int idx = 1; idx <= cand_vars; idx++) {
+ 
+         // First skip variables that have been dropped as candidates
+         // before.
+@@ -1533,6 +1749,12 @@
+ 
+       TRY_SAME_CANDIDATE_AGAIN:
+ 
++        // ParaBack: absorb facts of other workers (nothing is pending).
++        paraback_poll ();
++        lit = candidates[idx];
++        if (!lit)
++          continue;
++
+         assert (lit == candidates[idx]);
+         assert (lit);
+ 
+@@ -1550,7 +1772,7 @@
+           assert (assumed < vars);
+           core[assumed++] = -lit;
+ 
+-          for (int other = idx + 1; other <= vars; other++) {
++          for (int other = idx + 1; other <= cand_vars; other++) {
+             int lit_other = candidates[other];
+             if (!lit_other)
+               continue;
+@@ -1683,7 +1905,7 @@
+           assert (assumed < vars);
+           constraint[assumed++] = -lit;
+ 
+-          for (int other = idx + 1; other <= vars; other++) {
++          for (int other = idx + 1; other <= cand_vars; other++) {
+             int lit_other = candidates[other];
+             if (!lit_other)
+               continue;
+@@ -1796,7 +2018,7 @@
+ 
+         {
+           size_t count = 0;
+-          for (int idx = 1; idx <= vars; idx++)
++          for (int idx = 1; idx <= cand_vars; idx++)
+             if (fixed[idx])
+               count++;
+ 
+@@ -1805,14 +2027,14 @@
+ 
+         {
+           size_t count = 0;
+-          for (int idx = 1; idx <= vars; idx++)
++          for (int idx = 1; idx <= cand_vars; idx++)
+             if (!fixed[idx])
+               count++;
+ 
+           assert (count == statistics.dropped);
+         }
+ 
+-        assert (statistics.backbones + statistics.dropped == (size_t) vars);
++        assert (statistics.backbones + statistics.dropped == (size_t) cand_vars);
+       }
+ 
+ #endif
+@@ -1827,17 +2049,18 @@
+         delete[] core;
+ 
+       if (checker) {
+-        if (statistics.checked < (size_t) vars)
++        if (statistics.checked < (size_t) cand_vars)
+           fatal ("checked %zu literals and not all %d variables",
+-                 statistics.checked, vars);
+-        else if (statistics.checked > (size_t) vars)
++                 statistics.checked, cand_vars);
++        else if (statistics.checked > (size_t) cand_vars)
+           fatal ("checked %zu literals thus more than all %d variables",
+-                 statistics.checked, vars);
++                 statistics.checked, cand_vars);
+         delete checker;
+       }
+     } else {
+       assert (res == 20);
+       printf ("s UNSATISFIABLE\n");
++      fflush (stdout);
+     }
+ 
+     if (files.backbone.close)

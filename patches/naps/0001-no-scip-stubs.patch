@@ -1,0 +1,30 @@
+--- a/PbSolver_scip.C
++++ b/PbSolver_scip.C
+@@ -1047,6 +1047,27 @@
+ void PbSolver::checkScipPrecisionSafety() {
+ }
+ 
++// Stubs added for ParaBack/NapBack (patches/naps/0001-no-scip-stubs.patch): these four
++// functions were added to the USE_SCIP branch without their counterparts here, so a
++// -D USE_SCIP=OFF build did not link. The bodies are exactly what the SCIP build does
++// when no SCIP environment exists (scip_env == NULL, i.e. without -cSCIP).
++void PbSolver::initScipEnv() {
++    report->reportf(0,"ERROR: SCIP solver was disabled at compile time.\n");
++    throw std::runtime_error("SCIP solver was disabled at compile time.");
++}
++
++void PbSolver::initScipForCoop() {
++    report->reportf(0,"ERROR: SCIP solver was disabled at compile time.\n");
++    throw std::runtime_error("SCIP solver was disabled at compile time.");
++}
++
++void PbSolver::syncSatFixedVars() {
++}
++
++double PbSolver::getScipFeastol() const {
++    return 0.0;
++}
++
+ solverStatus PbSolver::solveScip(vec<Lit>& assump_ps, double, const Linear*, Int, Int*, Int*, Int, double*, int*) {
+     report->reportf(0,"ERROR: SCIP solver was disabled at compile time.\n");
+     throw std::runtime_error("SCIP solver was disabled at compile time.");
